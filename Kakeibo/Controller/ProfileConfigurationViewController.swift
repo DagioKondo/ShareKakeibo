@@ -9,13 +9,26 @@ import UIKit
 
 class ProfileConfigurationViewController: UIViewController {
 
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
+    
+    var receiveTitle = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        titleLabel.text = receiveTitle
+        textField.placeholder = receiveTitle
+        saveButton.layer.cornerRadius = 5
         // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func saveButton(_ sender: Any) {
+        let layerNumber = navigationController!.viewControllers.count
+        self.navigationController?.popToViewController(navigationController!.viewControllers[layerNumber - 3], animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 

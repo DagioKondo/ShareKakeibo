@@ -9,13 +9,20 @@ import UIKit
 
 class RegisterViewController: UIViewController {
 
+    @IBOutlet weak var registerButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        registerButton.layer.cornerRadius = 5
+        
     }
     
-
+    @IBAction func registerButton(_ sender: Any) {
+        performSegue(withIdentifier: "ProfileVC", sender: nil)
+    }
+    
+    
     /*
     // MARK: - Navigation
 

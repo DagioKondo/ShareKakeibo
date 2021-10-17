@@ -9,10 +9,26 @@ import UIKit
 
 class MonthDataViewController: UIViewController {
 
+    var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
+    @IBOutlet weak var addPaymentButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        addPaymentButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
+        addPaymentButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+    }
+    
+    @objc func touchDown(_ sender:UIButton){
+        buttonAnimatedModel.startAnimation(sender: sender)
+    }
+    
+    @objc func touchUpOutside(_ sender:UIButton){
+        buttonAnimatedModel.startAnimation(sender: sender)
+    }
+    
+    
+    @IBAction func addPaymentButton(_ sender: Any) {
     }
     
 
