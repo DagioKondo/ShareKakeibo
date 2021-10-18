@@ -9,11 +9,23 @@ import UIKit
 
 class SearchViewController: UIViewController {
 
+    
+    @IBOutlet weak var decideButton: UIButton!
+    @IBOutlet weak var searchUserTextField: UITextField!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        decideButton.layer.cornerRadius = 5
+        
     }
+    
+    @IBAction func decideButton(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     
 
     /*

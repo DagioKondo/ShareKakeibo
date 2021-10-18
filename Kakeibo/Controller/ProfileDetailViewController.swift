@@ -23,7 +23,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         profileImageView.layer.cornerRadius = 120
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
         
         loadArray = ["近藤大伍","daigo.soccer.0106@icloud.com","Daigo0811"]
     }

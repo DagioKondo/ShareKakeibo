@@ -9,13 +9,23 @@ import UIKit
 
 class PaymentViewController: UIViewController {
 
+    
+    @IBOutlet weak var paymentConfirmedButton: UIButton!
+    @IBOutlet weak var paymentNameTextField: UITextField!
+    @IBOutlet weak var paymentDayTextField: UITextField!
+    @IBOutlet weak var categoryTextField: UITextField!
+    @IBOutlet weak var priceTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        paymentConfirmedButton.layer.cornerRadius = 5
     }
     
-
+    @IBAction func paymentConfirmedButton(_ sender: Any) {
+        
+    }
+    
     /*
     // MARK: - Navigation
 

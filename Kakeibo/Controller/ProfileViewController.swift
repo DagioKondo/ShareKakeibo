@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ViewAnimator
 
 class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource{
    
@@ -22,7 +23,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     let configurationNameArray = ["プロフィールを変更","ログアウト"]
     let configurationImageArray = ["person.fill","exit"]
     let configurationLabel = UILabel()
-    var swipeView = UIView()
+    var swipeView = UIVisualEffectView()
     
     var groupNameArray = [String]()
     
@@ -52,7 +53,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         configurationLabel.textColor = .darkGray
         
         swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
-        swipeView.backgroundColor = .darkGray
+        swipeView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         swipeView.alpha = 0
         
         scrollView.delegate = self
@@ -69,6 +70,9 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+        UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
+        
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }else if let congigurationIndexPath = configurationTableView.indexPathForSelectedRow {
@@ -79,9 +83,10 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     //スクロール中に呼ばれる
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
-        swipeView.backgroundColor = .darkGray
-        swipeView.alpha = (0.1 / 260) * scrollView.bounds.minX
+        swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
+        print("daigobounds")
         print(scrollView.bounds)
+        print("daigoframe")
         print(scrollView.frame)
     }
     

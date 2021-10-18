@@ -9,13 +9,36 @@ import UIKit
 
 class GroupDetailViewController: UIViewController {
 
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+     
     }
     
-
+    @IBAction func back(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    @IBAction func groupConfigurationButton(_ sender: Any) {
+        performSegue(withIdentifier: "GroupConfigurationVC", sender: nil)
+    }
+    
+    @IBAction func memberButton(_ sender: Any) {
+        performSegue(withIdentifier: "MemberVC", sender: nil)
+    }
+    
+    @IBAction func invitationButton(_ sender: Any) {
+        performSegue(withIdentifier: "AdditionVC", sender: nil)
+    }
+    
+    @IBAction func exitButton(_ sender: Any) {
+        
+    }
+    
+    
     /*
     // MARK: - Navigation
 

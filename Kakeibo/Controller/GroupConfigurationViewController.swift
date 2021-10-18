@@ -15,7 +15,20 @@ class GroupConfigurationViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func changeButton(_ sender: Any) {
+//        let layerNumber = navigationController!.viewControllers.count
+//        print(layerNumber)
+//        self.navigationController?.popToViewController(navigationController!.viewControllers[layerNumber - 2], animated: true)
+        self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+       
+    }
+    
+    @IBAction func back(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 
