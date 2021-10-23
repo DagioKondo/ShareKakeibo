@@ -7,9 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		860B41B82722E78800948CE6 /* OverAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41B72722E78800948CE6 /* OverAllViewController.swift */; };
+		860B41BA2722E79800948CE6 /* LivingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41B92722E79800948CE6 /* LivingViewController.swift */; };
+		860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BB2722E7A600948CE6 /* FoodViewController.swift */; };
+		860B41BE2722E7B500948CE6 /* OthersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BD2722E7B500948CE6 /* OthersViewController.swift */; };
 		86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */; };
 		86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */; };
 		864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */; };
+		865B9CE0271F4D1B000CCFB2 /* DetailAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */; };
+		865B9CE2271F4D36000CCFB2 /* DetailMyselfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */; };
+		865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CE727216128000CCFB2 /* CollectionViewCell.swift */; };
+		865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 865B9CE827216128000CCFB2 /* CollectionViewCell.xib */; };
 		86A0387D27102A740044803F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0387C27102A740044803F /* AppDelegate.swift */; };
 		86A0387F27102A740044803F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0387E27102A740044803F /* SceneDelegate.swift */; };
 		86A0388127102A740044803F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0388027102A740044803F /* LoginViewController.swift */; };
@@ -42,9 +50,17 @@
 		289A402C588C13CB13F60481 /* Pods-Kakeibo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kakeibo.debug.xcconfig"; path = "Target Support Files/Pods-Kakeibo/Pods-Kakeibo.debug.xcconfig"; sourceTree = "<group>"; };
 		45F04BDF83913AC2A80BE6F4 /* Pods_Kakeibo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kakeibo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50D7CFA9CF9DBCCEB5F35EF8 /* Pods-Kakeibo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kakeibo.release.xcconfig"; path = "Target Support Files/Pods-Kakeibo/Pods-Kakeibo.release.xcconfig"; sourceTree = "<group>"; };
+		860B41B72722E78800948CE6 /* OverAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverAllViewController.swift; sourceTree = "<group>"; };
+		860B41B92722E79800948CE6 /* LivingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivingViewController.swift; sourceTree = "<group>"; };
+		860B41BB2722E7A600948CE6 /* FoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodViewController.swift; sourceTree = "<group>"; };
+		860B41BD2722E7B500948CE6 /* OthersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OthersViewController.swift; sourceTree = "<group>"; };
 		86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationCell.swift; sourceTree = "<group>"; };
 		86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileConfigurationCell.xib; sourceTree = "<group>"; };
 		864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAnimatedModel.swift; sourceTree = "<group>"; };
+		865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllViewController.swift; sourceTree = "<group>"; };
+		865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfViewController.swift; sourceTree = "<group>"; };
+		865B9CE727216128000CCFB2 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		865B9CE827216128000CCFB2 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		86A0387927102A740044803F /* Kakeibo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kakeibo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A0387C27102A740044803F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		86A0387E27102A740044803F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +119,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		865B9CB6271EDBD1000CCFB2 /* PagingController */ = {
+			isa = PBXGroup;
+			children = (
+				865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */,
+				865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */,
+				860B41B72722E78800948CE6 /* OverAllViewController.swift */,
+				860B41B92722E79800948CE6 /* LivingViewController.swift */,
+				860B41BB2722E7A600948CE6 /* FoodViewController.swift */,
+				860B41BD2722E7B500948CE6 /* OthersViewController.swift */,
+			);
+			path = PagingController;
+			sourceTree = "<group>";
+		};
 		86A0387027102A740044803F = {
 			isa = PBXGroup;
 			children = (
@@ -148,15 +177,16 @@
 				86A038C427197AF50044803F /* ProfileConfigurationViewController.swift */,
 				86A038C62719AB930044803F /* MonthDataViewController.swift */,
 				86A038C82719ABAF0044803F /* SettlementViewController.swift */,
+				86A038D42719B5860044803F /* AdditionViewController.swift */,
 				86A038CA2719ABD80044803F /* DetailThisMonthViewController.swift */,
 				86A038CC2719ABF40044803F /* MonthlyDataViewController.swift */,
 				86A038CE2719B3700044803F /* PaymentViewController.swift */,
 				86A038D02719B53C0044803F /* GroupDetailViewController.swift */,
 				86A038D22719B5520044803F /* GroupConfigurationViewController.swift */,
-				86A038D42719B5860044803F /* AdditionViewController.swift */,
 				86A038D62719B6A60044803F /* GroupMemberViewController.swift */,
 				86A038D82719C7740044803F /* DetailLastMonthViewController.swift */,
 				86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */,
+				865B9CB6271EDBD1000CCFB2 /* PagingController */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -177,6 +207,8 @@
 				86A0388227102A740044803F /* Main.storyboard */,
 				86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */,
 				86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */,
+				865B9CE727216128000CCFB2 /* CollectionViewCell.swift */,
+				865B9CE827216128000CCFB2 /* CollectionViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -244,6 +276,7 @@
 				86A0388627102A750044803F /* Assets.xcassets in Resources */,
 				86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */,
 				86A0388427102A740044803F /* Main.storyboard in Resources */,
+				865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,21 +337,28 @@
 				86A0388127102A740044803F /* LoginViewController.swift in Sources */,
 				86A038CF2719B3700044803F /* PaymentViewController.swift in Sources */,
 				86A038BD27197A830044803F /* NewGroupViewController.swift in Sources */,
+				865B9CE2271F4D36000CCFB2 /* DetailMyselfViewController.swift in Sources */,
+				865B9CE0271F4D1B000CCFB2 /* DetailAllViewController.swift in Sources */,
 				86A038BF27197A990044803F /* CreateGroupViewController.swift in Sources */,
 				86A038C127197AAB0044803F /* SearchViewController.swift in Sources */,
 				86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */,
+				860B41BA2722E79800948CE6 /* LivingViewController.swift in Sources */,
 				86A038C92719ABAF0044803F /* SettlementViewController.swift in Sources */,
 				864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */,
+				860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */,
 				86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */,
 				86A0387D27102A740044803F /* AppDelegate.swift in Sources */,
 				86A038C327197AD30044803F /* ProfileDetailViewController.swift in Sources */,
 				86A038C527197AF50044803F /* ProfileConfigurationViewController.swift in Sources */,
 				86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */,
+				865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */,
 				86A038BB27197A6F0044803F /* NotificationViewController.swift in Sources */,
+				860B41B82722E78800948CE6 /* OverAllViewController.swift in Sources */,
 				86A038B927197A5C0044803F /* ProfileViewController.swift in Sources */,
 				86A0387F27102A740044803F /* SceneDelegate.swift in Sources */,
 				86A038B727197A430044803F /* RegisterViewController.swift in Sources */,
 				86A038D52719B5860044803F /* AdditionViewController.swift in Sources */,
+				860B41BE2722E7B500948CE6 /* OthersViewController.swift in Sources */,
 				86A038C72719AB940044803F /* MonthDataViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

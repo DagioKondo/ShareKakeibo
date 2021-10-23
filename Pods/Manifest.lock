@@ -439,10 +439,12 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - Parchment (3.1.0)
   - PromisesObjC (2.0.0)
   - SDWebImage (5.12.0):
     - SDWebImage/Core (= 5.12.0)
   - SDWebImage/Core (5.12.0)
+  - SegementSlide (3.0.1)
   - ViewAnimator (3.1.0)
 
 DEPENDENCIES:
@@ -451,7 +453,9 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - IQKeyboardManagerSwift
+  - Parchment
   - SDWebImage
+  - SegementSlide
   - ViewAnimator
 
 SPEC REPOS:
@@ -473,8 +477,10 @@ SPEC REPOS:
     - IQKeyboardManagerSwift
     - leveldb-library
     - nanopb
+    - Parchment
     - PromisesObjC
     - SDWebImage
+    - SegementSlide
     - ViewAnimator
 
 SPEC CHECKSUMS:
@@ -495,10 +501,12 @@ SPEC CHECKSUMS:
   IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  Parchment: 6250722ed0456d68f6bae03118eda722a28486f3
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   SDWebImage: 4ea20cca2986adc5aacde07aa686742fd4c67a37
+  SegementSlide: 83b56ffb66b9c0edc4e4f2a74229309c62915db3
   ViewAnimator: a9ceed80266e00fd435ec4fb99b2df64d580d0e4
 
-PODFILE CHECKSUM: c927d3acc1b77253e4fcee784afc685782dd6b2a
+PODFILE CHECKSUM: bf4435b1481c86d4a878da4a51557de7f933e22f
 
 COCOAPODS: 1.10.2

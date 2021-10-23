@@ -8,8 +8,14 @@
 import UIKit
 import ViewAnimator
 
-class SettlementViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
+@objc protocol aaa{
+    
+    @objc optional func bbb(sender:[String])
+}
+
+class SettlementViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
+    
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userPaymentOfLastMonth: UILabel!

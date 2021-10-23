@@ -58,6 +58,9 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     }
     
   
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
     
     /*
     // MARK: - Navigation

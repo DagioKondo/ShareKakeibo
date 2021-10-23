@@ -14,5 +14,7 @@ target 'Kakeibo' do
   pod 'Firebase/Storage'
   pod 'SDWebImage'
   pod 'Charts'
+  pod 'SegementSlide'
+  pod 'Parchment'
 
 end

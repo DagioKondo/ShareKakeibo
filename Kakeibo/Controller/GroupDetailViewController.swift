@@ -7,9 +7,13 @@
 
 import UIKit
 
+protocol GoToVcDelegate {
+    func goToVC(segueID:String)
+}
+
 class GroupDetailViewController: UIViewController {
 
-
+    var goToVcDelegate:GoToVcDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,15 +27,18 @@ class GroupDetailViewController: UIViewController {
     
     
     @IBAction func groupConfigurationButton(_ sender: Any) {
-        performSegue(withIdentifier: "GroupConfigurationVC", sender: nil)
+        dismiss(animated: false, completion: nil)
+        goToVcDelegate?.goToVC(segueID: "GroupConfigurationVC")
     }
     
     @IBAction func memberButton(_ sender: Any) {
-        performSegue(withIdentifier: "MemberVC", sender: nil)
+        dismiss(animated: false, completion: nil)
+        goToVcDelegate?.goToVC(segueID: "MemberVC")
     }
     
     @IBAction func invitationButton(_ sender: Any) {
-        performSegue(withIdentifier: "AdditionVC", sender: nil)
+        dismiss(animated: false, completion: nil)
+        goToVcDelegate?.goToVC(segueID: "AdditionVC")
     }
     
     @IBAction func exitButton(_ sender: Any) {

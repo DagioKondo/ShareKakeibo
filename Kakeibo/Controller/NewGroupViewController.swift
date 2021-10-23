@@ -30,21 +30,29 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         createGroupButton.layer.shadowRadius = 1
         
         groupNameArray = ["テラスハウス","daigo"]//あとで消す
-        
     }
     
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
+        createGroupButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+        createGroupButton.layer.shadowOpacity = 0
+        createGroupButton.layer.shadowRadius = 0
     }
     
     @objc func touchUpOutside(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
+        createGroupButton.layer.shadowOffset = CGSize(width: 1, height: 1)
+        createGroupButton.layer.shadowOpacity = 0.5
+        createGroupButton.layer.shadowRadius = 1
     }
     
     @IBAction func createGroupButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         let createGroupVC = storyboard?.instantiateViewController(identifier: "CreateGroupVC") as! CreateGroupViewController
         navigationController?.pushViewController(createGroupVC, animated: true)
+        createGroupButton.layer.shadowOffset = CGSize(width: 1, height: 1)
+        createGroupButton.layer.shadowOpacity = 0.5
+        createGroupButton.layer.shadowRadius = 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,7 +108,10 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
-
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -38,7 +38,12 @@ class ProfileConfigurationViewController: UIViewController {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         let layerNumber = navigationController!.viewControllers.count
         print(layerNumber)
-        self.navigationController?.popToViewController(navigationController!.viewControllers[layerNumber - 2], animated: true)
+        self.navigationController?.popToViewController(navigationController!.viewControllers[layerNumber - 3], animated: true)
+    }
+    
+    
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
     /*

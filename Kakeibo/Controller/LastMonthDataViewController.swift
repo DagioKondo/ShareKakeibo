@@ -9,13 +9,18 @@ import UIKit
 
 class LastMonthDataViewController: UIViewController {
 
+    @IBOutlet weak var showDetailButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        showDetailButton.layer.cornerRadius = 5
     }
     
-
+    @IBAction func showDetailButton(_ sender: Any) {
+        performSegue(withIdentifier: "DetailLastMonthVC", sender: nil)
+    }
+    
     /*
     // MARK: - Navigation
 

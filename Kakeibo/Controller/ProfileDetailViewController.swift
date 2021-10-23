@@ -73,6 +73,9 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
     
 
     /*

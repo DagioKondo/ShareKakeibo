@@ -8,8 +8,10 @@
 import UIKit
 import ViewAnimator
 
-class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource{
-   
+
+
+class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate{
+    
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var tableView: UITableView!//roomNameが反映されるテーブルビューだよ
@@ -17,6 +19,11 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var profileView: UIView! //profileImageViewの後ろの白いビュー
     @IBOutlet weak var profileOrangeView: UIView!//profileImageViewの後ろのオレンジのビュー
+    
+    @IBOutlet weak var newGroupCountLabel: UILabel!
+    var newGroupCountArray = [String]()
+    
+    var originalNavigationControllerDelegate: UIGestureRecognizerDelegate?
     
     
     var configurationTableView = UITableView() //設定バーのテーブルビューだよ
@@ -26,22 +33,26 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     var swipeView = UIVisualEffectView()
     
     var groupNameArray = [String]()
+    var groupProfileArray = [String]()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.navigationController?.navigationBar.isHidden = true
+//        self.navigationController!.interactivePopGestureRecognizer!.isEnabled = false
         
         profileImageView.layer.cornerRadius = 40
         profileView.layer.cornerRadius = 42
         profileOrangeView.layer.cornerRadius = 44
         
         configurationTableView.tag = 0
-        configurationTableView.frame = CGRect(x: view.frame.size.width, y: 100, width: 260, height: scrollView.frame.height - 100)
+        configurationTableView.frame = CGRect(x: view.frame.size.width, y: 100, width: 260, height: scrollView.frame.height)
         configurationTableView.separatorStyle = .none
         configurationTableView.register(UINib(nibName: "ProfileConfigurationCell", bundle: nil), forCellReuseIdentifier: "ProfileConfigurationCell")
         configurationTableView.delegate = self
         configurationTableView.dataSource = self
+        //        configurationTableView.isScrollEnabled = false
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -55,20 +66,46 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
         swipeView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         swipeView.alpha = 0
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(swipeViewTap(_:)))
+        swipeView.addGestureRecognizer(tapGesture)
         
         scrollView.delegate = self
-        scrollView.isPagingEnabled = true
-        scrollView.contentSize = CGSize(width: scrollView.frame.size.width + 260, height: scrollView.frame.size.height - 100)
+        scrollView.isPagingEnabled = true //1ページずつスクロールする
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width + 260, height: scrollView.frame.size.height)
+        
         scrollView.addSubview(configurationTableView)
         scrollView.addSubview(configurationLabel)
         scrollView.addSubview(swipeView)
+        scrollView.didMoveToSuperview()
+        
+        newGroupCountLabel.clipsToBounds = true
+        newGroupCountLabel.layer.cornerRadius = 10
         
         groupNameArray = ["テラスハウス","daigo","kondo"]//あとで消す
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // popGestureを乗っ取り、左スワイプでpopを無効化する
+                // 必ずdisappearとセットで用いること
+                if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
+                    self.originalNavigationControllerDelegate = popGestureRecognizer.delegate
+                    popGestureRecognizer.delegate = self
+                }
+        newGroupCountArray = ["","","","",""]//あとで消す
+        
+        if newGroupCountArray.count == 0{
+            newGroupCountLabel.isHidden = true
+        }else if newGroupCountArray.count < 10{
+            newGroupCountLabel.isHidden = false
+            newGroupCountLabel.text = String(newGroupCountArray.count)
+        }else if newGroupCountArray.count >= 10{
+            newGroupCountLabel.isHidden = false
+            newGroupCountLabel.text = String(newGroupCountArray.count)
+            newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+        }
         
         let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
         UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
@@ -80,14 +117,51 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // popGestureを乗っ取り、左スワイプでpopを無効化する(のを解除する)
+                // 必ずwillAppear/willDisappearとセットで用いること
+                if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
+                    popGestureRecognizer.delegate = originalNavigationControllerDelegate
+                    originalNavigationControllerDelegate = nil
+                }
+    }
+    
+    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+         return false
+     }
+
     //スクロール中に呼ばれる
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
-        swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
-        print("daigobounds")
-        print(scrollView.bounds)
-        print("daigoframe")
-        print(scrollView.frame)
+        if scrollView.tag == 1{
+            swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
+            swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
+            print("daigobounds")
+            print(scrollView.bounds)
+            print("daigoframe")
+            print(scrollView.frame)
+        }
+    }
+    
+    func scrollToPage() {
+        var frame:CGRect = self.scrollView.frame
+        frame.origin.x = 260
+        self.scrollView.scrollRectToVisible(frame, animated: true)
+    }
+    
+    func scrollToOriginal(){
+        var frame:CGRect = self.scrollView.frame
+        frame.origin.x = 0
+        self.scrollView.scrollRectToVisible(frame, animated: true)
+    }
+    
+    @objc func swipeViewTap(_ sender:UITapGestureRecognizer){
+        scrollToOriginal()
+    }
+    
+    @IBAction func configurationButton(_ sender: Any) {
+        scrollToPage()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,9 +170,9 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }else{
             return groupNameArray.count
         }
-            
+        
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         if tableView.tag == 0{
             return 1
@@ -114,7 +188,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             return 85
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView.tag == 0{
             let configurationCell = configurationTableView.dequeueReusableCell(withIdentifier: "ProfileConfigurationCell") as! ProfileConfigurationCell
@@ -134,6 +208,10 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             let cellView = cell?.contentView.viewWithTag(3) as! UIView
             let groupImage = cell?.contentView.viewWithTag(4) as! UIImageView
             
+            print(groupNameLabel.superview)
+            print(groupNameLabel.superview?.superview)
+            print(groupNameLabel.superview?.superview?.superview)
+            print(groupNameLabel.superview?.superview?.superview?.superview)
             groupImage.layer.cornerRadius = 30
             groupNameLabel.text = groupNameArray[indexPath.row]
             cellView.layer.cornerRadius = 5
@@ -148,10 +226,12 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if tableView.tag == 0{
             if indexPath.row == 0{
                 let ProfileDetailVC = storyboard?.instantiateViewController(withIdentifier: "ProfileDetailVC") as! ProfileDetailViewController
                 navigationController?.pushViewController(ProfileDetailVC, animated: true)
+                scrollToOriginal()
             }else if indexPath.row == 1{
                 self.navigationController?.popViewController(animated: true)
             }
@@ -172,25 +252,16 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         navigationController?.pushViewController(newGroupVC, animated: true)
     }
     
-    @IBAction func configurationButton(_ sender: Any) {
-        scrollToPage()
-    }
-    
-    func scrollToPage() {
-        var frame: CGRect = self.scrollView.frame
-        frame.origin.x = 260
-        self.scrollView.scrollRectToVisible(frame, animated: true)
-    }
     
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
