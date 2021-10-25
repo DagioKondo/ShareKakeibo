@@ -204,9 +204,9 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             return configurationCell
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-            let groupNameLabel = cell?.contentView.viewWithTag(2) as! UILabel
-            let cellView = cell?.contentView.viewWithTag(3) as! UIView
-            let groupImage = cell?.contentView.viewWithTag(4) as! UIImageView
+            let cellView = cell?.contentView.viewWithTag(1) as! UIView
+            let groupImage = cell?.contentView.viewWithTag(2) as! UIImageView
+            let groupNameLabel = cell?.contentView.viewWithTag(3) as! UILabel
             
             print(groupNameLabel.superview)
             print(groupNameLabel.superview?.superview)

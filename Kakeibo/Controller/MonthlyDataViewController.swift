@@ -45,6 +45,9 @@ class MonthlyDataViewController: UIViewController {
         pagingVC.selectedTextColor = UIColor(red: 255 / 255, green: 190 / 255, blue: 115 / 255, alpha: 1.0)
         pagingVC.menuBackgroundColor = .clear
         pagingVC.borderColor = .clear
+        pagingVC.menuItemSize = .selfSizing(estimatedWidth: 80, height: 40)
+        pagingVC.menuItemSpacing = 10
+        pagingVC.menuHorizontalAlignment = .center
 
     }
 

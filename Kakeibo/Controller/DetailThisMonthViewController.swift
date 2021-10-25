@@ -47,6 +47,9 @@ class DetailThisMonthViewController: UIViewController {
         pagingVC.selectedTextColor = UIColor(red: 255 / 255, green: 190 / 255, blue: 115 / 255, alpha: 1.0)
         pagingVC.menuBackgroundColor = .clear
         pagingVC.borderColor = .clear
+        pagingVC.menuItemSize = .selfSizing(estimatedWidth: 100, height: 40)
+        pagingVC.menuItemSpacing = 80
+        pagingVC.menuHorizontalAlignment = .center
         
         addPaymentButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         addPaymentButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)

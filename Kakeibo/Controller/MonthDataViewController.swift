@@ -15,6 +15,9 @@ class MonthDataViewController: UIViewController,GoToVcDelegate {
     @IBOutlet weak var addPaymentButton: UIButton!
     @IBOutlet weak var configurationButton: UIButton!
     @IBOutlet weak var groupNameLabel: UILabel!
+    @IBOutlet weak var userPaymentThisMonth: UILabel!
+    @IBOutlet weak var groupPaymentOfThisMponth: UILabel!
+    @IBOutlet weak var paymentAverageOfTithMonth: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()

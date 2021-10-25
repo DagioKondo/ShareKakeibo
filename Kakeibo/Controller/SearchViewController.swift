@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import SDWebImage
+
+
 
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
    
@@ -15,10 +18,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var searchUserTextField: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
-    var selectedUserImageArray = [String]()
+    var selectedUserImageArray = [String]() //profile画像のURLが入る
+    var emailArray = [String]()
     var colorArray = [UIColor.blue,UIColor.red,UIColor.green,UIColor.yellow,UIColor.purple] //あとで消す
+
     
-    var indexPathArray = [IndexPath]()
     
     
     override func viewDidLoad() {
@@ -56,9 +60,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     @objc func tapDeleteButton(_ sender:UIButton){
-        print(sender.superview?.superview?.superview)
-        print(sender.superview)
-        print(sender.superview?.superview)
+//        print(sender.superview?.superview?.superview)
+//        print(sender.superview)
+//        print(sender.superview?.superview)
         let cell = sender.superview?.superview as! UICollectionViewCell
         let indexPath = collectionView.indexPath(for: cell)
         print(indexPath?.row)
@@ -79,6 +83,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     @IBAction func decideButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+        
     }
     
     
