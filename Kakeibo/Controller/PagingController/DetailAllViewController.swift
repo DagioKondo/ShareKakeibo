@@ -22,7 +22,7 @@ class DetailAllViewController: UIViewController, UITableViewDelegate, UITableVie
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 83 - 84 - 40)
+//        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 83 - 84 - 40)
     }
     
     override func viewWillAppear(_ animated: Bool) {

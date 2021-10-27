@@ -13,7 +13,9 @@ import ViewAnimator
 class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate{
     
     
+    @IBOutlet weak var contentViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!//roomNameが反映されるテーブルビューだよ
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -72,7 +74,11 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         scrollView.delegate = self
         scrollView.isPagingEnabled = true //1ページずつスクロールする
         scrollView.contentInsetAdjustmentBehavior = .never
-        scrollView.contentSize = CGSize(width: scrollView.frame.size.width + 260, height: scrollView.frame.size.height)
+        scrollView.contentSize = CGSize(width: view.frame.size.width + 260, height: view.frame.size.height)
+//        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+//        contentView.frame = CGRect(x: 0, y: 0, width: view.frame.width + 260, height: view.frame.height)
+//        contentView.widthAnchor.constraint(equalToConstant: view.frame.width + 260)
+        contentViewWidthConstraint.constant = view.frame.width + 260
         
         scrollView.addSubview(configurationTableView)
         scrollView.addSubview(configurationLabel)
@@ -87,7 +93,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+    
         // popGestureを乗っ取り、左スワイプでpopを無効化する
                 // 必ずdisappearとセットで用いること
                 if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
@@ -141,6 +147,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             print(scrollView.bounds)
             print("daigoframe")
             print(scrollView.frame)
+            print(scrollView.contentOffset.x)
         }
     }
     

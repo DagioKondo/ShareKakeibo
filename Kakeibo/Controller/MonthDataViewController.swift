@@ -8,7 +8,7 @@
 import UIKit
 
 
-class MonthDataViewController: UIViewController,GoToVcDelegate {
+class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDelegate {
 
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
@@ -18,6 +18,11 @@ class MonthDataViewController: UIViewController,GoToVcDelegate {
     @IBOutlet weak var userPaymentThisMonth: UILabel!
     @IBOutlet weak var groupPaymentOfThisMponth: UILabel!
     @IBOutlet weak var paymentAverageOfTithMonth: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var groupNameBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var configurationButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var blurView: UIVisualEffectView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +38,19 @@ class MonthDataViewController: UIViewController,GoToVcDelegate {
         configurationButton.layer.shadowRadius = 1
 
         groupNameLabel.layer.shadowOpacity = 0.7
+        scrollView.delegate = self
+        scrollView.contentInsetAdjustmentBehavior = .never
+        blurView.alpha = 0
+        
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+
+        headerViewHeightConstraint.constant = max(150 - scrollView.contentOffset.y, 85)
+        groupNameBottomConstraint.constant = max(5, 32 - scrollView.contentOffset.y)
+        configurationButtonBottomConstraint.constant = max(5, 26 - scrollView.contentOffset.y)
+        blurView.alpha = (0.7 / 85) * scrollView.contentOffset.y
     }
     
     @objc func touchDown(_ sender:UIButton){

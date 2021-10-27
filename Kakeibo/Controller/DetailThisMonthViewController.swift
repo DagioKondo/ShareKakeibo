@@ -51,6 +51,9 @@ class DetailThisMonthViewController: UIViewController {
         pagingVC.menuItemSpacing = 80
         pagingVC.menuHorizontalAlignment = .center
         
+//        DetailAllVC!.view.frame = CGRect(x: pagingVC.view.frame.minX, y: pagingVC.view.frame.minY, width: pagingVC.view.frame.width, height: pagingVC.view.frame.height - 100)
+//        DetailMyselfVC!.view.frame = pagingVC.view.frame
+        
         addPaymentButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         addPaymentButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
         addPaymentButton.layer.shadowOffset = CGSize(width: 1, height: 1)
