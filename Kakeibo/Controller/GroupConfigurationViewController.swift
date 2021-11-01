@@ -6,11 +6,18 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class GroupConfigurationViewController: UIViewController {
+class GroupConfigurationViewController: UIViewController,LoadOKDelegate {
 
-    
+    @IBOutlet weak var groupNameTextField: UITextField!
+    @IBOutlet weak var settelementDayTextField: UITextField!
     @IBOutlet weak var changeButton: UIButton!
+    
+    var db = Firestore.firestore()
+    var myEmail = String()
+    var groupID = String()
+    
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
     override func viewDidLoad() {
@@ -29,6 +36,7 @@ class GroupConfigurationViewController: UIViewController {
     }
     
     @IBAction func changeButton(_ sender: Any) {
+        db.collection(myEmail).document(groupID).updateData(["groupName" : "\(groupNameTextField.text)" as String,"settlementDay" : "\(settelementDayTextField.text)" as String])
         dismiss(animated: true, completion: nil)
     }
     

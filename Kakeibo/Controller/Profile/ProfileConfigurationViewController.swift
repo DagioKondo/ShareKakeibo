@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class ProfileConfigurationViewController: UIViewController {
 
@@ -13,8 +14,14 @@ class ProfileConfigurationViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
     
-    var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
+    //追加
+    var db = Firestore.firestore()
+    var myEmail = String()
     var receiveTitle = String()
+    var receiveDataName = String()
+    
+    var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,9 +43,9 @@ class ProfileConfigurationViewController: UIViewController {
     
     @IBAction func saveButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
-        let layerNumber = navigationController!.viewControllers.count
-        print(layerNumber)
-        self.navigationController?.popToViewController(navigationController!.viewControllers[layerNumber - 3], animated: true)
+        //追加
+        db.collection("usersManagement").document(myEmail).updateData(["\(receiveDataName)" : "\(textField.text!)"])
+        self.navigationController?.popViewController(animated: true)
     }
     
     

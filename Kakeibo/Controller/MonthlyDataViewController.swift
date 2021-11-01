@@ -49,6 +49,7 @@ class MonthlyDataViewController: UIViewController {
         pagingVC.menuItemSpacing = 10
         pagingVC.menuHorizontalAlignment = .center
 
+        
     }
 
     /*

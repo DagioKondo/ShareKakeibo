@@ -7,10 +7,12 @@
 
 import UIKit
 import ViewAnimator
+import SDWebImage
+import Firebase
+import FirebaseAuth
 
 
-
-class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate{
+class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate,LoadOKDelegate{
     
     
     @IBOutlet weak var contentViewWidthConstraint: NSLayoutConstraint!
@@ -23,7 +25,15 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     @IBOutlet weak var profileOrangeView: UIView!//profileImageViewの後ろのオレンジのビュー
     
     @IBOutlet weak var newGroupCountLabel: UILabel!
-    var newGroupCountArray = [String]()
+    
+    var newGroupCountArray = [JoinGroupFalseSets]()
+    var loadDBModel = LoadDBModel()
+    var myEmail = String()
+    var groupID = String()
+    var groupJoinArray = [JoinGroupTrueSets]()
+    
+    var loginModel = LoginModel()
+    var auth = Auth.auth()
     
     var originalNavigationControllerDelegate: UIGestureRecognizerDelegate?
     
@@ -34,15 +44,11 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     let configurationLabel = UILabel()
     var swipeView = UIVisualEffectView()
     
-    var groupNameArray = [String]()
-    var groupProfileArray = [String]()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.isHidden = true
-//        self.navigationController!.interactivePopGestureRecognizer!.isEnabled = false
         
         profileImageView.layer.cornerRadius = 40
         profileView.layer.cornerRadius = 42
@@ -61,7 +67,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         
         configurationLabel.text = "設定"
-        configurationLabel.frame = CGRect(x: view.frame.size.width + 100, y: 30, width: 60, height: 35)
+        configurationLabel.frame = CGRect(x: view.frame.size.width + 100, y: 50, width: 60, height: 35)
         configurationLabel.font = UIFont.boldSystemFont(ofSize: 28.0)
         configurationLabel.textColor = .darkGray
         
@@ -75,9 +81,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         scrollView.isPagingEnabled = true //1ページずつスクロールする
         scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.contentSize = CGSize(width: view.frame.size.width + 260, height: view.frame.size.height)
-//        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-//        contentView.frame = CGRect(x: 0, y: 0, width: view.frame.width + 260, height: view.frame.height)
-//        contentView.widthAnchor.constraint(equalToConstant: view.frame.width + 260)
+        
         contentViewWidthConstraint.constant = view.frame.width + 260
         
         scrollView.addSubview(configurationTableView)
@@ -88,29 +92,16 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
-        groupNameArray = ["テラスハウス","daigo","kondo"]//あとで消す
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
-        // popGestureを乗っ取り、左スワイプでpopを無効化する
-                // 必ずdisappearとセットで用いること
-                if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
-                    self.originalNavigationControllerDelegate = popGestureRecognizer.delegate
-                    popGestureRecognizer.delegate = self
-                }
-        newGroupCountArray = ["","","","",""]//あとで消す
         
-        if newGroupCountArray.count == 0{
-            newGroupCountLabel.isHidden = true
-        }else if newGroupCountArray.count < 10{
-            newGroupCountLabel.isHidden = false
-            newGroupCountLabel.text = String(newGroupCountArray.count)
-        }else if newGroupCountArray.count >= 10{
-            newGroupCountLabel.isHidden = false
-            newGroupCountLabel.text = String(newGroupCountArray.count)
-            newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+        // popGestureを乗っ取り、左スワイプでpopを無効化する
+        // 必ずdisappearとセットで用いること
+        if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
+            self.originalNavigationControllerDelegate = popGestureRecognizer.delegate
+            popGestureRecognizer.delegate = self
         }
         
         let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
@@ -121,23 +112,50 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }else if let congigurationIndexPath = configurationTableView.indexPathForSelectedRow {
             configurationTableView.deselectRow(at: congigurationIndexPath, animated: true)
         }
+        
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadUserInfo(myEmail: myEmail)
+    }
+    
+    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
+        userNameLabel.text = userName
+        loadDBModel.loadGroupInfo(myEmail: myEmail)
+    }
+    
+    func loadGroupInfo_OK() {
+        groupJoinArray = loadDBModel.joinGroupTrueSets
+        newGroupCountArray = loadDBModel.joinGroupFalseSets
+        newGroupCountLabel.text = String(newGroupCountArray.count)
+        if newGroupCountArray.count == 0{
+            newGroupCountLabel.isHidden = true
+        }else if newGroupCountArray.count < 10{
+            newGroupCountLabel.isHidden = false
+            newGroupCountLabel.text = String(newGroupCountArray.count)
+        }else if newGroupCountArray.count >= 10{
+            newGroupCountLabel.isHidden = false
+            newGroupCountLabel.text = String(newGroupCountArray.count)
+            newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+        }
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // popGestureを乗っ取り、左スワイプでpopを無効化する(のを解除する)
-                // 必ずwillAppear/willDisappearとセットで用いること
-                if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
-                    popGestureRecognizer.delegate = originalNavigationControllerDelegate
-                    originalNavigationControllerDelegate = nil
-                }
+        // 必ずwillAppear/willDisappearとセットで用いること
+        if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {
+            popGestureRecognizer.delegate = originalNavigationControllerDelegate
+            originalNavigationControllerDelegate = nil
+        }
     }
     
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-         return false
-     }
-
+        return false
+    }
+    
     //スクロール中に呼ばれる
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.tag == 1{
@@ -175,7 +193,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         if tableView.tag == 0{
             return 2
         }else{
-            return groupNameArray.count
+            return groupJoinArray.count
         }
         
     }
@@ -214,13 +232,10 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             let cellView = cell?.contentView.viewWithTag(1) as! UIView
             let groupImage = cell?.contentView.viewWithTag(2) as! UIImageView
             let groupNameLabel = cell?.contentView.viewWithTag(3) as! UILabel
-            
-            print(groupNameLabel.superview)
-            print(groupNameLabel.superview?.superview)
-            print(groupNameLabel.superview?.superview?.superview)
-            print(groupNameLabel.superview?.superview?.superview?.superview)
+         
             groupImage.layer.cornerRadius = 30
-            groupNameLabel.text = groupNameArray[indexPath.row]
+            groupImage.sd_setImage(with: URL(string: groupJoinArray[indexPath.row].profileImage), completed: nil)
+            groupNameLabel.text = groupJoinArray[indexPath.row].groupName
             cellView.layer.cornerRadius = 5
             cellView.layer.masksToBounds = false
             cellView.layer.cornerRadius = 5
@@ -240,11 +255,25 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
                 navigationController?.pushViewController(ProfileDetailVC, animated: true)
                 scrollToOriginal()
             }else if indexPath.row == 1{
-                self.navigationController?.popViewController(animated: true)
+                do {
+                    try auth.signOut()
+                    navigationController?.popViewController(animated: true)
+                } catch let error {
+//                    loginModel?.showError(error, showLabel: errorShow)
+                    let alert = UIAlertController(title: "エラーです", message: "", preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
+                    alert.addAction(cancelAction)
+                    present(alert, animated: true, completion: nil)
+                }
             }
         }else{
+            
             let tabBarContoller = storyboard?.instantiateViewController(withIdentifier: "TabBarContoller") as! UITabBarController
             navigationController?.pushViewController(tabBarContoller, animated: true)
+            
+            //この先ユーザーがどのルームを使うか認識したいのでroomIDを上書き保存する
+            groupID = loadDBModel.joinGroupTrueSets[indexPath.row].groupID
+            UserDefaults.standard.setValue(groupID, forKey: "groupID")
         }
     }
     

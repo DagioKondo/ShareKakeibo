@@ -41,9 +41,9 @@ class CreateGroupViewController: UIViewController {
     @IBAction func searchUserButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
 //        performSegue(withIdentifier: "searchVC", sender: nil)
-        let searchVC = storyboard?.instantiateViewController(identifier: "searchVC")
-        searchVC!.isModalInPresentation = false
-        self.present(searchVC!, animated: true, completion: nil)
+        let searchVC = storyboard?.instantiateViewController(identifier: "searchVC") as! SearchViewController
+        searchVC.isModalInPresentation = false
+        self.present(searchVC, animated: true, completion: nil)
     }
     
     @IBAction func createGroupButton(_ sender: Any) {

@@ -10,13 +10,18 @@ import Charts
 
 class OverAllViewController: UIViewController {
 
+    var graphModel = GraphModel()
+    var yAxisValues = [Int]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        let lineChartsView = LineChartView()
-        let lineChartsView = UIView()
+        yAxisValues = [200000,100000,290000,300000,200000,100000,290000,300000,200000,100000,290000,300000]
+        
+        let lineChartsView = LineChartView()
+        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
         lineChartsView.frame = CGRect(x: 0, y: 80, width: view.frame.width, height: 350)
-        lineChartsView.backgroundColor = .red
+        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
         self.view.addSubview(lineChartsView)
         
     }

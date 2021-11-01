@@ -6,15 +6,23 @@
 //
 
 import UIKit
+import Charts
 
 class LastMonthDataViewController: UIViewController {
 
     @IBOutlet weak var showDetailButton: UIButton!
+    @IBOutlet weak var pieChartView: PieChartView!
+    
+    var graphModel = GraphModel()
+    var categorypay = [Int]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         showDetailButton.layer.cornerRadius = 5
+        
+        categorypay = [10,10,10,10,19,3,24]
+        graphModel.setPieCht(piecht: pieChartView, categorypay: categorypay)
     }
     
     @IBAction func showDetailButton(_ sender: Any) {

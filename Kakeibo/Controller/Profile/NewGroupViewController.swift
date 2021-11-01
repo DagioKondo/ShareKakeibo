@@ -6,15 +6,25 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate {
 
     
     @IBOutlet weak var createGroupButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
+    //追加
+    var loadDBModel = LoadDBModel()
+    var db = Firestore.firestore()
+    var myEmail = String()
+    var groupID = String()
+    
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
-    var groupNameArray = [String]()
+    
+    //追加
+    var groupNotJoinArray = [JoinGroupFalseSets]()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +39,16 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         createGroupButton.layer.shadowOpacity = 0.5
         createGroupButton.layer.shadowRadius = 1
         
-        groupNameArray = ["テラスハウス","daigo"]//あとで消す
+        //追加
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadGroupInfo(myEmail: myEmail)
+    }
+    
+    //追加
+    func loadGroupInfo_OK() {
+        groupNotJoinArray = loadDBModel.joinGroupFalseSets
+        tableView.reloadData()
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -56,7 +75,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groupNameArray.count
+        return groupNotJoinArray.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -83,7 +102,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         invitationView.layer.shadowOpacity = 0.2
         invitationView.layer.shadowRadius = 1
         
-        groupNameLabel.text = groupNameArray[indexPath.row]
+        groupNameLabel.text = groupNotJoinArray[indexPath.row].groupName
         
         joinButton.layer.cornerRadius = 3
         joinButton.addTarget(self, action: #selector(joinButton(_:)), for: .touchUpInside)
@@ -100,11 +119,23 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func joinButton(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
+        print(sender.superview?.superview)
+        print(sender.superview?.superview?.superview)
+        let cell = sender.superview?.superview?.superview as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)
+        //追加
+        groupID = groupNotJoinArray[indexPath!.row].groupID
+        UserDefaults.standard.setValue(groupID, forKey: "groupID")
+        db.collection(myEmail).document(groupID).updateData(["joinGroup" : true as Bool])
         performSegue(withIdentifier: "TabBarContoller", sender: nil)
     }
     
     @objc func rejectButton(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
+        
+        //追加
+        db.collection(myEmail).document(groupID).delete()
+        loadDBModel.loadGroupInfo(myEmail: myEmail)
     }
     
     

@@ -7,11 +7,18 @@
 
 import UIKit
 
-class NotificationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NotificationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate {
    
 
     @IBOutlet weak var tableView: UITableView!
-    var notificationArray = [String]() //ロードしてきた通知が入る配列
+
+    //追加
+    var loadDBModel = LoadDBModel()
+    var myEmail = String()
+    var groupID = String()
+    var day = Int()
+    
+    var notificationArray = [NotificationSets]() //ロードしてきた通知が入る配列
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +27,6 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
         
-        notificationArray = ["○○月分の決済が確定されました"]//あとで消す
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,8 +35,20 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }
+        //追加
+        let calendar = Calendar(identifier: .gregorian)
+        let date = calendar.dateComponents([.day], from: Date())
+        day = date.day! + 1
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadSettlementNotification(myEmail: myEmail, day: day)
     }
     
+    //追加
+    func loadSettlementNotification_OK() {
+        notificationArray = loadDBModel.notificationSets
+        tableView.reloadData()
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notificationArray.count
@@ -47,11 +65,15 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let label = cell.contentView.viewWithTag(1) as! UILabel
-        label.text = notificationArray[indexPath.row]
+        label.text = notificationArray[indexPath.row].groupName + "の決済が確定されました"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //追加
+        groupID = notificationArray[indexPath.row].groupID
+        UserDefaults.standard.setValue(groupID, forKey: "groupID")
+        
         let settlementTabVC = storyboard?.instantiateViewController(identifier: "TabBarContoller") as! UITabBarController
         settlementTabVC.selectedIndex = 1
         navigationController?.pushViewController(settlementTabVC, animated: true)

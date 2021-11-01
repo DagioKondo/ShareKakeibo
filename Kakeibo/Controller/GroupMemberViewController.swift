@@ -6,14 +6,20 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import SDWebImage
 
 class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-   
-
+    
     
     @IBOutlet weak var tableView: UITableView!
     
-    var userNameArray = [String]()
+    //追加
+    var db = Firestore.firestore()
+    var loadDBModel = LoadDBModel()
+    var groupID = String()
+    //変更
+    var userNameArray = [MemberSets]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +28,13 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.dataSource = self
         tableView.separatorStyle = .none
         
-        userNameArray = ["大伍","まさし","西","とこ"]
+        //追加
+        groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        loadDBModel.loadGroupMember(groupID: groupID)
+    }
+    //追加
+    func loadGroupMember_OK() {
+        userNameArray = loadDBModel.memberSets
     }
     
     @IBAction func back(_ sender: Any) {
@@ -34,7 +46,7 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-         return 1
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -47,8 +59,10 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         let profileImage = cell.contentView.viewWithTag(2) as! UIImageView
         let userNameLabel = cell.contentView.viewWithTag(3) as! UILabel
         
+        profileImage.sd_setImage(with: URL(string: userNameArray[indexPath.row].profileImage), completed: nil)
         profileImage.layer.cornerRadius = 30
-        userNameLabel.text = userNameArray[indexPath.row]
+        //追加
+        userNameLabel.text = userNameArray[indexPath.row].userName
         cellView!.layer.cornerRadius = 5
         cellView!.layer.masksToBounds = false
         cellView!.layer.cornerRadius = 5
@@ -59,15 +73,36 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         return cell
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // 削除のアクションを設定する
+        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
+            (ctxAction, view, completionHandler) in
+            self.userNameArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        // 削除ボタンのデザインを設定する
+        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
+        deleteAction.image = trashImage
+        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
+        
+        // スワイプでの削除を無効化して設定する
+        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
+        swipeAction.performsFirstActionWithFullSwipe = false
+        
+        return swipeAction
+        
+    }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

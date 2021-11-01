@@ -6,16 +6,25 @@
 //
 
 import UIKit
+import SDWebImage
 
-class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
+    //追加
+    var loadDBModel = LoadDBModel()
+    var myEmail = String()
+    
     var nameArray = ["名前","メールアドレス","パスワード"]
+    var dataNameArray = ["userName","email","password"]
     var loadArray = [String]()
     var sendString = String()
+    var sendData = String()
+    
+    var alertModel = AlertModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +33,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
-        
-        loadArray = ["近藤大伍","daigo.soccer.0106@icloud.com","Daigo0811"]
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,10 +42,22 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }
+        
+        //追加
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadUserInfo(myEmail: myEmail)
+    }
+    
+    //追加
+    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
+        loadArray = [userName,email,password]
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return nameArray.count
+        return loadArray.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -64,15 +84,34 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         sendString = nameArray[indexPath.row]
-        performSegue(withIdentifier: "ProfileConfigurationVC", sender: nil)
+        sendData = dataNameArray[indexPath.row]
+        alertModel.passWordAlert(viewController: self, passWord: loadArray[2])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let ProfileConfigurationVC = segue.destination as! ProfileConfigurationViewController
         ProfileConfigurationVC.receiveTitle = sendString
+        ProfileConfigurationVC.receiveDataName = sendData
+        ProfileConfigurationVC.myEmail = myEmail
     }
 
+    @IBAction func profileImageView(_ sender: UITapGestureRecognizer) {
+        alertModel.satsueiAlert(viewController: self)
+    }
     
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if info[.editedImage] as? UIImage != nil{
+            let editedImage = info[.editedImage] as! UIImage
+            profileImageView.image = editedImage
+            picker.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+
     @IBAction func back(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }

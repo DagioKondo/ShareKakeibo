@@ -11,8 +11,18 @@
 		860B41BA2722E79800948CE6 /* LivingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41B92722E79800948CE6 /* LivingViewController.swift */; };
 		860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BB2722E7A600948CE6 /* FoodViewController.swift */; };
 		860B41BE2722E7B500948CE6 /* OthersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BD2722E7B500948CE6 /* OthersViewController.swift */; };
-		862AF6FC2729B45700C2B5DC /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 862AF6FB2729B45700C2B5DC /* Profile.storyboard */; };
-		862AF6FE2729B47100C2B5DC /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 862AF6FD2729B47100C2B5DC /* Group.storyboard */; };
+		862AF700272AB98E00C2B5DC /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF6FF272AB98E00C2B5DC /* GraphModel.swift */; };
+		862AF704272B0E3600C2B5DC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */; };
+		862AF708272B1CE400C2B5DC /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF707272B1CE400C2B5DC /* LoginModel.swift */; };
+		862AF70A272B1CFD00C2B5DC /* SendDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF709272B1CFC00C2B5DC /* SendDBModel.swift */; };
+		862AF712272B1D1200C2B5DC /* LoadDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF70B272B1D1200C2B5DC /* LoadDBModel.swift */; };
+		862AF713272B1D1200C2B5DC /* MonthMyDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF70C272B1D1200C2B5DC /* MonthMyDetailsSets.swift */; };
+		862AF714272B1D1200C2B5DC /* NotificationSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF70D272B1D1200C2B5DC /* NotificationSets.swift */; };
+		862AF715272B1D1200C2B5DC /* JoinGroupTrueSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF70E272B1D1200C2B5DC /* JoinGroupTrueSets.swift */; };
+		862AF716272B1D1200C2B5DC /* MonthGroupDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF70F272B1D1200C2B5DC /* MonthGroupDetailsSets.swift */; };
+		862AF717272B1D1200C2B5DC /* MemberSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF710272B1D1200C2B5DC /* MemberSets.swift */; };
+		862AF718272B1D1200C2B5DC /* JoinGroupFalseSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF711272B1D1200C2B5DC /* JoinGroupFalseSets.swift */; };
+		862AF71B272C17A500C2B5DC /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF71A272C17A500C2B5DC /* AlertModel.swift */; };
 		86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */; };
 		86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */; };
 		864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */; };
@@ -56,8 +66,18 @@
 		860B41B92722E79800948CE6 /* LivingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivingViewController.swift; sourceTree = "<group>"; };
 		860B41BB2722E7A600948CE6 /* FoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodViewController.swift; sourceTree = "<group>"; };
 		860B41BD2722E7B500948CE6 /* OthersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OthersViewController.swift; sourceTree = "<group>"; };
-		862AF6FB2729B45700C2B5DC /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
-		862AF6FD2729B47100C2B5DC /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
+		862AF6FF272AB98E00C2B5DC /* GraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
+		862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		862AF707272B1CE400C2B5DC /* LoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		862AF709272B1CFC00C2B5DC /* SendDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDBModel.swift; sourceTree = "<group>"; };
+		862AF70B272B1D1200C2B5DC /* LoadDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDBModel.swift; sourceTree = "<group>"; };
+		862AF70C272B1D1200C2B5DC /* MonthMyDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthMyDetailsSets.swift; sourceTree = "<group>"; };
+		862AF70D272B1D1200C2B5DC /* NotificationSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSets.swift; sourceTree = "<group>"; };
+		862AF70E272B1D1200C2B5DC /* JoinGroupTrueSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupTrueSets.swift; sourceTree = "<group>"; };
+		862AF70F272B1D1200C2B5DC /* MonthGroupDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthGroupDetailsSets.swift; sourceTree = "<group>"; };
+		862AF710272B1D1200C2B5DC /* MemberSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberSets.swift; sourceTree = "<group>"; };
+		862AF711272B1D1200C2B5DC /* JoinGroupFalseSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupFalseSets.swift; sourceTree = "<group>"; };
+		862AF71A272C17A500C2B5DC /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationCell.swift; sourceTree = "<group>"; };
 		86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileConfigurationCell.xib; sourceTree = "<group>"; };
 		864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAnimatedModel.swift; sourceTree = "<group>"; };
@@ -123,6 +143,34 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		862AF719272B1D1800C2B5DC /* loadModel */ = {
+			isa = PBXGroup;
+			children = (
+				862AF711272B1D1200C2B5DC /* JoinGroupFalseSets.swift */,
+				862AF70E272B1D1200C2B5DC /* JoinGroupTrueSets.swift */,
+				862AF70B272B1D1200C2B5DC /* LoadDBModel.swift */,
+				862AF710272B1D1200C2B5DC /* MemberSets.swift */,
+				862AF70F272B1D1200C2B5DC /* MonthGroupDetailsSets.swift */,
+				862AF70C272B1D1200C2B5DC /* MonthMyDetailsSets.swift */,
+				862AF70D272B1D1200C2B5DC /* NotificationSets.swift */,
+			);
+			path = loadModel;
+			sourceTree = "<group>";
+		};
+		862AF71C272C366C00C2B5DC /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				86A038B827197A5C0044803F /* ProfileViewController.swift */,
+				86A038BA27197A6F0044803F /* NotificationViewController.swift */,
+				86A038BC27197A830044803F /* NewGroupViewController.swift */,
+				86A038BE27197A990044803F /* CreateGroupViewController.swift */,
+				86A038C027197AAB0044803F /* SearchViewController.swift */,
+				86A038C227197AD30044803F /* ProfileDetailViewController.swift */,
+				86A038C427197AF50044803F /* ProfileConfigurationViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		865B9CB6271EDBD1000CCFB2 /* PagingController */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +211,7 @@
 				86A0388527102A750044803F /* Assets.xcassets */,
 				86A0388727102A750044803F /* LaunchScreen.storyboard */,
 				86A0388A27102A750044803F /* Info.plist */,
+				862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */,
 			);
 			path = Kakeibo;
 			sourceTree = "<group>";
@@ -172,13 +221,7 @@
 			children = (
 				86A0388027102A740044803F /* LoginViewController.swift */,
 				86A038B627197A430044803F /* RegisterViewController.swift */,
-				86A038B827197A5C0044803F /* ProfileViewController.swift */,
-				86A038BA27197A6F0044803F /* NotificationViewController.swift */,
-				86A038BC27197A830044803F /* NewGroupViewController.swift */,
-				86A038BE27197A990044803F /* CreateGroupViewController.swift */,
-				86A038C027197AAB0044803F /* SearchViewController.swift */,
-				86A038C227197AD30044803F /* ProfileDetailViewController.swift */,
-				86A038C427197AF50044803F /* ProfileConfigurationViewController.swift */,
+				862AF71C272C366C00C2B5DC /* Profile */,
 				86A038C62719AB930044803F /* MonthDataViewController.swift */,
 				86A038C82719ABAF0044803F /* SettlementViewController.swift */,
 				86A038D42719B5860044803F /* AdditionViewController.swift */,
@@ -201,6 +244,11 @@
 				86A0387C27102A740044803F /* AppDelegate.swift */,
 				86A0387E27102A740044803F /* SceneDelegate.swift */,
 				864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */,
+				862AF719272B1D1800C2B5DC /* loadModel */,
+				862AF6FF272AB98E00C2B5DC /* GraphModel.swift */,
+				862AF709272B1CFC00C2B5DC /* SendDBModel.swift */,
+				862AF707272B1CE400C2B5DC /* LoginModel.swift */,
+				862AF71A272C17A500C2B5DC /* AlertModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -213,8 +261,6 @@
 				86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */,
 				865B9CE727216128000CCFB2 /* CollectionViewCell.swift */,
 				865B9CE827216128000CCFB2 /* CollectionViewCell.xib */,
-				862AF6FB2729B45700C2B5DC /* Profile.storyboard */,
-				862AF6FD2729B47100C2B5DC /* Group.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -278,11 +324,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				862AF6FC2729B45700C2B5DC /* Profile.storyboard in Resources */,
 				86A0388927102A750044803F /* LaunchScreen.storyboard in Resources */,
-				862AF6FE2729B47100C2B5DC /* Group.storyboard in Resources */,
 				86A0388627102A750044803F /* Assets.xcassets in Resources */,
 				86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */,
+				862AF704272B0E3600C2B5DC /* GoogleService-Info.plist in Resources */,
 				86A0388427102A740044803F /* Main.storyboard in Resources */,
 				865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */,
 			);
@@ -339,6 +384,9 @@
 			files = (
 				86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */,
 				86A038CB2719ABD80044803F /* DetailThisMonthViewController.swift in Sources */,
+				862AF718272B1D1200C2B5DC /* JoinGroupFalseSets.swift in Sources */,
+				862AF714272B1D1200C2B5DC /* NotificationSets.swift in Sources */,
+				862AF71B272C17A500C2B5DC /* AlertModel.swift in Sources */,
 				86A038D32719B5520044803F /* GroupConfigurationViewController.swift in Sources */,
 				86A038CD2719ABF40044803F /* MonthlyDataViewController.swift in Sources */,
 				86A038D12719B53C0044803F /* GroupDetailViewController.swift in Sources */,
@@ -346,23 +394,31 @@
 				86A038CF2719B3700044803F /* PaymentViewController.swift in Sources */,
 				86A038BD27197A830044803F /* NewGroupViewController.swift in Sources */,
 				865B9CE2271F4D36000CCFB2 /* DetailMyselfViewController.swift in Sources */,
+				862AF712272B1D1200C2B5DC /* LoadDBModel.swift in Sources */,
 				865B9CE0271F4D1B000CCFB2 /* DetailAllViewController.swift in Sources */,
 				86A038BF27197A990044803F /* CreateGroupViewController.swift in Sources */,
 				86A038C127197AAB0044803F /* SearchViewController.swift in Sources */,
 				86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */,
 				860B41BA2722E79800948CE6 /* LivingViewController.swift in Sources */,
+				862AF700272AB98E00C2B5DC /* GraphModel.swift in Sources */,
 				86A038C92719ABAF0044803F /* SettlementViewController.swift in Sources */,
 				864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */,
 				860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */,
 				86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */,
+				862AF713272B1D1200C2B5DC /* MonthMyDetailsSets.swift in Sources */,
 				86A0387D27102A740044803F /* AppDelegate.swift in Sources */,
 				86A038C327197AD30044803F /* ProfileDetailViewController.swift in Sources */,
 				86A038C527197AF50044803F /* ProfileConfigurationViewController.swift in Sources */,
 				86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */,
+				862AF715272B1D1200C2B5DC /* JoinGroupTrueSets.swift in Sources */,
 				865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */,
 				86A038BB27197A6F0044803F /* NotificationViewController.swift in Sources */,
+				862AF708272B1CE400C2B5DC /* LoginModel.swift in Sources */,
+				862AF716272B1D1200C2B5DC /* MonthGroupDetailsSets.swift in Sources */,
 				860B41B82722E78800948CE6 /* OverAllViewController.swift in Sources */,
+				862AF70A272B1CFD00C2B5DC /* SendDBModel.swift in Sources */,
 				86A038B927197A5C0044803F /* ProfileViewController.swift in Sources */,
+				862AF717272B1D1200C2B5DC /* MemberSets.swift in Sources */,
 				86A0387F27102A740044803F /* SceneDelegate.swift in Sources */,
 				86A038B727197A430044803F /* RegisterViewController.swift in Sources */,
 				86A038D52719B5860044803F /* AdditionViewController.swift in Sources */,

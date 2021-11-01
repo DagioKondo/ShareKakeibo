@@ -7,14 +7,11 @@
 
 import UIKit
 import ViewAnimator
+import SDWebImage
+import FirebaseFirestore
 
 
-@objc protocol aaa{
-    
-    @objc optional func bbb(sender:[String])
-}
-
-class SettlementViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
+class SettlementViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate{
     
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -23,8 +20,18 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
     @IBOutlet weak var checkDetailButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
+    //追加
+    var loadDBModel = LoadDBModel()
+    var groupID = String()
+    var myEmail = String()
+    var year = String()
+    var month = String()
+    var db = Firestore.firestore()
+    
     var userNameArray = [String]()
     var profileImageArray = [String]()
+    var settlementArray = [Bool]()
+    var howMuchArray = [Int]()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
@@ -43,7 +50,6 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         checkDetailButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         checkDetailButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
         
-        userNameArray = ["近藤大伍"]//あとで消す
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +61,30 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }
+        //追加
+        groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        let calendar = Calendar(identifier: .gregorian)
+        let date = calendar.dateComponents([.year,.month], from: Date())
+        year = String(date.year!)
+        month = String(date.month!)
+        titleLabel.text = "\(year)" + "年" + "\(month)" + "月分の"
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadGroupMemberSettlement(groupID: groupID, myEmail: myEmail)
+    }
+    //追加
+    //グループの支払い状況の取得完了
+    func loadGroupMemberSettlement_OK(profileImageArray: [String], userNameArray: [String], settlementArray: [Bool], howMuchArray: [Int],userPayment: Int) {
+        if userPayment < 0{
+            userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の受け取りがあります"
+        }else{
+            userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の支払いがあります"
+        }
+        self.profileImageArray = profileImageArray
+        self.userNameArray = userNameArray
+        self.settlementArray = settlementArray
+        self.howMuchArray = howMuchArray
+        tableView.reloadData()
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -68,6 +98,8 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
     @IBAction func settlementCompletionButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
 
+        //追加
+        db.collection(groupID).document(myEmail).updateData(["settlement" : true as Bool])
     }
     
     @IBAction func checkDetailButton(_ sender: Any) {
@@ -97,7 +129,18 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         let howMuchLabel = cell?.contentView.viewWithTag(5) as! UILabel
         
         profileImage.layer.cornerRadius = 30
+        profileImage.sd_setImage(with: URL(string: profileImageArray[indexPath.row]), completed: nil)
         userNameLabel.text = userNameArray[indexPath.row]
+        
+        checkSettlementLabel.layer.cornerRadius = 5
+        if settlementArray[indexPath.row] == true{
+            checkSettlementLabel.text = "決済済み"
+            checkSettlementLabel.backgroundColor = .systemGreen
+        }else{
+            checkSettlementLabel.text = "未決済"
+            checkSettlementLabel.backgroundColor = .systemRed
+        }
+        howMuchLabel.text = String(howMuchArray[indexPath.row])
         cellView.layer.cornerRadius = 5
         cellView.layer.masksToBounds = false
         cellView.layer.cornerRadius = 5

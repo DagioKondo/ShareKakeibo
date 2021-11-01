@@ -6,23 +6,36 @@
 //
 
 import UIKit
+import Charts
 
 
-class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDelegate {
+class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDelegate,LoadOKDelegate {
 
+    //追加
+    var loadDBModel = LoadDBModel()
+    var myEmail = String()
+    var groupID = String()
+    var year = String()
+    var month = String()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     @IBOutlet weak var addPaymentButton: UIButton!
     @IBOutlet weak var configurationButton: UIButton!
     @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var userPaymentThisMonth: UILabel!
-    @IBOutlet weak var groupPaymentOfThisMponth: UILabel!
+    @IBOutlet weak var groupPaymentOfThisMonth: UILabel!
     @IBOutlet weak var paymentAverageOfTithMonth: UILabel!
+    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var groupNameBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var configurationButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var blurView: UIVisualEffectView!
+    
+    @IBOutlet weak var pieChartView: PieChartView!
+    var graphModel = GraphModel()
+    var categorypay = [Int]()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +55,44 @@ class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDeleg
         scrollView.contentInsetAdjustmentBehavior = .never
         blurView.alpha = 0
         
+    }
+    //追加
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let date = calendar.dateComponents([.year,.month], from: Date())
+        year = String(date.year!)
+        month = String(date.month!)
+        groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadGroupName(email: myEmail, groupID: groupID)
+    }
+    //追加
+    //groupName取得完了
+    func loadGroupName_OK(groupName: String) {
+        groupNameLabel.text = groupName
+        loadDBModel.loadCategoryGraphOfTithMonth(groupID: groupID, year: year, month: month)
+    }
+    
+    //グラフに反映するカテゴリ別合計金額取得完了
+    func loadCategoryGraphOfTithMonth_OK(categoryAmountArray: [Int]) {
+        categorypay = categoryAmountArray
+        graphModel.setPieCht(piecht: pieChartView, categorypay: categorypay)
+        loadDBModel.loadNumberOfPeople(groupID: groupID)
+    }
+
+    //グループ人数取得完了
+    func loadNumberOfPeople_OK(numberOfPeople: Int) {
+        loadDBModel.loadMonthTotalAmount(groupID: groupID, year: year, month: month, myEmail: myEmail, numberOfPeople: numberOfPeople)
+    }
+
+    //ログインユーザー決済額、グループの合計出資額、1人当たりの出資額を取得完了
+    func loadMonthTotalAmount_OK(myPaymentOfMonth: Int, groupPaymentOfMonth: Int, paymentAverageOfMonth: Int) {
+        self.userPaymentThisMonth.text = String(myPaymentOfMonth) + "　円"
+        self.groupPaymentOfThisMonth.text = String(groupPaymentOfMonth) + "　円"
+        self.paymentAverageOfTithMonth.text = String(paymentAverageOfMonth) + "　円"
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
