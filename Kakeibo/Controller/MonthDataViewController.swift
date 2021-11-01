@@ -69,6 +69,7 @@ class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDeleg
         loadDBModel.loadOKDelegate = self
         loadDBModel.loadGroupName(email: myEmail, groupID: groupID)
     }
+    
     //追加
     //groupName取得完了
     func loadGroupName_OK(groupName: String) {

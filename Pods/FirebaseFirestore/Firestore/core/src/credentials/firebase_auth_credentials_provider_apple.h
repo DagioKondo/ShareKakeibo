@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef FIRESTORE_CORE_SRC_AUTH_FIREBASE_CREDENTIALS_PROVIDER_APPLE_H_
-#define FIRESTORE_CORE_SRC_AUTH_FIREBASE_CREDENTIALS_PROVIDER_APPLE_H_
+#ifndef FIRESTORE_CORE_SRC_CREDENTIALS_FIREBASE_AUTH_CREDENTIALS_PROVIDER_APPLE_H_
+#define FIRESTORE_CORE_SRC_CREDENTIALS_FIREBASE_AUTH_CREDENTIALS_PROVIDER_APPLE_H_
 
 #if !defined(__OBJC__)
 #error "This header only supports Objective-C++."
@@ -27,8 +27,8 @@
 #include <mutex>  // NOLINT(build/c++11)
 #include <utility>
 
-#include "Firestore/core/src/auth/credentials_provider.h"
-#include "Firestore/core/src/auth/user.h"
+#include "Firestore/core/src/credentials/credentials_provider.h"
+#include "Firestore/core/src/credentials/user.h"
 #include "absl/strings/string_view.h"
 
 @class FIRApp;
@@ -36,7 +36,7 @@
 
 namespace firebase {
 namespace firestore {
-namespace auth {
+namespace credentials {
 
 /**
  * `FirebaseCredentialsProvider` uses Firebase Auth via `FIRApp` to get an auth
@@ -52,7 +52,8 @@ namespace auth {
  *
  * For non-Apple desktop build, this is right now just a stub.
  */
-class FirebaseCredentialsProvider : public CredentialsProvider {
+class FirebaseAuthCredentialsProvider
+    : public CredentialsProvider<AuthToken, User> {
  public:
   // TODO(zxu123): Provide a ctor to accept the C++ Firebase Games App, which
   // deals all platforms. Right now, only works for FIRApp*.
@@ -63,16 +64,15 @@ class FirebaseCredentialsProvider : public CredentialsProvider {
    *            received.
    * @param auth The auth instance from which to get credentials.
    */
-  explicit FirebaseCredentialsProvider(FIRApp* app, id<FIRAuthInterop> auth);
+  explicit FirebaseAuthCredentialsProvider(FIRApp* app,
+                                           id<FIRAuthInterop> auth);
 
-  ~FirebaseCredentialsProvider() override;
+  ~FirebaseAuthCredentialsProvider() override;
 
-  void GetToken(TokenListener completion) override;
+  void GetToken(TokenListener<AuthToken> completion) override;
 
   void SetCredentialChangeListener(
-      CredentialChangeListener change_listener) override;
-
-  void InvalidateToken() override;
+      CredentialChangeListener<User> change_listener) override;
 
  private:
   /**
@@ -102,8 +102,6 @@ class FirebaseCredentialsProvider : public CredentialsProvider {
     int token_counter = 0;
 
     std::mutex mutex;
-
-    bool force_refresh = false;
   };
 
   /**
@@ -115,8 +113,8 @@ class FirebaseCredentialsProvider : public CredentialsProvider {
   std::shared_ptr<Contents> contents_;
 };
 
-}  // namespace auth
+}  // namespace credentials
 }  // namespace firestore
 }  // namespace firebase
 
-#endif  // FIRESTORE_CORE_SRC_AUTH_FIREBASE_CREDENTIALS_PROVIDER_APPLE_H_
+#endif  // FIRESTORE_CORE_SRC_CREDENTIALS_FIREBASE_AUTH_CREDENTIALS_PROVIDER_APPLE_H_

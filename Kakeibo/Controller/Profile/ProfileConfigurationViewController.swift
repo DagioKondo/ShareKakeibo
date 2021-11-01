@@ -16,7 +16,7 @@ class ProfileConfigurationViewController: UIViewController {
     
     //追加
     var db = Firestore.firestore()
-    var myEmail = String()
+    var userID = String()
     var receiveTitle = String()
     var receiveDataName = String()
     
@@ -44,7 +44,7 @@ class ProfileConfigurationViewController: UIViewController {
     @IBAction func saveButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         //追加
-        db.collection("usersManagement").document(myEmail).updateData(["\(receiveDataName)" : "\(textField.text!)"])
+        db.collection("usersManagement").document(userID).updateData(["\(receiveDataName)" : "\(textField.text!)"])
         self.navigationController?.popViewController(animated: true)
     }
     

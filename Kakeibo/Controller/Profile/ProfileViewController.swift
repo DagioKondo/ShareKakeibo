@@ -28,9 +28,10 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     
     var newGroupCountArray = [JoinGroupFalseSets]()
     var loadDBModel = LoadDBModel()
-    var myEmail = String()
+    var userID = String()
     var groupID = String()
     var groupJoinArray = [JoinGroupTrueSets]()
+    var userInfoArray = [String]()
     
     var loginModel = LoginModel()
     var auth = Auth.auth()
@@ -113,15 +114,16 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             configurationTableView.deselectRow(at: congigurationIndexPath, animated: true)
         }
         
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        userID = UserDefaults.standard.object(forKey: "uesrID") as! String
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadUserInfo(myEmail: myEmail)
+        loadDBModel.loadUserInfo(userID: userID)
     }
     
     func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
         profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
         userNameLabel.text = userName
-        loadDBModel.loadGroupInfo(myEmail: myEmail)
+        userInfoArray = [userName,email,password]
+        loadDBModel.loadGroupInfo(userID: userID)
     }
     
     func loadGroupInfo_OK() {
@@ -195,7 +197,6 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }else{
             return groupJoinArray.count
         }
-        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -234,7 +235,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             let groupNameLabel = cell?.contentView.viewWithTag(3) as! UILabel
          
             groupImage.layer.cornerRadius = 30
-            groupImage.sd_setImage(with: URL(string: groupJoinArray[indexPath.row].profileImage), completed: nil)
+            groupImage.sd_setImage(with: URL(string: groupJoinArray[indexPath.row].groupImage), completed: nil)
             groupNameLabel.text = groupJoinArray[indexPath.row].groupName
             cellView.layer.cornerRadius = 5
             cellView.layer.masksToBounds = false
@@ -252,6 +253,8 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         if tableView.tag == 0{
             if indexPath.row == 0{
                 let ProfileDetailVC = storyboard?.instantiateViewController(withIdentifier: "ProfileDetailVC") as! ProfileDetailViewController
+                ProfileDetailVC.userInfoArray = userInfoArray
+                ProfileDetailVC.profileImageView.image = self.profileImageView.image
                 navigationController?.pushViewController(ProfileDetailVC, animated: true)
                 scrollToOriginal()
             }else if indexPath.row == 1{

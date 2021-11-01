@@ -14,7 +14,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
 
     //追加
     var loadDBModel = LoadDBModel()
-    var myEmail = String()
+    var userID = String()
     var groupID = String()
     var day = Int()
     
@@ -39,9 +39,9 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.day], from: Date())
         day = date.day! + 1
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadSettlementNotification(myEmail: myEmail, day: day)
+        loadDBModel.loadSettlementNotification(userID: userID, day: String(day))
     }
     
     //追加

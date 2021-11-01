@@ -62,6 +62,7 @@ class PaymentViewController: UIViewController,UITextFieldDelegate {
         paymentConfirmedButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         paymentConfirmedButton.layer.shadowOpacity = 0.5
         paymentConfirmedButton.layer.shadowRadius = 1
+        
     }
     
     @IBAction func resetButton(_ sender: Any) {

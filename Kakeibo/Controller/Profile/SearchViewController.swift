@@ -1,17 +1,21 @@
 //
-//  SearchViewController.swift
-//  Kakeibo
+//  CollectionViewController.swift
+//  shareKakeibo
 //
-//  Created by 近藤大伍 on 2021/10/15.
+//  Created by nishimaru on 2021/10/26.
+//  Copyright © 2021 nishimaru. All rights reserved.
 //
-
 import UIKit
 import SDWebImage
 
+protocol CollectionDeligate {
+    func SendArray(selectedUserImageArray:[String],emailArray: [String])
+}
 
 
-class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
-   
+class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource {
+    
+    var collectionDeligate:CollectionDeligate?
 
     
     @IBOutlet weak var decideButton: UIButton!
@@ -20,9 +24,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var tableView: UITableView!
     var selectedUserImageArray = [String]() //profile画像のURLが入る
     var emailArray = [String]()
+    var imageArray = ["person","person.fill","pencil","trash","person"]
     var colorArray = [UIColor.blue,UIColor.red,UIColor.green,UIColor.yellow,UIColor.purple] //あとで消す
-
-    
     
     
     override func viewDidLoad() {
@@ -36,8 +39,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
-        
-        selectedUserImageArray = ["person","person.fill","person","person.fill","person"]
+       
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -60,9 +64,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     @objc func tapDeleteButton(_ sender:UIButton){
-//        print(sender.superview?.superview?.superview)
-//        print(sender.superview)
-//        print(sender.superview?.superview)
         let cell = sender.superview?.superview as! UICollectionViewCell
         let indexPath = collectionView.indexPath(for: cell)
         print(indexPath?.row)
@@ -81,16 +82,47 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     
-    @IBAction func decideButton(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return imageArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+         
+        let profileImage = cell.contentView.viewWithTag(1) as! UIImageView
+        let userNameLabel = cell.contentView.viewWithTag(2) as! UILabel
         
+        profileImage.image = UIImage(systemName: imageArray[indexPath.row])
+        
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        selectedUserImageArray.append(imageArray[indexPath.row])
+        imageArray.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        collectionView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 74
+    }
+    
+    @IBAction func decideButton(_ sender: Any) {
+        collectionDeligate?.SendArray(selectedUserImageArray: selectedUserImageArray, emailArray: emailArray)
+        print(selectedUserImageArray)
+        dismiss(animated: true, completion: nil)
     }
     
     
 
     /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
@@ -99,3 +131,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     */
 
 }
+
+    /*
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+

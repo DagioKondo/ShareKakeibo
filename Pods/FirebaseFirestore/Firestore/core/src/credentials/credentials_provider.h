@@ -14,46 +14,52 @@
  * limitations under the License.
  */
 
-#ifndef FIRESTORE_CORE_SRC_AUTH_CREDENTIALS_PROVIDER_H_
-#define FIRESTORE_CORE_SRC_AUTH_CREDENTIALS_PROVIDER_H_
+#ifndef FIRESTORE_CORE_SRC_CREDENTIALS_CREDENTIALS_PROVIDER_H_
+#define FIRESTORE_CORE_SRC_CREDENTIALS_CREDENTIALS_PROVIDER_H_
 
 #include <functional>
 #include <string>
 
 #include "Firestore/core/include/firebase/firestore/firestore_errors.h"
-#include "Firestore/core/src/auth/token.h"
-#include "Firestore/core/src/auth/user.h"
+#include "Firestore/core/src/credentials/auth_token.h"
+#include "Firestore/core/src/credentials/user.h"
 #include "Firestore/core/src/util/statusor.h"
 #include "absl/strings/string_view.h"
 
 namespace firebase {
 namespace firestore {
-namespace auth {
+namespace credentials {
 
 // `TokenErrorListener` is a listener that gets a token or an error.
-using TokenListener = std::function<void(util::StatusOr<Token>)>;
+template <class TokenType>
+using TokenListener = std::function<void(util::StatusOr<TokenType>)>;
 
 // Listener notified with a credential change.
-using CredentialChangeListener = std::function<void(User user)>;
+template <class ValueType>
+using CredentialChangeListener = std::function<void(ValueType)>;
 
 /**
  * Provides methods for getting the uid and token for the current user and
  * listen for changes.
  */
+template <class TokenType, class ValueType>
 class CredentialsProvider {
  public:
-  CredentialsProvider();
+  CredentialsProvider() : change_listener_(nullptr) {
+  }
 
-  virtual ~CredentialsProvider();
+  virtual ~CredentialsProvider() = default;
 
   /** Requests token for the current user. */
-  virtual void GetToken(TokenListener completion) = 0;
+  virtual void GetToken(TokenListener<TokenType> completion) = 0;
 
   /**
    * Marks the last retrieved token as invalid, making the next `GetToken`
    * request force refresh the token.
    */
-  virtual void InvalidateToken() = 0;
+  virtual void InvalidateToken() {
+    force_refresh_ = true;
+  }
 
   /**
    * Sets the listener to be notified of credential changes (sign-in /
@@ -63,7 +69,7 @@ class CredentialsProvider {
    * Call with nullptr to remove previous listener.
    */
   virtual void SetCredentialChangeListener(
-      CredentialChangeListener change_listener) = 0;
+      CredentialChangeListener<ValueType> change_listener) = 0;
 
  protected:
   /**
@@ -73,11 +79,13 @@ class CredentialsProvider {
    * Note that this block will be called back on an arbitrary thread that is not
    * the normal Firestore worker thread.
    */
-  CredentialChangeListener change_listener_;
+  CredentialChangeListener<ValueType> change_listener_;
+
+  bool force_refresh_ = false;
 };
 
-}  // namespace auth
+}  // namespace credentials
 }  // namespace firestore
 }  // namespace firebase
 
-#endif  // FIRESTORE_CORE_SRC_AUTH_CREDENTIALS_PROVIDER_H_
+#endif  // FIRESTORE_CORE_SRC_CREDENTIALS_CREDENTIALS_PROVIDER_H_

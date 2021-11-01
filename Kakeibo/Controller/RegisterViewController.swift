@@ -21,6 +21,7 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     @IBOutlet weak var profileImageView: UIImageView!
     
     var loginModel = LoginModel()
+    var userID = String()
     var myEmail = String()
     var sendDBModel = SendDBModel()
     var alertModel = AlertModel()
@@ -42,7 +43,6 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
         
         view.addSubview(activityIndicatorView)
         
-        
     }
     
     @IBAction func registerButton(_ sender: Any) {
@@ -51,15 +51,15 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     }
     
     func registerOK(userID: String) {
-        myEmail = userID
+        self.userID = userID
         
         let data = profileImageView.image?.jpegData(compressionQuality: 1.0)
         sendDBModel.sendProfileImage(data: data!)
     }
     
-    func sendProfileImage_OK(url: String) {
+    func sendImage_OK(url: String) {
         if url.isEmpty != true{
-            db.collection("usersManagement").document(myEmail).setData(["email" : myEmail, "userName": userNameTextField.text,"password":passwordTextField.text,"profileImage":url])
+            db.collection("usersManagement").document(userID).setData(["email" : myEmail, "userName": userNameTextField.text,"password":passwordTextField.text,"profileImage":url])
             userNameTextField.text = ""
             emailTextField.text = ""
             passwordTextField.text = ""
@@ -72,8 +72,8 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let ProfileVC = segue.destination as! ProfileViewController
-        ProfileVC.myEmail = myEmail
-        UserDefaults.standard.setValue(myEmail, forKey: "myEmail")
+        ProfileVC.userID = userID
+        UserDefaults.standard.setValue(userID, forKey: "userID")
     }
     
     @IBAction func profileImageView(_ sender: UITapGestureRecognizer) {

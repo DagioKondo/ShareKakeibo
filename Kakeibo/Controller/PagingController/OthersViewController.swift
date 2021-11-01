@@ -26,6 +26,7 @@ class OthersViewController: UIViewController {
         
     }
 
+    
     /*
     // MARK: - Navigation
 

@@ -11,38 +11,53 @@ import FirebaseFirestore
 
 @objc protocol LoadOKDelegate {
     @objc optional func loadUserInfo_OK(userName:String,profileImage:String,email:String,password:String)
+    @objc optional func loadUserSearch_OK()
     @objc optional func loadGroupInfo_OK()
-    @objc optional func loadGroupName_OK(groupName:String)
+    @objc optional func loadGroupInfoDelete_OK()
+    @objc optional func loadGroupName_OK(groupName:String,groupImage:String)
     @objc optional func loadSettlementNotification_OK()
     @objc optional func loadMonthDetails_OK()
+    @objc optional func loadMonthDetailsDelete_OK()
     @objc optional func loadCategoryGraphOfTithMonth_OK(categoryAmountArray:[Int])
     @objc optional func loadMonthlyTransition_OK(countArray:[Int])
     @objc optional func loadMonthTotalAmount_OK(myPaymentOfMonth: Int, groupPaymentOfMonth: Int, paymentAverageOfMonth: Int)
     @objc optional func loadNumberOfPeople_OK(numberOfPeople:Int)
+    @objc optional func loadMytotalAmount_OK(myTotalPaymentAmount:Int)
     @objc optional func loadGroupMember_OK()
     @objc optional func loadGroupMemberSettlement_OK(profileImageArray:[String],userNameArray:[String],settlementArray:[Bool],howMuchArray:[Int],userPayment:Int)
     
 }
 
 class LoadDBModel{
-    
+
     var loadOKDelegate:LoadOKDelegate?
     var db = Firestore.firestore()
+    var userSearchSets:[UserSearchSets] = []
     var joinGroupTrueSets:[JoinGroupTrueSets] = []
     var joinGroupFalseSets:[JoinGroupFalseSets] = []
     var notificationSets:[NotificationSets] = []
     var monthMyDetailsSets:[MonthMyDetailsSets] = []
     var monthGroupDetailsSets:[MonthGroupDetailsSets] = []
     var memberSets:[MemberSets] = []
-    var categoryAmountArray = [Int]()
+    var january = 0
+    var february = 0
+    var march = 0
+    var april = 0
+    var may = 0
+    var june = 0
+    var july = 0
+    var august = 0
+    var september = 0
+    var october = 0
+    var november = 0
+    var december = 0
     var countArray = [Int]()
     var numberOfPeople = 0
     
     
-    //userの名前とプロフィール画像の取得するメソッド
-    //メールアドレスで検索するメソッド。メールアドレスと一致するユーザー情報を取得。
-    func loadUserInfo(myEmail:String){
-        db.collection("usersManagement").document(myEmail).addSnapshotListener { (snapShot, error) in
+    //userの情報を取得するメソッド
+    func loadUserInfo(userID:String){
+        db.collection("userManagement").document(userID).addSnapshotListener { (snapShot, error) in
             if error != nil{
                 return
             }
@@ -53,9 +68,30 @@ class LoadDBModel{
         }
     }
     
+    //メールアドレスで検索するメソッド。メールアドレスと一致するユーザー情報を取得。
+    func loadUserSearch(email:String){
+        db.collection("userManagement").whereField("email", isEqualTo: email).addSnapshotListener { (snapShot, error) in
+            self.userSearchSets = []
+            if error != nil{
+                return
+            }
+            if let snapShotDoc = snapShot?.documents{
+                for doc in snapShotDoc{
+                    let data = doc.data()
+                    let userName = data["userName"] as! String
+                    let profileImage = data["profileImage"] as! String
+                    let userID = data["userID"] as! String
+                    let newData = UserSearchSets(userName: userName, profileImage: profileImage, userID: userID)
+                    self.userSearchSets.append(newData)
+                }
+            }
+            self.loadOKDelegate?.loadUserSearch_OK?()
+        }
+    }
+    
     //ルームの参加不参加を取得するメソッド
-    func loadGroupInfo(myEmail:String){
-        db.collection(myEmail).addSnapshotListener { (snapShot, error) in
+    func loadGroupInfo(userID:String){
+        db.collection("groupManagement").whereField("joinGroup", in: [[userID:true],[userID:false]]).addSnapshotListener { (snapShot, error) in
             self.joinGroupTrueSets = []
             self.joinGroupFalseSets = []
             if error != nil{
@@ -64,46 +100,58 @@ class LoadDBModel{
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
                     let data = doc.data()
-                    let joinGroup = data["joinGroup"] as? Bool
+                    let joinGroup = data["joinGroup"] as? Dictionary<String,Bool>
                     let groupName = data["groupName"] as? String
-                    let profileImage = data["profileImage"] as? String
+                    let groupImage = data["groupImage"] as? String
                     let groupID = data["groupID"] as? String
-                    let inviter = data["inviter"] as? String
-                    switch joinGroup {
+                    switch joinGroup![userID] {
                     case true:   //←グループに参加している場合
-                        let newTrue = JoinGroupTrueSets(groupName: groupName!, profileImage: profileImage!, groupID: groupID!)
+                        let newTrue = JoinGroupTrueSets(groupName: groupName!,
+                                                        groupImage: groupImage!, groupID: groupID!)
                         self.joinGroupTrueSets.append(newTrue)
                     case false:  //←グループに参加していない場合
-                        let newFalse = JoinGroupFalseSets(groupName: groupName!, groupID: groupID!, inviter: inviter!)
+                        let newFalse = JoinGroupFalseSets(groupName: groupName!, groupImage: groupImage!, groupID: groupID!)
                         self.joinGroupFalseSets.append(newFalse)
                     default: break
                     }
                 }
-                print("参加の配列")
-                print("\(self.joinGroupTrueSets)")
-                print("不参加の配列")
-                print("\(self.joinGroupFalseSets)")
             }
             self.loadOKDelegate?.loadGroupInfo_OK?()
         }
     }
     
-    //グループ名を取得するロード
-    func loadGroupName(email:String,groupID:String){
-        db.collection(email).document(groupID).addSnapshotListener { (snapShot, error) in
+    //招待を受けているグループで拒否ボタンを押したときのロード
+    func loadGroupInfoDelete(groupID:String,userID:String){
+        db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
+            if error != nil{
+                return
+            }
+            if let data = snapShot?.data(){
+                var joinGroup = data["joinGroup"] as! Dictionary<String,Bool>
+                joinGroup.removeValue(forKey: userID)
+                self.db.collection("groupManagement").document(groupID).updateData(["joinGroup" : joinGroup])
+                self.loadOKDelegate?.loadGroupInfoDelete_OK?()
+            }
+        }
+    }
+    
+    //今見ているグループ名、グループ画像を取得するロード。
+    func loadGroupName(groupID:String){
+        db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
             if error != nil{
                 return
             }
             if let data = snapShot?.data(){
                 let groupName = data["groupName"] as! String
-                self.loadOKDelegate?.loadGroupName_OK?(groupName: groupName)
+                let groupImage = data["groupImage"] as! String
+                self.loadOKDelegate?.loadGroupName_OK?(groupName: groupName, groupImage: groupImage)
             }
         }
     }
     
     //決済日を取得し決済通知するロード
-    func loadSettlementNotification(myEmail:String,day:Int){
-        db.collection(myEmail).addSnapshotListener { (snapShot, error) in
+    func loadSettlementNotification(userID:String,day:String){
+        db.collection("groupManagement").whereField("joinGroup", isEqualTo: [userID:true]).addSnapshotListener { (snapShot, error) in
             self.notificationSets = []
             if error != nil{
                 return
@@ -111,10 +159,10 @@ class LoadDBModel{
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
                     let data = doc.data()
-                    let settlement = data["settlement"] as! Int
+                    let settlementDay = data["settlementDay"] as! String
                     let groupName = data["groupName"] as! String
                     let groupID = data["groupID"] as! String
-                    if settlement == Int(day){
+                    if settlementDay == day{
                         let newData = NotificationSets(groupName: groupName, groupID: groupID)
                         self.notificationSets.append(newData)
                     }
@@ -126,70 +174,89 @@ class LoadDBModel{
     
     //全体の明細のロード(月分)
     //自分の明細のロード(月分)
-    func loadMonthDetails(groupID:String,year:String,month:String,myEmail:String){
-        db.collection(groupID).document("details").collection(year).document(month).addSnapshotListener { (snapShot, error) in
+    func loadMonthDetails(groupID:String,year:String,month:String,userID:String?){
+        if userID == nil{
+            //全体の明細のロード(月分)
+            db.collection(groupID).document("details").collection(year).whereField("paymentMonth", isEqualTo: month).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                self.monthGroupDetailsSets = []
+                if error != nil{
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let profileImage = data["profileImage"] as! String
+                        let productName = data["productName"] as! String
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        let userName = data["userName"] as! String
+                        let paymentDay = data["paymentDay"] as! String
+                        let category = data["category"] as! String
+                        let groupNewData = MonthGroupDetailsSets(profileImage: profileImage, productName: productName, paymentAmount: paymentAmount, userName: userName, paymentDay: paymentDay, category: category)
+                        self.monthGroupDetailsSets.append(groupNewData)
+                    }
+                }
+                self.loadOKDelegate?.loadMonthDetails_OK?()
+            }
+        }else if userID != nil{
+            //自分の明細のロード(月分)
+            db.collection(groupID).document("details").collection(year).whereField("userID", isEqualTo: userID!).whereField("paymentMonth", isEqualTo: month).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                self.monthMyDetailsSets = []
+                if error != nil{
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let profileImage = data["profileImage"] as! String
+                        let productName = data["productName"] as! String
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        let userName = data["userName"] as! String
+                        let paymentDay = data["paymentDay"] as! String
+                        let category = data["category"] as! String
+                        let myNewData = MonthMyDetailsSets(profileImage: profileImage, productName: productName, paymentAmount: paymentAmount, userName: userName, paymentDay: paymentDay, category: category)
+                        self.monthMyDetailsSets.append(myNewData)
+                    }
+                }
+                self.loadOKDelegate?.loadMonthDetails_OK?()
+            }
+        }
+    }
+    
+    //自分の明細を削除したときにロード
+    func loadMonthDetailsDelete(groupID:String,year:String,month:String,userID:String,index:Int){
+        db.collection(groupID).document("details").collection(year).whereField("userID", isEqualTo: userID).whereField("paymentMonth", isEqualTo: month).order(by: "paymentDay").getDocuments { (snapShot, error) in
             self.monthMyDetailsSets = []
-            self.monthGroupDetailsSets = []
-            var count = 0
             if error != nil{
                 return
             }
-            if let data = snapShot?.data(){
-                let profileImageArray = data["profileImageArray"] as! Array<String>
-                let productNameArray = data["productNameArray"] as! Array<String>
-                let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                let userNameArray = data["userNameArray"] as! Array<String>
-                let paymentDayArray = data["paymentDayArray"] as! Array<Int>
-                let categoryArray = data["categoryArray"] as! Array<String>
-                let emailArray = data["emailArray"] as! Array<String>
-                for email in emailArray{
-                    if email == myEmail{
-                        let myNewData = MonthMyDetailsSets(profileImage: profileImageArray[count], paymentName: productNameArray[count], paymentAmount: paymentAmountArray[count], userName: userNameArray[count], paymentDay: paymentDayArray[count], category: categoryArray[count])
+            if let snapShotDoc = snapShot?.documents{
+                var count = 0
+                for doc in snapShotDoc{
+                    let data = doc.data()
+                    let profileImage = data["profileImage"] as! String
+                    let productName = data["productName"] as! String
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let userName = data["userName"] as! String
+                    let paymentDay = data["paymentDay"] as! String
+                    let category = data["category"] as! String
+                    if count == index{
+                        self.db.collection(groupID).document("details").collection(year).document(doc.documentID).delete()
+                    }else{
+                        let myNewData = MonthMyDetailsSets(profileImage: profileImage, productName: productName, paymentAmount: paymentAmount, userName: userName, paymentDay: paymentDay, category: category)
                         self.monthMyDetailsSets.append(myNewData)
                     }
                     count = count + 1
                 }
-                let groupNewData = MonthGroupDetailsSets(profileImageArray: profileImageArray, productNameArray: productNameArray, paymentAmountArray: paymentAmountArray, userNameArray: userNameArray, paymentDayArray: paymentDayArray, categoryArray: categoryArray)
-                self.monthGroupDetailsSets.append(groupNewData)
             }
-            self.loadOKDelegate?.loadMonthDetails_OK?()
+            self.loadOKDelegate?.loadMonthDetailsDelete_OK?()
         }
     }
     
-    func loadMonthDetailsDelete(groupID:String,year:String,month:String,myEmail:String,ID:Int){
-        db.collection(groupID).document("details").collection(year).document(month).addSnapshotListener { (snapShot, error) in
-            self.monthMyDetailsSets = []
-            var count = 0
-            if error != nil{
-                return
-            }
-            if let data = snapShot?.data(){
-                let profileImageArray = data["profileImageArray"] as! Array<String>
-                let productNameArray = data["productNameArray"] as! Array<String>
-                let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                let userNameArray = data["userNameArray"] as! Array<String>
-                let paymentDayArray = data["paymentDayArray"] as! Array<Int>
-                let categoryArray = data["categoryArray"] as! Array<String>
-                let emailArray = data["emailArray"] as! Array<String>
-                for email in emailArray{
-                    if email == myEmail{
-                        let myNewData = MonthMyDetailsSets(profileImage: profileImageArray[count], paymentName: productNameArray[count], paymentAmount: paymentAmountArray[count], userName: userNameArray[count], paymentDay: paymentDayArray[count], category: categoryArray[count])
-                        self.monthMyDetailsSets.append(myNewData)
-                    }
-                    count = count + 1
-                }
-                self.monthMyDetailsSets.remove(at: ID)
-                self.db.collection(groupID).document("details").collection(year).document(month).updateData(["productNameArray" : self.monthMyDetailsSets])
-            }
-            self.loadOKDelegate?.loadMonthDetails_OK?()
-        }
-    }
     
-    //グラフに表示
     //カテゴリ別の合計金額金額
     func loadCategoryGraphOfTithMonth(groupID:String,year:String,month:String){
-        db.collection(groupID).document("details").collection(year).document(month).addSnapshotListener { (snapShot, error) in
-            self.categoryAmountArray = []
+        db.collection(groupID).document("details").collection(year).whereField("paymentMonth", isEqualTo: month).addSnapshotListener { (snapShot, error) in
+            var categoryAmountArray = [Int]()
             var foodCount = 0
             var waterCount = 0
             var electricityCount = 0
@@ -197,148 +264,232 @@ class LoadDBModel{
             var communicationCount = 0
             var rentCount = 0
             var othersCount = 0
-            var count = 0
             if error != nil{
                 return
             }
             
-            if let data = snapShot?.data(){
-                let categoryArray = data["categoryArray"] as! Array<String>
-                let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                for category in categoryArray{
+            if let snapShotDoc = snapShot?.documents{
+                for doc in snapShotDoc{
+                    let data = doc.data()
+                    let category = data["category"] as! String
+                    let paymentAmount = data["paymentAmount"] as! Int
                     switch category {
                     case "食費":
-                        foodCount = foodCount + paymentAmountArray[count]
+                        foodCount = foodCount + paymentAmount
                     case "水道代":
-                        waterCount = waterCount + paymentAmountArray[count]
+                        waterCount = waterCount + paymentAmount
                     case "電気代":
-                        electricityCount = electricityCount + paymentAmountArray[count]
+                        electricityCount = electricityCount + paymentAmount
                     case "ガス代":
-                        gasCount = gasCount + paymentAmountArray[count]
+                        gasCount = gasCount + paymentAmount
                     case "通信費":
-                        communicationCount = communicationCount + paymentAmountArray[count]
+                        communicationCount = communicationCount + paymentAmount
                     case "家賃":
-                        rentCount = rentCount + paymentAmountArray[count]
+                        rentCount = rentCount + paymentAmount
                     case "その他":
-                        othersCount = othersCount + paymentAmountArray[count]
+                        othersCount = othersCount + paymentAmount
                     default:
                         break
                     }
-                    count = count + 1
                 }
-                self.categoryAmountArray = [foodCount,waterCount,electricityCount,gasCount,communicationCount,rentCount,othersCount]
+                categoryAmountArray = [foodCount,waterCount,electricityCount,gasCount,communicationCount,rentCount,othersCount]
             }
-            self.loadOKDelegate?.loadCategoryGraphOfTithMonth_OK?(categoryAmountArray: self.categoryAmountArray)
+            self.loadOKDelegate?.loadCategoryGraphOfTithMonth_OK?(categoryAmountArray: categoryAmountArray)
         }
     }
     
     //1〜12月の全体の推移
     func loadMonthlyAllTransition(groupID:String,year:String){
         db.collection(groupID).document("details").collection(year).addSnapshotListener { (snapShot, error) in
-            self.countArray = [0,0,0,0,0,0,0,0,0,0,0,0]
+            self.countArray = []
+            
             if error != nil{
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
-                    let month = Int(doc.documentID)
                     let data = doc.data()
-                    let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                    let paymentAmount = paymentAmountArray.reduce(0,+)
-                    self.countArray[month! - 1] = paymentAmount
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let paymentMonth = data["paymentMonth"] as! String
+                    switch paymentMonth {
+                    case "1":
+                        self.january = self.january + paymentAmount
+                    case "2":
+                        self.february = self.february + paymentAmount
+                    case "3":
+                        self.march = self.march + paymentAmount
+                    case "4":
+                        self.april = self.april + paymentAmount
+                    case "5":
+                        self.may = self.may + paymentAmount
+                    case "6":
+                        self.june = self.june + paymentAmount
+                    case "7":
+                        self.july = self.july + paymentAmount
+                    case "8":
+                        self.august = self.august + paymentAmount
+                    case "9":
+                        self.september = self.september + paymentAmount
+                    case "10":
+                        self.october = self.october + paymentAmount
+                    case "11":
+                        self.november = self.november + paymentAmount
+                    case "12":
+                        self.december = self.december + paymentAmount
+                    default:
+                        break
+                    }
                 }
             }
+            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとの光熱費の推移
     func loadMonthlyUtilityTransition(groupID:String,year:String){
-        db.collection(groupID).document("details").collection(year).addSnapshotListener { (snapShot, error) in
-            self.countArray = [0,0,0,0,0,0,0,0,0,0,0,0]
+        db.collection(groupID).document("details").collection(year).whereField("category", isEqualTo: "水道代").whereField("category", isEqualTo: "電気代").whereField("category", isEqualTo: "ガス代").addSnapshotListener { (snapShot, error) in
+            self.countArray = []
             if error != nil{
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
-                    var utilityCount = 0
-                    var count = 0
-                    let month = Int(doc.documentID)
                     let data = doc.data()
-                    let categoryArray = data["categoryArray"] as! Array<String>
-                    let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                    for category in categoryArray{
-                        if (category == "水道代") || (category == "電気代") || (category == "ガス代"){
-                            utilityCount = utilityCount + paymentAmountArray[count]
-                        }
-                        count = count + 1
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let paymentMonth = data["paymentMonth"] as! String
+                    switch paymentMonth {
+                    case "1":
+                        self.january = self.january + paymentAmount
+                    case "2":
+                        self.february = self.february + paymentAmount
+                    case "3":
+                        self.march = self.march + paymentAmount
+                    case "4":
+                        self.april = self.april + paymentAmount
+                    case "5":
+                        self.may = self.may + paymentAmount
+                    case "6":
+                        self.june = self.june + paymentAmount
+                    case "7":
+                        self.july = self.july + paymentAmount
+                    case "8":
+                        self.august = self.august + paymentAmount
+                    case "9":
+                        self.september = self.september + paymentAmount
+                    case "10":
+                        self.october = self.october + paymentAmount
+                    case "11":
+                        self.november = self.november + paymentAmount
+                    case "12":
+                        self.december = self.december + paymentAmount
+                    default:
+                        break
                     }
-                    self.countArray[month! - 1] = utilityCount
                 }
             }
+            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとの食費の推移
     func loadMonthlyEatTransition(groupID:String,year:String){
-        db.collection(groupID).document("details").collection(year).addSnapshotListener { (snapShot, error) in
+        db.collection(groupID).document("details").collection(year).whereField("category", isEqualTo: "食費").addSnapshotListener { (snapShot, error) in
             self.countArray = []
             if error != nil{
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
-                    var eatCount = 0
-                    var count = 0
-                    let month = Int(doc.documentID)
                     let data = doc.data()
-                    let categoryArray = data["categoryArray"] as! Array<String>
-                    let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                    for category in categoryArray{
-                        if category == "食費"{
-                            eatCount = eatCount + paymentAmountArray[count]
-                        }
-                        count = count + 1
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let paymentMonth = data["paymentMonth"] as! String
+                    switch paymentMonth {
+                    case "1":
+                        self.january = self.january + paymentAmount
+                    case "2":
+                        self.february = self.february + paymentAmount
+                    case "3":
+                        self.march = self.march + paymentAmount
+                    case "4":
+                        self.april = self.april + paymentAmount
+                    case "5":
+                        self.may = self.may + paymentAmount
+                    case "6":
+                        self.june = self.june + paymentAmount
+                    case "7":
+                        self.july = self.july + paymentAmount
+                    case "8":
+                        self.august = self.august + paymentAmount
+                    case "9":
+                        self.september = self.september + paymentAmount
+                    case "10":
+                        self.october = self.october + paymentAmount
+                    case "11":
+                        self.november = self.november + paymentAmount
+                    case "12":
+                        self.december = self.december + paymentAmount
+                    default:
+                        break
                     }
-                    self.countArray[month! - 1] = eatCount
                 }
             }
+            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとのその他の推移
     func loadMonthlyOthersTransition(groupID:String,year:String){
-        db.collection(groupID).document("details").collection(year).addSnapshotListener { (snapShot, error) in
+        db.collection(groupID).document("details").collection(year).whereField("category", isEqualTo: "通信費").whereField("category", isEqualTo: "家賃").whereField("category", isEqualTo: "その他").addSnapshotListener { (snapShot, error) in
             self.countArray = []
             if error != nil{
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
-                    var othersCount = 0
-                    var count = 0
-                    let month = Int(doc.documentID)
                     let data = doc.data()
-                    let categoryArray = data["categoryArray"] as! Array<String>
-                    let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                    for category in categoryArray{
-                        if (category == "通信費") || (category == "家賃") || (category == "その他"){
-                            othersCount = othersCount + paymentAmountArray[count]
-                        }
-                        count = count + 1
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let paymentMonth = data["paymentMonth"] as! String
+                    switch paymentMonth {
+                    case "1":
+                        self.january = self.january + paymentAmount
+                    case "2":
+                        self.february = self.february + paymentAmount
+                    case "3":
+                        self.march = self.march + paymentAmount
+                    case "4":
+                        self.april = self.april + paymentAmount
+                    case "5":
+                        self.may = self.may + paymentAmount
+                    case "6":
+                        self.june = self.june + paymentAmount
+                    case "7":
+                        self.july = self.july + paymentAmount
+                    case "8":
+                        self.august = self.august + paymentAmount
+                    case "9":
+                        self.september = self.september + paymentAmount
+                    case "10":
+                        self.october = self.october + paymentAmount
+                    case "11":
+                        self.november = self.november + paymentAmount
+                    case "12":
+                        self.december = self.december + paymentAmount
+                    default:
+                        break
                     }
-                    self.countArray[month! - 1] = othersCount
                 }
             }
+            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //グループ人数を取得するロード
     func loadNumberOfPeople(groupID:String){
-        db.collection(groupID).addSnapshotListener { (snapShot, error) in
+        db.collection(groupID).whereField("userName", isEqualTo: true).addSnapshotListener { (snapShot, error) in
             
             if error != nil{
                 return
@@ -350,10 +501,23 @@ class LoadDBModel{
         }
     }
     
+    //今月自分が使った金額を取得するロード
+    func loadMytotalAmount(groupID:String,userID:String){
+        db.collection(groupID).document(userID).getDocument { (snapShot, error) in
+            var myTotalPaymentAmount = 0
+            if error != nil{
+                return
+            }
+            if let data = snapShot?.data(){
+                myTotalPaymentAmount = data["myTotalPaymentAmount"] as! Int
+            }
+            self.loadOKDelegate?.loadMytotalAmount_OK?(myTotalPaymentAmount: myTotalPaymentAmount)
+        }
+    }
+    
     //(自分の支払い合計金額)と(全体の合計金額のロード)と(1人当たりの出資額)のロード(月分)
-    func loadMonthTotalAmount(groupID:String,year:String,month:String,myEmail:String,numberOfPeople:Int){
-        db.collection(groupID).document("details").collection(year).document(month).addSnapshotListener { (snapShot, error) in
-            var count = 0
+    func loadMonthTotalAmount(groupID:String,year:String,month:String,userID:String,numberOfPeople:Int){
+        db.collection(groupID).document("details").collection(year).whereField("paymentMonth", isEqualTo: month).addSnapshotListener { (snapShot, error) in
             var totalMyAmount = 0
             var groupPaymentOfMonth = 0
             var myPaymentOfMonth = 0
@@ -361,46 +525,40 @@ class LoadDBModel{
             if error != nil{
                 return
             }
-            if let data = snapShot?.data(){
-                let paymentAmountArray = data["paymentAmountArray"] as! Array<Int>
-                let emailArray = data["emailArray"] as! Array<String>
-                for email in emailArray{
-                    if email == myEmail{
-                        totalMyAmount = totalMyAmount + paymentAmountArray[count]    //←自分が使ったお金
+            if let snapShotDoc = snapShot?.documents{
+                for doc in snapShotDoc{
+                    let data = doc.data()
+                    let paymentAmount = data["paymentAmount"] as! Int
+                    let myUserID = data["userID"] as! String
+                    if myUserID == userID{
+                        totalMyAmount = totalMyAmount + paymentAmount
+                    }else{
+                        groupPaymentOfMonth = groupPaymentOfMonth + paymentAmount
                     }
-                    count = count + 1
                 }
-                print("合計人数と自分が使った金額")
-                print(numberOfPeople)
-                print(totalMyAmount)
-                
                 //グループの合計金額
-                groupPaymentOfMonth = paymentAmountArray.reduce(0,+)
+                groupPaymentOfMonth = groupPaymentOfMonth + totalMyAmount
                 //1人当たりの合計金額
                 paymentAverageOfMonth = groupPaymentOfMonth / numberOfPeople
                 //自分の支払い合計金額
-                myPaymentOfMonth = groupPaymentOfMonth - totalMyAmount
-                
-                print("自分とグループと1人当たりの合計金額")
-                print(groupPaymentOfMonth)         //←全体が使った合計金額
-                print(paymentAverageOfMonth)       //←1人当たりの合計金額
-                print(myPaymentOfMonth)            //←自分の支払い合計金額
-                self.loadOKDelegate?.loadMonthTotalAmount_OK?(myPaymentOfMonth: myPaymentOfMonth, groupPaymentOfMonth: groupPaymentOfMonth, paymentAverageOfMonth: paymentAverageOfMonth)
+                myPaymentOfMonth = paymentAverageOfMonth - totalMyAmount
             }
+            self.loadOKDelegate?.loadMonthTotalAmount_OK?(myPaymentOfMonth: myPaymentOfMonth, groupPaymentOfMonth: groupPaymentOfMonth, paymentAverageOfMonth: paymentAverageOfMonth)
         }
     }
     
     //グループに所属する人の名前と決済可否を取得するロード
     func loadGroupMember(groupID:String){
         db.collection(groupID).addSnapshotListener { (snapShot, error) in
+            self.memberSets = []
             if error != nil{
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
                     let data = doc.data()
-                    if let userName = data["userName"] as? String,let settlement = data["settlement"] as? Bool,let email = data["email"] as? String,let profileImage = data["profileImage"] as? String{
-                        let newData = MemberSets(userName: userName, settlement: settlement, email: email,profileImage: profileImage)
+                    if let userName = data["userName"] as? String,let settlement = data["settlement"] as? Bool,let userID = data["userID"] as? String{
+                        let newData = MemberSets(userName: userName, settlement: settlement, userID: userID)
                         self.memberSets.append(newData)
                     }
                 }
@@ -411,15 +569,16 @@ class LoadDBModel{
     
     //グループの支払状況のロード
     //(userName)と(決済の可否)と(各メンバーの決済額)と(各メンバーのプロフィール画像)を取得するロード
-    func loadGroupMemberSettlement(groupID:String,myEmail:String){
+    func loadGroupMemberSettlement(groupID:String,userID:String){
         db.collection(groupID).addSnapshotListener { (snapShot, error) in
             var profileImageArray = [String]()
             var userNameArray = [String]()
             var settlementArray = [Bool]()
             var paymentOfPersonArray = Dictionary<String,Int>()
             var howMuchArray = [Int]()
-            var userPayment = Int()
             var totalPaymentAmount = 0
+            var userPayment = Int()
+            
             if error != nil{
                 return
             }
@@ -427,25 +586,61 @@ class LoadDBModel{
                 self.numberOfPeople = snapShotDoc.count
                 for doc in snapShotDoc{
                     let data = doc.data()
-                    if let profileImage = data["profileImage"] as? String,let userName = data["userName"] as? String,let settlement = data["settlement"] as? Bool,let myTotalPaymentAmount = data["myTotalPaymentAmount"] as? Int,let email = data["email"] as? String{
+                    if let profileImage = data["profileImage"] as? String,let userName = data["userName"] as? String,let settlement = data["settlement"] as? Bool,let myTotalPaymentAmount = data["myTotalPaymentAmount"] as? Int,let userID = data["userID"] as? String{
                         profileImageArray.append(profileImage)
                         userNameArray.append(userName)
                         settlementArray.append(settlement)
                         //合計金額
                         totalPaymentAmount = totalPaymentAmount + myTotalPaymentAmount
                         //各メンバーの支払った合計金額の配列
-                        paymentOfPersonArray.updateValue(myTotalPaymentAmount, forKey: email)
+                        paymentOfPersonArray.updateValue(myTotalPaymentAmount, forKey: userID)
                     }
                 }
-                //自分の決済額
-                userPayment = paymentOfPersonArray[myEmail]!
                 //1人当たりの支出額
                 let perPerson = totalPaymentAmount / self.numberOfPeople
                 //各メンバーの決済額の配列
                 howMuchArray = paymentOfPersonArray.map{($1 - perPerson) * -1}
+                //自分の決済額
+                userPayment = paymentOfPersonArray[userID]!
+                userPayment = perPerson - userPayment
             }
             self.loadOKDelegate?.loadGroupMemberSettlement_OK?(profileImageArray: profileImageArray, userNameArray: userNameArray, settlementArray: settlementArray, howMuchArray: howMuchArray, userPayment: userPayment)
         }
     }
+    
+    //プロフィール画像変更するロード
+    func loadProfileImageChange(groupID:String,userID:String,year:String,newProfileImage:String){
+        db.collection(groupID).document(userID).updateData(["profileImage" : newProfileImage])
+        db.collection("usersManagement").document(userID).updateData(["profileImage" : newProfileImage])
+        db.collection(groupID).document("details").collection(year).whereField("userID", isEqualTo: userID).getDocuments { (snapShot, error) in
+            if error != nil{
+                return
+            }
+            if let snapShotDoc = snapShot?.documents{
+                for doc in snapShotDoc{
+                    self.db.collection(groupID).document("details").collection(year).document(doc.documentID).updateData(["profileImage" : newProfileImage])
+                }
+            }
+        }
+    }
+    
+    //ユーザーネーム変更するロード
+    func loadUserNameChange(groupID:String,userID:String,year:String,newUserName:String){
+        db.collection(groupID).document(userID).updateData(["userName" : newUserName])
+        db.collection("usersManagement").document(userID).updateData(["userName" : newUserName])
+        db.collection(groupID).document("details").collection(year).whereField("userID", isEqualTo: userID).getDocuments { (snapShot, error) in
+            if error != nil{
+                return
+            }
+            if let snapShotDoc = snapShot?.documents{
+                for doc in snapShotDoc{
+                    self.db.collection(groupID).document("details").collection(year).document(doc.documentID).updateData(["userName" : newUserName])
+                }
+            }
+        }
+    }
+    
+    
+    
 }
 

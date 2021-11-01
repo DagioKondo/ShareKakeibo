@@ -8,21 +8,18 @@
 import UIKit
 import SDWebImage
 
-class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
-    //追加
-    var loadDBModel = LoadDBModel()
-    var myEmail = String()
-    
     var nameArray = ["名前","メールアドレス","パスワード"]
     var dataNameArray = ["userName","email","password"]
-    var loadArray = [String]()
+    var userInfoArray = [String]()
     var sendString = String()
     var sendData = String()
+    var userID = String()
     
     var alertModel = AlertModel()
     
@@ -33,6 +30,8 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
+        
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
 
     }
     
@@ -43,21 +42,11 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
             tableView.deselectRow(at: indexPath, animated: true)
         }
         
-        //追加
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
-        loadDBModel.loadOKDelegate = self
-        loadDBModel.loadUserInfo(myEmail: myEmail)
     }
     
-    //追加
-    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
-        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
-        loadArray = [userName,email,password]
-        tableView.reloadData()
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return loadArray.count
+        return userInfoArray.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -77,7 +66,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         let imageView = cell.contentView.viewWithTag(3) as! UIImageView
         
         nameLabel.text = nameArray[indexPath.row]
-        loadLabel.text = loadArray[indexPath.row]
+        loadLabel.text = userInfoArray[indexPath.row]
         
         return cell
     }
@@ -85,14 +74,14 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         sendString = nameArray[indexPath.row]
         sendData = dataNameArray[indexPath.row]
-        alertModel.passWordAlert(viewController: self, passWord: loadArray[2])
+        alertModel.passWordAlert(viewController: self, passWord: userInfoArray[2])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let ProfileConfigurationVC = segue.destination as! ProfileConfigurationViewController
         ProfileConfigurationVC.receiveTitle = sendString
         ProfileConfigurationVC.receiveDataName = sendData
-        ProfileConfigurationVC.myEmail = myEmail
+        ProfileConfigurationVC.userID = userID
     }
 
     @IBAction func profileImageView(_ sender: UITapGestureRecognizer) {

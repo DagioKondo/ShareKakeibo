@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-#include "Firestore/core/src/auth/empty_credentials_provider.h"
+#include "Firestore/core/src/credentials/auth_token.h"
+
+#include <utility>
+
+#include "Firestore/core/src/util/hard_assert.h"
 
 namespace firebase {
 namespace firestore {
-namespace auth {
+namespace credentials {
 
-void EmptyCredentialsProvider::GetToken(TokenListener completion) {
-  if (completion) {
-    // Unauthenticated token will force the GRPC fallback to use default
-    // settings.
-    completion(Token::Unauthenticated());
-  }
+AuthToken::AuthToken() : token_{}, user_{User::Unauthenticated()} {
 }
 
-void EmptyCredentialsProvider::SetCredentialChangeListener(
-    CredentialChangeListener change_listener) {
-  if (change_listener) {
-    change_listener(User::Unauthenticated());
-  }
+AuthToken::AuthToken(std::string token, User user)
+    : token_{std::move(token)}, user_{std::move(user)} {
 }
 
-void EmptyCredentialsProvider::InvalidateToken() {
+const std::string& AuthToken::token() const {
+  HARD_ASSERT(user_.is_authenticated());
+  return token_;
 }
 
-}  // namespace auth
+const AuthToken& AuthToken::Unauthenticated() {
+  static const AuthToken kUnauthenticatedToken{};
+  return kUnauthenticatedToken;
+}
+
+}  // namespace credentials
 }  // namespace firestore
 }  // namespace firebase

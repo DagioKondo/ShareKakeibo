@@ -25,6 +25,8 @@ class FoodViewController: UIViewController {
         self.view.addSubview(lineChartsView)
         
     }
+    
+    
     /*
     // MARK: - Navigation
 

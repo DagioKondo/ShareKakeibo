@@ -13,21 +13,21 @@ class MonthlyDataViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let OverAllVC = OverAllViewController()
-        let LivingVC = LivingViewController()
-        let FoodVC = FoodViewController()
-        let OthersVC = OthersViewController()
+        let overAllVC = OverAllViewController()
+        let utilityVC = UtilityViewController()
+        let foodVC = FoodViewController()
+        let othersVC = OthersViewController()
         
-        OverAllVC.title = "グループ全体"
-        LivingVC.title = "個人"
-        FoodVC.title = "食費"
-        OthersVC.title = "その他"
+        overAllVC.title = "全体"
+        utilityVC.title = "光熱費"
+        foodVC.title = "食費"
+        othersVC.title = "その他"
         
         let pagingVC = PagingViewController(viewControllers: [
-            OverAllVC,
-            LivingVC,
-            FoodVC,
-            OthersVC
+            overAllVC,
+            utilityVC,
+            foodVC,
+            othersVC
         ])
      
         self.addChild(pagingVC)
@@ -48,9 +48,9 @@ class MonthlyDataViewController: UIViewController {
         pagingVC.menuItemSize = .selfSizing(estimatedWidth: 80, height: 40)
         pagingVC.menuItemSpacing = 10
         pagingVC.menuHorizontalAlignment = .center
-
         
     }
+    
 
     /*
     // MARK: - Navigation

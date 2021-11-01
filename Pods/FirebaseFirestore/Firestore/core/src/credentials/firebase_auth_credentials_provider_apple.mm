@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "Firestore/core/src/auth/firebase_credentials_provider_apple.h"
+#include "Firestore/core/src/credentials/firebase_auth_credentials_provider_apple.h"
 
 #import "FirebaseCore/Sources/Private/FirebaseCoreInternal.h"
 #import "Interop/Auth/Public/FIRAuthInterop.h"
@@ -26,9 +26,9 @@
 
 namespace firebase {
 namespace firestore {
-namespace auth {
+namespace credentials {
 
-FirebaseCredentialsProvider::FirebaseCredentialsProvider(
+FirebaseAuthCredentialsProvider::FirebaseAuthCredentialsProvider(
     FIRApp* app, id<FIRAuthInterop> auth) {
   contents_ =
       std::make_shared<Contents>(app, auth, User::FromUid([auth getUserID]));
@@ -58,23 +58,21 @@ FirebaseCredentialsProvider::FirebaseCredentialsProvider(
                     user_info[FIRAuthStateDidChangeInternalNotificationUIDKey];
                 contents->current_user = User::FromUid(user_id);
                 contents->token_counter++;
-                CredentialChangeListener listener = change_listener_;
+                CredentialChangeListener<User> listener = change_listener_;
                 if (listener) {
                   listener(contents->current_user);
                 }
               }];
 }
 
-FirebaseCredentialsProvider::~FirebaseCredentialsProvider() {
+FirebaseAuthCredentialsProvider::~FirebaseAuthCredentialsProvider() {
   if (auth_listener_handle_) {
-    // Even though iOS 9 (and later) and macOS 10.11 (and later) keep a weak
-    // reference to the observer so we could avoid this removeObserver call, we
-    // still support iOS 8 which requires it.
     [[NSNotificationCenter defaultCenter] removeObserver:auth_listener_handle_];
   }
 }
 
-void FirebaseCredentialsProvider::GetToken(TokenListener completion) {
+void FirebaseAuthCredentialsProvider::GetToken(
+    TokenListener<AuthToken> completion) {
   HARD_ASSERT(auth_listener_handle_,
               "GetToken cannot be called after listener removed.");
 
@@ -83,56 +81,53 @@ void FirebaseCredentialsProvider::GetToken(TokenListener completion) {
   int initial_token_counter = contents_->token_counter;
 
   std::weak_ptr<Contents> weak_contents = contents_;
-  void (^get_token_callback)(NSString*, NSError*) = ^(
-      NSString* _Nullable token, NSError* _Nullable error) {
-    std::shared_ptr<Contents> contents = weak_contents.lock();
-    if (!contents) {
-      return;
-    }
+  void (^get_token_callback)(NSString*, NSError*) =
+      ^(NSString* _Nullable token, NSError* _Nullable error) {
+        std::shared_ptr<Contents> contents = weak_contents.lock();
+        if (!contents) {
+          return;
+        }
 
-    std::unique_lock<std::mutex> lock(contents->mutex);
-    if (initial_token_counter != contents->token_counter) {
-      // Cancel the request since the user changed while the request was
-      // outstanding so the response is likely for a previous user (which
-      // user, we can't be sure).
-      LOG_DEBUG("GetToken aborted due to token change.");
-      return GetToken(completion);
-    } else {
-      if (error == nil) {
-        if (token != nil) {
-          completion(Token{util::MakeString(token), contents->current_user});
+        std::unique_lock<std::mutex> lock(contents->mutex);
+        if (initial_token_counter != contents->token_counter) {
+          // Cancel the request since the user changed while the request was
+          // outstanding so the response is likely for a previous user (which
+          // user, we can't be sure).
+          LOG_DEBUG("GetToken aborted due to token change.");
+          return GetToken(completion);
         } else {
-          completion(Token::Unauthenticated());
+          if (error == nil) {
+            if (token != nil) {
+              completion(
+                  AuthToken{util::MakeString(token), contents->current_user});
+            } else {
+              completion(AuthToken::Unauthenticated());
+            }
+          } else {
+            Error error_code = Error::kErrorUnknown;
+            if (error.domain == FIRFirestoreErrorDomain) {
+              error_code = static_cast<Error>(error.code);
+            }
+            completion(util::Status(
+                error_code, util::MakeString(error.localizedDescription)));
+          }
         }
-      } else {
-        Error error_code = Error::kErrorUnknown;
-        if (error.domain == FIRFirestoreErrorDomain) {
-          error_code = static_cast<Error>(error.code);
-        }
-        completion(util::Status(error_code,
-                                util::MakeString(error.localizedDescription)));
-      }
-    }
-  };
+      };
 
   // TODO(wilhuff): Need a better abstraction over a missing auth provider.
   if (contents_->auth) {
-    [contents_->auth getTokenForcingRefresh:contents_->force_refresh
+    [contents_->auth getTokenForcingRefresh:force_refresh_
                                withCallback:get_token_callback];
   } else {
     // If there's no Auth provider, call back immediately with a nil
     // (unauthenticated) token.
     get_token_callback(nil, nil);
   }
-  contents_->force_refresh = false;
+  force_refresh_ = false;
 }
 
-void FirebaseCredentialsProvider::InvalidateToken() {
-  contents_->force_refresh = true;
-}
-
-void FirebaseCredentialsProvider::SetCredentialChangeListener(
-    CredentialChangeListener change_listener) {
+void FirebaseAuthCredentialsProvider::SetCredentialChangeListener(
+    CredentialChangeListener<User> change_listener) {
   std::unique_lock<std::mutex> lock(contents_->mutex);
   if (change_listener) {
     HARD_ASSERT(!change_listener_, "set change_listener twice!");
@@ -147,6 +142,6 @@ void FirebaseCredentialsProvider::SetCredentialChangeListener(
   change_listener_ = change_listener;
 }
 
-}  // namespace auth
+}  // namespace credentials
 }  // namespace firestore
 }  // namespace firebase

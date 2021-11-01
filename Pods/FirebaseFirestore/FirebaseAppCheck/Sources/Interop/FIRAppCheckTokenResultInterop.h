@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-#include "Firestore/core/src/auth/user.h"
+#import <Foundation/Foundation.h>
 
-#include <utility>
+NS_ASSUME_NONNULL_BEGIN
 
-#include "Firestore/core/src/util/hard_assert.h"
+@protocol FIRAppCheckTokenResultInterop <NSObject>
 
-namespace firebase {
-namespace firestore {
-namespace auth {
+/// App Check token in the case of success or a dummy token in the case of a failure.
+/// In general, the value of the token should always be set to the request header.
+@property(nonatomic, readonly) NSString *token;
 
-User::User() : is_authenticated_{false} {
-}
+/// A token fetch error in the case of a failure or `nil` in the case of success.
+@property(nonatomic, readonly, nullable) NSError *error;
 
-User::User(std::string uid) : uid_{std::move(uid)}, is_authenticated_{true} {
-  HARD_ASSERT(!uid_.empty());
-}
+@end
 
-const User& User::Unauthenticated() {
-  static const User* kUnauthenticated = new User();
-  return *kUnauthenticated;
-}
-
-}  // namespace auth
-}  // namespace firestore
-}  // namespace firebase
+NS_ASSUME_NONNULL_END

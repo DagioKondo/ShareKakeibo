@@ -36,8 +36,8 @@ class LoginViewController: UIViewController,LoginOKDelegate {
     func loginOK(userID: String) {
         if userID != nil{
             let ProfileVC = storyboard?.instantiateViewController(identifier: "ProfileVC") as! ProfileViewController
-            ProfileVC.myEmail = userID
-            UserDefaults.standard.setValue(userID, forKey: "myEmail")
+            ProfileVC.userID = userID
+            UserDefaults.standard.setValue(userID, forKey: "userID")
             activityIndicatorView.stopAnimating()
             navigationController?.pushViewController(ProfileVC, animated: true)
         }

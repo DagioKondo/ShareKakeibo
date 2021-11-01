@@ -43,13 +43,14 @@ class LoginModel{
                     self.showError(error, showLabel: errorShowLabel)
                     
                 }else{
-                    if let user = result?.user.email{
+                    if let user = result?.user.uid{
                         let userID = String(user)
                         print(userID)
                         self.loginOKDelegate?.loginOK!(userID: userID)
                         emailTextField.text = ""
                         passwordTextField.text = ""
                         errorShowLabel.text = ""
+                        
                     }
                 }
             }
@@ -81,7 +82,7 @@ class LoginModel{
                     self.showError(error, showLabel: errorShowLabel)
                     
                 }else{
-                    if let user = result?.user.email{
+                    if let user = result?.user.uid{
                         let userID = String(user)
                         print(userID)
                         self.loginOKDelegate?.registerOK!(userID: userID)

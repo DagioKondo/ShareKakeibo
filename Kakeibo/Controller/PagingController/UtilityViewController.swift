@@ -8,7 +8,7 @@
 import UIKit
 import Charts
 
-class LivingViewController: UIViewController {
+class UtilityViewController: UIViewController {
 
     var graphModel = GraphModel()
     var yAxisValues = [Int]()

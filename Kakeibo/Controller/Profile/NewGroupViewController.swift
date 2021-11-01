@@ -17,7 +17,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     //追加
     var loadDBModel = LoadDBModel()
     var db = Firestore.firestore()
-    var myEmail = String()
+    var userID = String()
     var groupID = String()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
@@ -40,9 +40,9 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         createGroupButton.layer.shadowRadius = 1
         
         //追加
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        userID = UserDefaults.standard.object(forKey: "myEmail") as! String
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadGroupInfo(myEmail: myEmail)
+        loadDBModel.loadGroupInfo(userID: userID)
     }
     
     //追加
@@ -126,7 +126,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         //追加
         groupID = groupNotJoinArray[indexPath!.row].groupID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
-        db.collection(myEmail).document(groupID).updateData(["joinGroup" : true as Bool])
+        db.collection(userID).document(groupID).updateData(["joinGroup" : true as Bool])
         performSegue(withIdentifier: "TabBarContoller", sender: nil)
     }
     
@@ -134,8 +134,8 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         buttonAnimatedModel.endAnimation(sender: sender)
         
         //追加
-        db.collection(myEmail).document(groupID).delete()
-        loadDBModel.loadGroupInfo(myEmail: myEmail)
+        db.collection(userID).document(groupID).delete()
+        loadDBModel.loadGroupInfo(userID: userID)
     }
     
     
