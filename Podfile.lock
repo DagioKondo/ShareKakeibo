@@ -347,6 +347,7 @@ PODS:
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
+  - CropViewController (2.6.0)
   - Firebase/Auth (8.9.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 8.9.0)
@@ -449,6 +450,7 @@ PODS:
 
 DEPENDENCIES:
   - Charts
+  - CropViewController
   - Firebase/Auth
   - Firebase/Firestore
   - Firebase/Storage
@@ -463,6 +465,7 @@ SPEC REPOS:
     - abseil
     - BoringSSL-GRPC
     - Charts
+    - CropViewController
     - Firebase
     - FirebaseAuth
     - FirebaseCore
@@ -487,6 +490,7 @@ SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
+  CropViewController: 7093b39ec3cb508531b22d35773e06cecd7378d8
   Firebase: 13d8d96499e2635428d5bf0ec675df21f95d9a95
   FirebaseAuth: 2b78b2a32c07b3ecfa4970bdf1d3632b8304099b
   FirebaseCore: 599ee609343eaf4941bd188f85e3aa077ffe325b
@@ -507,6 +511,6 @@ SPEC CHECKSUMS:
   SegementSlide: 83b56ffb66b9c0edc4e4f2a74229309c62915db3
   ViewAnimator: a9ceed80266e00fd435ec4fb99b2df64d580d0e4
 
-PODFILE CHECKSUM: bf4435b1481c86d4a878da4a51557de7f933e22f
+PODFILE CHECKSUM: c4a658ded08b038548d21ed05b33e910528f698b
 
 COCOAPODS: 1.10.2

@@ -6,23 +6,24 @@
 //  Copyright © 2021 nishimaru. All rights reserved.
 //
 import UIKit
+import CropViewController
 
-class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate{
+class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+    
     
     
     //    var collectionDeligate:CollectionDeligate?
     @IBOutlet weak var groupNameTextField: UITextField!
-    @IBOutlet weak var fixedCostTextField: UITextField!
     @IBOutlet weak var settlementTextField: UITextField!
     @IBOutlet weak var searchUserButton: UIButton!
     @IBOutlet weak var createGroupButton: UIButton!
- 
-    
+    @IBOutlet weak var groupImageView: UIImageView!
     @IBOutlet weak var collectionView: UICollectionView!
     
     var selectedUserImageArray = [String]()
-    var colorArray = [UIColor]()
     var emailArray = [String]()
+    
+    var alertModel = AlertModel()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
@@ -78,7 +79,6 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     }
     
     
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
@@ -96,7 +96,6 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
         
         cell.profileImage!.image = UIImage(systemName: selectedUserImageArray[indexPath.row])
-//        cell.profileImage.backgroundColor = colorArray[indexPath.row]
         cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
         print("daigoitemAt")
         print(cell.deleteButton.tag)
@@ -114,7 +113,6 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         selectedUserImageArray.remove(at: indexPath!.row)
         emailArray.remove(at: indexPath!.row)
         print(emailArray)
-//        colorArray.remove(at: indexPath!.row)
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
@@ -128,7 +126,41 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func groupImageView(_ sender: Any) {
+        alertModel.satsueiAlert(viewController: self)
+    }
     
+    @IBAction func groupImageViewButton(_ sender: Any) {
+        alertModel.satsueiAlert(viewController: self)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if info[.originalImage] as? UIImage != nil{
+            let pickerImage = info[.originalImage] as! UIImage
+            let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
+        
+            cropController.delegate = self
+            cropController.customAspectRatio = groupImageView.frame.size
+            //cropBoxのサイズを固定する。
+            cropController.cropView.cropBoxResizeEnabled = false
+            //pickerを閉じたら、cropControllerを表示する。
+            picker.dismiss(animated: true) {
+                self.present(cropController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        //トリミング編集が終えたら、呼び出される。
+        self.groupImageView.image = image
+        cropViewController.dismiss(animated: true, completion: nil)
+    }
+
     
     /*
      // MARK: - Navigation

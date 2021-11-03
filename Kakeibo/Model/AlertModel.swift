@@ -72,7 +72,7 @@ class AlertModel{
         //インスタンスを作成
         let cameraPicker = UIImagePickerController()
         cameraPicker.sourceType = sourceType
-        cameraPicker.allowsEditing = true
+        cameraPicker.allowsEditing = false
         cameraPicker.delegate = CreateImagePicker as! UIImagePickerControllerDelegate & UINavigationControllerDelegate
         CreateImagePicker.present(cameraPicker, animated: true, completion: nil)
         

@@ -20,21 +20,22 @@ class DetailThisMonthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let DetailAllVC = DetailAllViewController()
+        let DetailMyselfVC = DetailMyselfViewController()
         
-        let DetailAllVC = storyboard?.instantiateViewController(identifier: "DetailAllVC")
-        let DetailMyselfVC = storyboard?.instantiateViewController(identifier: "DetailMyselfVC")
-        
-        DetailAllVC?.title = "グループ全体"
-        DetailMyselfVC?.title = "個人"
+        DetailAllVC.title = "グループ全体"
+        DetailMyselfVC.title = "個人"
         
         let pagingVC = PagingViewController(viewControllers: [
-            DetailAllVC!,
-            DetailMyselfVC!
+            DetailAllVC,
+            DetailMyselfVC
         ])
-     
+        
+        
         self.addChild(pagingVC)
         self.view.addSubview(pagingVC.view)
         pagingVC.didMove(toParent: self)
+        
         pagingVC.view.translatesAutoresizingMaskIntoConstraints = false
         pagingVC.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         pagingVC.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -51,8 +52,17 @@ class DetailThisMonthViewController: UIViewController {
         pagingVC.menuItemSpacing = 80
         pagingVC.menuHorizontalAlignment = .center
         
-//        DetailAllVC!.view.frame = CGRect(x: pagingVC.view.frame.minX, y: pagingVC.view.frame.minY, width: pagingVC.view.frame.width, height: pagingVC.view.frame.height - 100)
-//        DetailMyselfVC!.view.frame = pagingVC.view.frame
+        DetailAllVC.tableView.translatesAutoresizingMaskIntoConstraints = false
+        DetailAllVC.tableView.leadingAnchor.constraint(equalTo: DetailAllVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        DetailAllVC.tableView.trailingAnchor.constraint(equalTo: DetailAllVC.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        DetailAllVC.tableView.bottomAnchor.constraint(equalTo: DetailAllVC.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        DetailAllVC.tableView.topAnchor.constraint(equalTo: DetailAllVC.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        DetailMyselfVC.tableView.translatesAutoresizingMaskIntoConstraints = false
+        DetailMyselfVC.tableView.leadingAnchor.constraint(equalTo: DetailMyselfVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        DetailMyselfVC.tableView.trailingAnchor.constraint(equalTo: DetailMyselfVC.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        DetailMyselfVC.tableView.bottomAnchor.constraint(equalTo: DetailMyselfVC.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        DetailMyselfVC.tableView.topAnchor.constraint(equalTo: DetailMyselfVC.view.safeAreaLayoutGuide.topAnchor).isActive = true
         
         addPaymentButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         addPaymentButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
@@ -62,10 +72,6 @@ class DetailThisMonthViewController: UIViewController {
         
         self.view.bringSubviewToFront(addPaymentButton)
 
-        print(UITableViewController().view.frame)
-        print(DetailAllVC!.view.frame)
-        print(DetailMyselfVC!.view.frame)
-        print(pagingVC.view.frame)
     }
     
     override func viewWillAppear(_ animated: Bool) {

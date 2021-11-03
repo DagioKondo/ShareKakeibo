@@ -1,15 +1,17 @@
 //
-//  DetailAllLastMonthViewController.swift
-//  Kakeibo
+//  DetailMyselfViewController.swift
+//  Test
 //
-//  Created by 近藤大伍 on 2021/11/01.
+//  Created by 近藤大伍 on 2021/11/04.
 //
 
 import UIKit
+import Parchment
 
 class DetailAllLastMonthViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
-
-    @IBOutlet weak var tableView: UITableView!
+    
+    
+    var tableView = UITableView()
     var profileArray = [String]()
     var paymentArray = [String]()
     var userNameArray = [String]()
@@ -22,21 +24,16 @@ class DetailAllLastMonthViewController: UIViewController,UITableViewDelegate,UIT
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
-        //        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 83 - 84 - 40)
+        tableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "detailCell")
+        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        self.view.addSubview(tableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-        print(view.safeAreaInsets.bottom)
-        
-        //        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - view.safeAreaInsets.bottom - 49 - 84 - 40)
-    }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 20
     }
@@ -46,12 +43,8 @@ class DetailAllLastMonthViewController: UIViewController,UITableViewDelegate,UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let profileImage = cell.contentView.viewWithTag(2) as! UIImageView
-        let paymentLabel = cell.contentView.viewWithTag(3) as! UILabel
-        let userNameLabel = cell.contentView.viewWithTag(4) as! UILabel
-        let dateLabel = cell.viewWithTag(5) as! UILabel
-        let category = cell.viewWithTag(6) as! UILabel
+        let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
+       
         
         return cell
     }
@@ -90,13 +83,13 @@ class DetailAllLastMonthViewController: UIViewController,UITableViewDelegate,UIT
 //    }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

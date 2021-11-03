@@ -24,7 +24,8 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     
     //追加
     var groupNotJoinArray = [JoinGroupFalseSets]()
-
+    var activityIndicatorView = UIActivityIndicatorView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,8 +41,9 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         createGroupButton.layer.shadowRadius = 1
         
         //追加
-        userID = UserDefaults.standard.object(forKey: "myEmail") as! String
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
+        activityIndicatorView.startAnimating()
         loadDBModel.loadGroupInfo(userID: userID)
     }
     
@@ -49,6 +51,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     func loadGroupInfo_OK() {
         groupNotJoinArray = loadDBModel.joinGroupFalseSets
         tableView.reloadData()
+        activityIndicatorView.stopAnimating()
     }
     
     @objc func touchDown(_ sender:UIButton){

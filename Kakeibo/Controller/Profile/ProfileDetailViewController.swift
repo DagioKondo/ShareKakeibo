@@ -7,9 +7,13 @@
 
 import UIKit
 import SDWebImage
+import CropViewController
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
-class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
-    
+class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate,SendOKDelegate,LoadOKDelegate{
+
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
@@ -22,6 +26,10 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     var userID = String()
     
     var alertModel = AlertModel()
+    var sendDBModel = SendDBModel()
+    var loadDBModel = LoadDBModel()
+    var db = Firestore.firestore()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,17 +98,37 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if info[.editedImage] as? UIImage != nil{
-            let editedImage = info[.editedImage] as! UIImage
-            profileImageView.image = editedImage
-            picker.dismiss(animated: true, completion: nil)
+        if info[.originalImage] as? UIImage != nil{
+            let pickerImage = info[.originalImage] as! UIImage
+            let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
+        
+            cropController.delegate = self
+            cropController.customAspectRatio = profileImageView.frame.size
+            //cropBoxのサイズを固定する。
+            cropController.cropView.cropBoxResizeEnabled = false
+            //pickerを閉じたら、cropControllerを表示する。
+            picker.dismiss(animated: true) {
+                self.present(cropController, animated: true, completion: nil)
+            }
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
-
+    
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        //トリミング編集が終えたら、呼び出される。
+        self.profileImageView.image = image
+        let data = image.jpegData(compressionQuality: 1.0)
+        sendDBModel.sendProfileImage(data: data!)
+        cropViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func sendImage_OK(url: String) {
+        
+    }
+    
     @IBAction func back(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }

@@ -16,5 +16,6 @@ target 'Kakeibo' do
   pod 'Charts'
   pod 'SegementSlide'
   pod 'Parchment'
+  pod 'CropViewController'
 
 end

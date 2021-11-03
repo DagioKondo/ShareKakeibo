@@ -18,20 +18,22 @@ class DetailLastMonthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let DetailAllVC = storyboard?.instantiateViewController(identifier: "DetailAllVC")
-        let DetailMyselfVC = storyboard?.instantiateViewController(identifier: "DetailMyselfVC")
+        let DetailAllLastMonthVC = DetailAllLastMonthViewController()
+        let DetailMyselfLastMonthVC = DetailMyselfLastMonthViewController()
         
-        DetailAllVC?.title = "グループ全体"
-        DetailMyselfVC?.title = "個人"
+        DetailAllLastMonthVC.title = "グループ全体"
+        DetailMyselfLastMonthVC.title = "個人"
         
         let pagingVC = PagingViewController(viewControllers: [
-            DetailAllVC!,
-            DetailMyselfVC!
+            DetailAllLastMonthVC,
+            DetailMyselfLastMonthVC
         ])
-     
+        
+        
         self.addChild(pagingVC)
         self.view.addSubview(pagingVC.view)
         pagingVC.didMove(toParent: self)
+        
         pagingVC.view.translatesAutoresizingMaskIntoConstraints = false
         pagingVC.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         pagingVC.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -48,10 +50,17 @@ class DetailLastMonthViewController: UIViewController {
         pagingVC.menuItemSpacing = 80
         pagingVC.menuHorizontalAlignment = .center
         
-        print(UITableViewController().view.frame)
-        print(DetailAllVC!.view.frame)
-        print(DetailMyselfVC!.view.frame)
-        print(pagingVC.view.frame)
+        DetailAllLastMonthVC.tableView.translatesAutoresizingMaskIntoConstraints = false
+        DetailAllLastMonthVC.tableView.leadingAnchor.constraint(equalTo: DetailAllLastMonthVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        DetailAllLastMonthVC.tableView.trailingAnchor.constraint(equalTo: DetailAllLastMonthVC.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        DetailAllLastMonthVC.tableView.bottomAnchor.constraint(equalTo: DetailAllLastMonthVC.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        DetailAllLastMonthVC.tableView.topAnchor.constraint(equalTo: DetailAllLastMonthVC.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        DetailMyselfLastMonthVC.tableView.translatesAutoresizingMaskIntoConstraints = false
+        DetailMyselfLastMonthVC.tableView.leadingAnchor.constraint(equalTo: DetailMyselfLastMonthVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        DetailMyselfLastMonthVC.tableView.trailingAnchor.constraint(equalTo: DetailMyselfLastMonthVC.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        DetailMyselfLastMonthVC.tableView.bottomAnchor.constraint(equalTo: DetailMyselfLastMonthVC.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        DetailMyselfLastMonthVC.tableView.topAnchor.constraint(equalTo: DetailMyselfLastMonthVC.view.safeAreaLayoutGuide.topAnchor).isActive = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

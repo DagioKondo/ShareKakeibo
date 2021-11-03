@@ -19,6 +19,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     var day = Int()
     
     var notificationArray = [NotificationSets]() //ロードしてきた通知が入る配列
+    var activityIndicatorView = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,10 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
         
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +46,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         day = date.day! + 1
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
+        activityIndicatorView.startAnimating()
         loadDBModel.loadSettlementNotification(userID: userID, day: String(day))
     }
     
@@ -48,6 +54,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     func loadSettlementNotification_OK() {
         notificationArray = loadDBModel.notificationSets
         tableView.reloadData()
+        activityIndicatorView.stopAnimating()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

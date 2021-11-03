@@ -26,6 +26,8 @@
 		8635E83127302B4F00C8DB72 /* DetailAllLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E83027302B4F00C8DB72 /* DetailAllLastMonthViewController.swift */; };
 		8635E83327302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E83227302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift */; };
 		8635E835273051D000C8DB72 /* UserSearchSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E834273051D000C8DB72 /* UserSearchSets.swift */; };
+		8635E8482733245F00C8DB72 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8462733245F00C8DB72 /* DetailCell.swift */; };
+		8635E8492733245F00C8DB72 /* DetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8635E8472733245F00C8DB72 /* DetailCell.xib */; };
 		86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */; };
 		86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */; };
 		864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */; };
@@ -84,6 +86,8 @@
 		8635E83027302B4F00C8DB72 /* DetailAllLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllLastMonthViewController.swift; sourceTree = "<group>"; };
 		8635E83227302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfLastMonthViewController.swift; sourceTree = "<group>"; };
 		8635E834273051D000C8DB72 /* UserSearchSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchSets.swift; sourceTree = "<group>"; };
+		8635E8462733245F00C8DB72 /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
+		8635E8472733245F00C8DB72 /* DetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailCell.xib; sourceTree = "<group>"; };
 		86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationCell.swift; sourceTree = "<group>"; };
 		86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileConfigurationCell.xib; sourceTree = "<group>"; };
 		864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAnimatedModel.swift; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 			isa = PBXGroup;
 			children = (
 				86A0388227102A740044803F /* Main.storyboard */,
+				8635E8462733245F00C8DB72 /* DetailCell.swift */,
+				8635E8472733245F00C8DB72 /* DetailCell.xib */,
 				86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */,
 				86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */,
 				865B9CE727216128000CCFB2 /* CollectionViewCell.swift */,
@@ -345,6 +351,7 @@
 				86A0388627102A750044803F /* Assets.xcassets in Resources */,
 				86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */,
 				862AF704272B0E3600C2B5DC /* GoogleService-Info.plist in Resources */,
+				8635E8492733245F00C8DB72 /* DetailCell.xib in Resources */,
 				86A0388427102A740044803F /* Main.storyboard in Resources */,
 				865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */,
 			);
@@ -431,6 +438,7 @@
 				86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */,
 				865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */,
 				862AF727273000F700C2B5DC /* JoinGroupTrueSets.swift in Sources */,
+				8635E8482733245F00C8DB72 /* DetailCell.swift in Sources */,
 				86A038BB27197A6F0044803F /* NotificationViewController.swift in Sources */,
 				862AF708272B1CE400C2B5DC /* LoginModel.swift in Sources */,
 				8635E83127302B4F00C8DB72 /* DetailAllLastMonthViewController.swift in Sources */,

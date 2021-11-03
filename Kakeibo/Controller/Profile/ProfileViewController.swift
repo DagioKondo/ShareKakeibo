@@ -23,7 +23,6 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var profileView: UIView! //profileImageViewの後ろの白いビュー
     @IBOutlet weak var profileOrangeView: UIView!//profileImageViewの後ろのオレンジのビュー
-    
     @IBOutlet weak var newGroupCountLabel: UILabel!
     
     var newGroupCountArray = [JoinGroupFalseSets]()
@@ -36,6 +35,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     var loginModel = LoginModel()
     var auth = Auth.auth()
     
+    var activityIndicatorView = UIActivityIndicatorView()
     var originalNavigationControllerDelegate: UIGestureRecognizerDelegate?
     
     
@@ -90,6 +90,11 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         scrollView.addSubview(swipeView)
         scrollView.didMoveToSuperview()
         
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
+        
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
@@ -115,6 +120,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }
         
         userID = UserDefaults.standard.object(forKey: "uesrID") as! String
+        activityIndicatorView.startAnimating()
         loadDBModel.loadOKDelegate = self
         loadDBModel.loadUserInfo(userID: userID)
     }
@@ -141,6 +147,8 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
         }
         tableView.reloadData()
+        activityIndicatorView.stopAnimating()
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {

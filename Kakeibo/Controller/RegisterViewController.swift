@@ -8,8 +8,9 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
+import CropViewController
 
-class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate {
    
 
     @IBOutlet weak var registerButton: UIButton!
@@ -40,7 +41,6 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
-        
         view.addSubview(activityIndicatorView)
         
     }
@@ -80,12 +80,21 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
         alertModel.satsueiAlert(viewController: self)
     }
     
+ 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if info[.editedImage] as? UIImage != nil{
-            let editedImage = info[.editedImage] as! UIImage
-            profileImageView.image = editedImage
-            picker.dismiss(animated: true, completion: nil)
+        if info[.originalImage] as? UIImage != nil{
+            let pickerImage = info[.originalImage] as! UIImage
+            let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
+        
+            cropController.delegate = self
+            cropController.customAspectRatio = profileImageView.frame.size
+            //cropBoxのサイズを固定する。
+            cropController.cropView.cropBoxResizeEnabled = false
+            //pickerを閉じたら、cropControllerを表示する。
+            picker.dismiss(animated: true) {
+                self.present(cropController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -93,6 +102,11 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
         picker.dismiss(animated: true, completion: nil)
     }
     
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        //トリミング編集が終えたら、呼び出される。
+        self.profileImageView.image = image
+        cropViewController.dismiss(animated: true, completion: nil)
+    }
     
     
     /*
