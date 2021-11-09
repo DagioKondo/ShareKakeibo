@@ -9,7 +9,7 @@ import UIKit
 import FirebaseFirestore
 import SDWebImage
 
-class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate {
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -19,7 +19,8 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
     var loadDBModel = LoadDBModel()
     var groupID = String()
     //変更
-    var userNameArray = [MemberSets]()
+    var profileImageArray = [String]()
+    var userNameArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,11 +31,13 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         
         //追加
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        loadDBModel.loadOKDelegate = self
         loadDBModel.loadGroupMember(groupID: groupID)
     }
-    //追加
-    func loadGroupMember_OK() {
-        userNameArray = loadDBModel.memberSets
+  
+    func loadGroupMember_OK(profileImageDic: Dictionary<String, String>, userNameDic: Dictionary<String, String>) {
+        self.profileImageArray = Array(profileImageDic.values)
+        self.userNameArray = Array(userNameDic.values)
     }
     
     @IBAction func back(_ sender: Any) {
@@ -59,10 +62,10 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         let profileImage = cell.contentView.viewWithTag(2) as! UIImageView
         let userNameLabel = cell.contentView.viewWithTag(3) as! UILabel
         
-        profileImage.sd_setImage(with: URL(string: userNameArray[indexPath.row].profileImage), completed: nil)
+        profileImage.sd_setImage(with: URL(string: userNameArray[indexPath.row]), completed: nil)
         profileImage.layer.cornerRadius = 30
         //追加
-        userNameLabel.text = userNameArray[indexPath.row].userName
+        userNameLabel.text = userNameArray[indexPath.row]
         cellView!.layer.cornerRadius = 5
         cellView!.layer.masksToBounds = false
         cellView!.layer.cornerRadius = 5
@@ -72,28 +75,28 @@ class GroupMemberViewController: UIViewController, UITableViewDelegate, UITableV
         
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        // 削除のアクションを設定する
-        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
-            (ctxAction, view, completionHandler) in
-            self.userNameArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
-        }
-        // 削除ボタンのデザインを設定する
-        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
-        deleteAction.image = trashImage
-        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
-        
-        // スワイプでの削除を無効化して設定する
-        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
-        swipeAction.performsFirstActionWithFullSwipe = false
-        
-        return swipeAction
-        
-    }
+//
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//
+//        // 削除のアクションを設定する
+//        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
+//            (ctxAction, view, completionHandler) in
+//            self.userNameArray.remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//            completionHandler(true)
+//        }
+//        // 削除ボタンのデザインを設定する
+//        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
+//        deleteAction.image = trashImage
+//        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
+//
+//        // スワイプでの削除を無効化して設定する
+//        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
+//        swipeAction.performsFirstActionWithFullSwipe = false
+//
+//        return swipeAction
+//
+//    }
     
     /*
      // MARK: - Navigation

@@ -9,23 +9,30 @@ import UIKit
 import SDWebImage
 
 protocol CollectionDeligate {
-    func SendArray(selectedUserImageArray:[String],emailArray: [String])
+    func SendArray(selectedUserImageArray:[String],userIDArray: [String])
 }
 
 
-class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource {
+class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate {
     
     var collectionDeligate:CollectionDeligate?
-
     
     @IBOutlet weak var decideButton: UIButton!
     @IBOutlet weak var searchUserTextField: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
+    
+    var loadDBModel = LoadDBModel()
     var selectedUserImageArray = [String]() //profile画像のURLが入る
-    var emailArray = [String]()
-    var imageArray = ["person","person.fill","pencil","trash","person"]
-    var colorArray = [UIColor.blue,UIColor.red,UIColor.green,UIColor.yellow,UIColor.purple] //あとで消す
+    var userIDArray = [String]()
+    var userNameArray = [String]()
+//    var imageArray = ["person","person.fill","pencil","trash","person"]
+    var userSearchSets = [UserSearchSets]()
+    
+    let nothingLabel = UILabel()
+    
+    var activityIndicatorView = UIActivityIndicatorView()
     
     
     override func viewDidLoad() {
@@ -42,6 +49,24 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
        
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.layer.masksToBounds = false
+        tableView.isScrollEnabled = false
+        tableView.layer.shadowOffset = CGSize(width: 0, height: 1)
+        tableView.layer.shadowOpacity = 0.5
+        tableView.layer.shadowRadius = 1
+//        tableView.isHidden = true
+        tableView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        loadDBModel.loadOKDelegate = self
+        
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -54,9 +79,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
-        cell.profileImage!.image = UIImage(systemName: selectedUserImageArray[indexPath.row])
-        cell.profileImage.backgroundColor = colorArray[indexPath.row]
+        cell.profileImage!.sd_setImage(with: URL(string: selectedUserImageArray[indexPath.row]), completed: nil)
         cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
+        cell.userNameLabel.text = userNameArray[indexPath.row]
         print("daigoitemAt")
         print(cell.deleteButton.tag)
         
@@ -68,7 +93,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let indexPath = collectionView.indexPath(for: cell)
         print(indexPath?.row)
         selectedUserImageArray.remove(at: indexPath!.row)
-        colorArray.remove(at: indexPath!.row)
+        userIDArray.remove(at: indexPath!.row)
+        userNameArray.remove(at: indexPath!.row)
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
@@ -83,30 +109,42 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return imageArray.count
+            return userSearchSets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-         
-        let profileImage = cell.contentView.viewWithTag(1) as! UIImageView
-        let userNameLabel = cell.contentView.viewWithTag(2) as! UILabel
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+             
+            let profileImage = cell.contentView.viewWithTag(1) as! UIImageView
+            let userNameLabel = cell.contentView.viewWithTag(2) as! UILabel
+ 
+            profileImage.sd_setImage(with: URL(string: userSearchSets[indexPath.row].profileImage), completed: nil)
+            profileImage.layer.cornerRadius = 30
+            userNameLabel.text = userSearchSets[indexPath.row].userName
         
-        profileImage.image = UIImage(systemName: imageArray[indexPath.row])
-        
-        return cell
+            return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+            return 1
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        selectedUserImageArray.append(imageArray[indexPath.row])
-        imageArray.remove(at: indexPath.row)
+        //        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        nothingLabel.isHidden = true
+        selectedUserImageArray.append(userSearchSets[indexPath.row].profileImage)
+        userIDArray.append(userSearchSets[indexPath.row].userID)
+        userNameArray.append(userSearchSets[indexPath.row].userName)
+        userSearchSets.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.tableView.transform = CGAffineTransform(scaleX: 0, y: 0)
+            self.tableView.alpha = 0
+        }, completion:  { _ in
+            //               self.tableView.isHidden = true
+        })
         collectionView.reloadData()
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -114,13 +152,49 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     @IBAction func decideButton(_ sender: Any) {
-        collectionDeligate?.SendArray(selectedUserImageArray: selectedUserImageArray, emailArray: emailArray)
+        collectionDeligate?.SendArray(selectedUserImageArray: selectedUserImageArray, userIDArray: userIDArray)
         print(selectedUserImageArray)
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func searchUserButton(_ sender: Any) {
+        activityIndicatorView.startAnimating()
+        nothingLabel.isHidden = true
+        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
+    }
     
-
+    func loadUserSearch_OK() {
+        self.userSearchSets = loadDBModel.userSearchSets
+        if userSearchSets.count == 0{
+            view.addSubview(nothingLabel)
+            nothingLabel.isHidden = false
+            nothingLabel.translatesAutoresizingMaskIntoConstraints = false
+            nothingLabel.text = "検索結果がありません"
+            nothingLabel.textAlignment = .center
+            nothingLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            nothingLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 50).isActive = true
+            nothingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            nothingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
+            tableView.reloadData()
+            activityIndicatorView.stopAnimating()
+        }else{
+            nothingLabel.isHidden = true
+            UIView.animate(withDuration: 0.1, animations: {
+                self.tableView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                self.tableView.alpha = 1
+            }, completion:  { _ in
+    //            self.tableView.isHidden = false
+                self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
+                self.tableView.reloadData()
+                self.activityIndicatorView.stopAnimating()
+            })
+        }
+        
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -131,6 +205,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     */
 
 }
+
 
     /*
     // MARK: - Navigation

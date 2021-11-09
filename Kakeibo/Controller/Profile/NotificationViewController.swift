@@ -47,7 +47,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
-        loadDBModel.loadSettlementNotification(userID: userID, day: String(day))
+        loadDBModel.loadSettlementNotification(userID: userID, day: String(day), activityIndicatorView: activityIndicatorView)
     }
     
     //追加

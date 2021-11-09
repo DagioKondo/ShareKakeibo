@@ -11,8 +11,8 @@ import FirebaseFirestore
 import CropViewController
 
 class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate {
-   
-
+    
+    
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -32,7 +32,7 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         registerButton.layer.cornerRadius = 5
         profileImageView.layer.cornerRadius = 108
         loginModel.loginOKDelegate = self
@@ -59,7 +59,13 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     
     func sendImage_OK(url: String) {
         if url.isEmpty != true{
-            db.collection("usersManagement").document(userID).setData(["email" : myEmail, "userName": userNameTextField.text,"password":passwordTextField.text,"profileImage":url])
+            db.collection("userManagement").document(userID).setData([
+                "email" : emailTextField.text,
+                "userName": userNameTextField.text,
+                "password":passwordTextField.text,
+                "profileImage":url,
+                "userID":userID
+            ])
             userNameTextField.text = ""
             emailTextField.text = ""
             passwordTextField.text = ""
@@ -80,13 +86,13 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
         alertModel.satsueiAlert(viewController: self)
     }
     
- 
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if info[.originalImage] as? UIImage != nil{
             let pickerImage = info[.originalImage] as! UIImage
             let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
-        
+            
             cropController.delegate = self
             cropController.customAspectRatio = profileImageView.frame.size
             //cropBoxのサイズを固定する。
@@ -110,13 +116,13 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate,UI
     
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

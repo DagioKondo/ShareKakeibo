@@ -48,39 +48,29 @@ class DetailMyselfLastMonthViewController: UIViewController,UITableViewDelegate,
         
         return cell
     }
-//
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//
-//        // シェアのアクションを設定する
-//        let shareAction = UIContextualAction(style: .normal  , title: "share") {
-//            (ctxAction, view, completionHandler) in
-//            print("シェアを実行する")
-//            completionHandler(true)
-//        }
-//        // シェアボタンのデザインを設定する
-//        let shareImage = UIImage(systemName: "square.and.arrow.up")?.withTintColor(UIColor.white, renderingMode: .alwaysTemplate)
-//        shareAction.image = shareImage
-//        shareAction.backgroundColor = UIColor(red: 0/255, green: 125/255, blue: 255/255, alpha: 1)
-//
-//        // 削除のアクションを設定する
-//        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
-//            (ctxAction, view, completionHandler) in
-//            self.tableData.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//            completionHandler(true)
-//        }
-//        // 削除ボタンのデザインを設定する
-//        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
-//        deleteAction.image = trashImage
-//        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
-//
-//        // スワイプでの削除を無効化して設定する
-//        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction, shareAction])
-//        swipeAction.performsFirstActionWithFullSwipe = false
-//
-//        return swipeAction
-//
-//    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // 削除のアクションを設定する
+        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
+            (ctxAction, view, completionHandler) in
+            self.userNameArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        // 削除ボタンのデザインを設定する
+        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
+        deleteAction.image = trashImage
+        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
+        
+        // スワイプでの削除を無効化して設定する
+        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
+        swipeAction.performsFirstActionWithFullSwipe = false
+        
+        return swipeAction
+        
+    }
+    
     
     /*
      // MARK: - Navigation

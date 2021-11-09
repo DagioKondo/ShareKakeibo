@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class PaymentViewController: UIViewController,UITextFieldDelegate {
+class PaymentViewController: UIViewController,UITextFieldDelegate,LoadOKDelegate {
 
     
     @IBOutlet weak var paymentConfirmedButton: UIButton!
@@ -17,6 +18,18 @@ class PaymentViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var priceTextField: UITextField!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var resetButton: UIButton!
+    
+    //追加
+    var loadDBModel = LoadDBModel()
+    var db = Firestore.firestore()
+    var activityIndicatorView = UIActivityIndicatorView()
+    var groupID = String()
+    var userID = String()
+    let dateFormatter = DateFormatter()
+    var paymentDay = Date()
+    var year = String()
+    var month = String()
+    var myTotalPaymentAmount = Int()
     
     var textFieldCalcArray = [Int]()
     
@@ -35,12 +48,35 @@ class PaymentViewController: UIViewController,UITextFieldDelegate {
         paymentConfirmedButton.layer.cornerRadius = 5
         
         resetButton.layer.cornerRadius = 5
+        
+        //追加
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         priceLabel.text = ""
+        
+        //追加
+        let calendar = Calendar(identifier: .gregorian)
+        let date = calendar.dateComponents([.year,.month], from: Date())
+        year = String(date.year!)
+        month = String(date.month!)
+        groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
+        loadDBModel.loadOKDelegate = self
+        loadDBModel.loadMytotalAmount(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
+    }
+    
+    //追加
+    //今月自分が支払った金額取得完了
+    func loadMytotalAmount_OK(myTotalPaymentAmount: Int) {
+        activityIndicatorView.stopAnimating()
+        self.myTotalPaymentAmount = myTotalPaymentAmount
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -62,6 +98,23 @@ class PaymentViewController: UIViewController,UITextFieldDelegate {
         paymentConfirmedButton.layer.shadowOffset = CGSize(width: 1, height: 1)
         paymentConfirmedButton.layer.shadowOpacity = 0.5
         paymentConfirmedButton.layer.shadowRadius = 1
+        
+        //追加
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        paymentDay = dateFormatter.date(from: "\(year)年\(month)月\(paymentDayTextField.text)日")!
+        
+        //変更
+        if priceLabel.text?.isEmpty == false {
+            myTotalPaymentAmount = myTotalPaymentAmount + Int(priceLabel.text!)!
+            db.collection("groupManagement").document(groupID).setData(["myTotalPaymentAmountDic" : [userID:myTotalPaymentAmount]],merge: true)
+            db.collection(groupID).document().setData(["paymentAmount" : "\(Int(priceLabel.text!))" as String,"productName" : "\(paymentNameTextField.text)" as String,"paymentDay" : paymentDay as Date,"category" : "\(categoryTextField.text)" as String,"userID" : userID as String])
+        }else{
+            //空だった場合の処理をお願いします
+            //ここに来たのは２回目です。elseの処理がわかりません。お願いします。
+            //支払名、カテゴリなどが空だったらどうしましょうか。時間が無いので先進みます。
+        }
         
     }
     

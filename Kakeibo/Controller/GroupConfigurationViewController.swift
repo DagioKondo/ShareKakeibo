@@ -6,18 +6,24 @@
 //
 
 import UIKit
-import FirebaseFirestore
 import CropViewController
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
-class GroupConfigurationViewController: UIViewController,LoadOKDelegate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
-
-    @IBOutlet weak var groupNameTextField: UITextField!
-    @IBOutlet weak var settelementDayTextField: UITextField!
-    @IBOutlet weak var changeButton: UIButton!
-    @IBOutlet weak var groupImageView: UIImageView!
+class GroupConfigurationViewController: UIViewController,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SendOKDelegate{
     
+    
+    @IBOutlet weak var groupNameTextField: UITextField!
+    @IBOutlet weak var settlementTextField: UITextField!
+    @IBOutlet weak var changeGroupButton: UIButton!
+    @IBOutlet weak var groupImageView: UIImageView!
+    @IBOutlet weak var warningLabel: UILabel!
+    
+    var sendDBModel = SendDBModel()
     var db = Firestore.firestore()
-    var myEmail = String()
+    
+    var selectedUserImageArray = [String]()
     var groupID = String()
     
     var alertModel = AlertModel()
@@ -26,11 +32,14 @@ class GroupConfigurationViewController: UIViewController,LoadOKDelegate,CropView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        changeButton.layer.cornerRadius = 5
-        changeButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
-        changeButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+        
+        changeGroupButton.layer.cornerRadius = 5
+        changeGroupButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
+        changeGroupButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+        
+        groupID = UserDefaults.standard.object(forKey: "groupID") as! String
     }
-    
+
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
     }
@@ -39,9 +48,29 @@ class GroupConfigurationViewController: UIViewController,LoadOKDelegate,CropView
         buttonAnimatedModel.endAnimation(sender: sender)
     }
     
-    @IBAction func changeButton(_ sender: Any) {
-        db.collection(myEmail).document(groupID).updateData(["groupName" : "\(groupNameTextField.text)" as String,"settlementDay" : "\(settelementDayTextField.text)" as String])
-        dismiss(animated: true, completion: nil)
+    @IBAction func changeGroupButton(_ sender: Any) {
+        buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
+        if groupNameTextField.text == "" || settlementTextField.text == ""{
+            warningLabel.text = "グループ名と決済日は必須入力です"
+        }else{
+            db.collection("groupManagement").document(groupID).updateData(
+                ["groupName": groupNameTextField.text!,"settlementDay": settlementTextField.text!])
+        }
+        
+        if groupImageView.image != nil{
+            sendDBModel.sendOKDelegate = self
+            let data = groupImageView.image?.jpegData(compressionQuality: 1.0)
+            sendDBModel.sendGroupImage(data: data!)
+        }
+    }
+    
+    func sendImage_OK(url: String) {
+        db.collection("groupManagement").document(groupID).updateData(
+            ["groupImage": url])
+    }
+    
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func groupImageView(_ sender: Any) {
@@ -78,15 +107,16 @@ class GroupConfigurationViewController: UIViewController,LoadOKDelegate,CropView
         self.groupImageView.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }
+
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

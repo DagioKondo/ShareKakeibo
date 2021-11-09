@@ -7,32 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		860B41B82722E78800948CE6 /* OverAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41B72722E78800948CE6 /* OverAllViewController.swift */; };
-		860B41BA2722E79800948CE6 /* UtilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41B92722E79800948CE6 /* UtilityViewController.swift */; };
-		860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BB2722E7A600948CE6 /* FoodViewController.swift */; };
-		860B41BE2722E7B500948CE6 /* OthersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860B41BD2722E7B500948CE6 /* OthersViewController.swift */; };
 		862AF700272AB98E00C2B5DC /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF6FF272AB98E00C2B5DC /* GraphModel.swift */; };
 		862AF704272B0E3600C2B5DC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */; };
 		862AF708272B1CE400C2B5DC /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF707272B1CE400C2B5DC /* LoginModel.swift */; };
 		862AF71B272C17A500C2B5DC /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF71A272C17A500C2B5DC /* AlertModel.swift */; };
-		862AF725273000F700C2B5DC /* SendDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF71D273000F700C2B5DC /* SendDBModel.swift */; };
-		862AF726273000F700C2B5DC /* JoinGroupFalseSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF71E273000F700C2B5DC /* JoinGroupFalseSets.swift */; };
-		862AF727273000F700C2B5DC /* JoinGroupTrueSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF71F273000F700C2B5DC /* JoinGroupTrueSets.swift */; };
-		862AF728273000F700C2B5DC /* LoadDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF720273000F700C2B5DC /* LoadDBModel.swift */; };
-		862AF729273000F700C2B5DC /* MonthMyDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF721273000F700C2B5DC /* MonthMyDetailsSets.swift */; };
-		862AF72A273000F700C2B5DC /* MemberSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF722273000F700C2B5DC /* MemberSets.swift */; };
-		862AF72B273000F700C2B5DC /* NotificationSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF723273000F700C2B5DC /* NotificationSets.swift */; };
-		862AF72C273000F700C2B5DC /* MonthGroupDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862AF724273000F700C2B5DC /* MonthGroupDetailsSets.swift */; };
-		8635E83127302B4F00C8DB72 /* DetailAllLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E83027302B4F00C8DB72 /* DetailAllLastMonthViewController.swift */; };
-		8635E83327302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E83227302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift */; };
-		8635E835273051D000C8DB72 /* UserSearchSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E834273051D000C8DB72 /* UserSearchSets.swift */; };
 		8635E8482733245F00C8DB72 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8462733245F00C8DB72 /* DetailCell.swift */; };
 		8635E8492733245F00C8DB72 /* DetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8635E8472733245F00C8DB72 /* DetailCell.xib */; };
+		8635E873273433F300C8DB72 /* MonthMyDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86A273433F100C8DB72 /* MonthMyDetailsSets.swift */; };
+		8635E874273433F300C8DB72 /* JoinGroupFalseSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86B273433F100C8DB72 /* JoinGroupFalseSets.swift */; };
+		8635E875273433F300C8DB72 /* LoadDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86C273433F200C8DB72 /* LoadDBModel.swift */; };
+		8635E876273433F300C8DB72 /* MonthGroupDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86D273433F200C8DB72 /* MonthGroupDetailsSets.swift */; };
+		8635E877273433F300C8DB72 /* NotificationSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86E273433F200C8DB72 /* NotificationSets.swift */; };
+		8635E878273433F300C8DB72 /* EditDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E86F273433F200C8DB72 /* EditDBModel.swift */; };
+		8635E879273433F300C8DB72 /* SendDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E870273433F200C8DB72 /* SendDBModel.swift */; };
+		8635E87A273433F300C8DB72 /* JoinGroupTrueSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E871273433F300C8DB72 /* JoinGroupTrueSets.swift */; };
+		8635E87B273433F300C8DB72 /* UserSearchSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E872273433F300C8DB72 /* UserSearchSets.swift */; };
+		8635E89C27353A1700C8DB72 /* OthersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E89A27353A1700C8DB72 /* OthersViewController.swift */; };
+		8635E89D27353A1700C8DB72 /* OverAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E89B27353A1700C8DB72 /* OverAllViewController.swift */; };
+		8635E89E27353A1700C8DB72 /* FoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E89927353A1700C8DB72 /* FoodViewController.swift */; };
+		8635E8A027353A1D00C8DB72 /* UtilityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E89F27353A1D00C8DB72 /* UtilityViewController.swift */; };
+		8635E8A527353A2300C8DB72 /* DetailAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8A127353A2200C8DB72 /* DetailAllViewController.swift */; };
+		8635E8A627353A2300C8DB72 /* DetailAllLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8A327353A2300C8DB72 /* DetailAllLastMonthViewController.swift */; };
+		8635E8A727353A2300C8DB72 /* DetailMyselfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8A427353A2300C8DB72 /* DetailMyselfViewController.swift */; };
+		8635E8A827353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8635E8A227353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift */; };
 		86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */; };
 		86388878271AE3E90068AAAC /* ProfileConfigurationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */; };
 		864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */; };
-		865B9CE0271F4D1B000CCFB2 /* DetailAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */; };
-		865B9CE2271F4D36000CCFB2 /* DetailMyselfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */; };
 		865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CE727216128000CCFB2 /* CollectionViewCell.swift */; };
 		865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 865B9CE827216128000CCFB2 /* CollectionViewCell.xib */; };
 		86A0387D27102A740044803F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0387C27102A740044803F /* AppDelegate.swift */; };
@@ -67,32 +67,32 @@
 		289A402C588C13CB13F60481 /* Pods-Kakeibo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kakeibo.debug.xcconfig"; path = "Target Support Files/Pods-Kakeibo/Pods-Kakeibo.debug.xcconfig"; sourceTree = "<group>"; };
 		45F04BDF83913AC2A80BE6F4 /* Pods_Kakeibo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kakeibo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50D7CFA9CF9DBCCEB5F35EF8 /* Pods-Kakeibo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kakeibo.release.xcconfig"; path = "Target Support Files/Pods-Kakeibo/Pods-Kakeibo.release.xcconfig"; sourceTree = "<group>"; };
-		860B41B72722E78800948CE6 /* OverAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverAllViewController.swift; sourceTree = "<group>"; };
-		860B41B92722E79800948CE6 /* UtilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityViewController.swift; sourceTree = "<group>"; };
-		860B41BB2722E7A600948CE6 /* FoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodViewController.swift; sourceTree = "<group>"; };
-		860B41BD2722E7B500948CE6 /* OthersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OthersViewController.swift; sourceTree = "<group>"; };
 		862AF6FF272AB98E00C2B5DC /* GraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
 		862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		862AF707272B1CE400C2B5DC /* LoginModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		862AF71A272C17A500C2B5DC /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
-		862AF71D273000F700C2B5DC /* SendDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDBModel.swift; sourceTree = "<group>"; };
-		862AF71E273000F700C2B5DC /* JoinGroupFalseSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupFalseSets.swift; sourceTree = "<group>"; };
-		862AF71F273000F700C2B5DC /* JoinGroupTrueSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupTrueSets.swift; sourceTree = "<group>"; };
-		862AF720273000F700C2B5DC /* LoadDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDBModel.swift; sourceTree = "<group>"; };
-		862AF721273000F700C2B5DC /* MonthMyDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthMyDetailsSets.swift; sourceTree = "<group>"; };
-		862AF722273000F700C2B5DC /* MemberSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberSets.swift; sourceTree = "<group>"; };
-		862AF723273000F700C2B5DC /* NotificationSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSets.swift; sourceTree = "<group>"; };
-		862AF724273000F700C2B5DC /* MonthGroupDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthGroupDetailsSets.swift; sourceTree = "<group>"; };
-		8635E83027302B4F00C8DB72 /* DetailAllLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllLastMonthViewController.swift; sourceTree = "<group>"; };
-		8635E83227302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfLastMonthViewController.swift; sourceTree = "<group>"; };
-		8635E834273051D000C8DB72 /* UserSearchSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchSets.swift; sourceTree = "<group>"; };
 		8635E8462733245F00C8DB72 /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
 		8635E8472733245F00C8DB72 /* DetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailCell.xib; sourceTree = "<group>"; };
+		8635E86A273433F100C8DB72 /* MonthMyDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthMyDetailsSets.swift; sourceTree = "<group>"; };
+		8635E86B273433F100C8DB72 /* JoinGroupFalseSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupFalseSets.swift; sourceTree = "<group>"; };
+		8635E86C273433F200C8DB72 /* LoadDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDBModel.swift; sourceTree = "<group>"; };
+		8635E86D273433F200C8DB72 /* MonthGroupDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthGroupDetailsSets.swift; sourceTree = "<group>"; };
+		8635E86E273433F200C8DB72 /* NotificationSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSets.swift; sourceTree = "<group>"; };
+		8635E86F273433F200C8DB72 /* EditDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditDBModel.swift; sourceTree = "<group>"; };
+		8635E870273433F200C8DB72 /* SendDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDBModel.swift; sourceTree = "<group>"; };
+		8635E871273433F300C8DB72 /* JoinGroupTrueSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupTrueSets.swift; sourceTree = "<group>"; };
+		8635E872273433F300C8DB72 /* UserSearchSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchSets.swift; sourceTree = "<group>"; };
+		8635E89927353A1700C8DB72 /* FoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodViewController.swift; sourceTree = "<group>"; };
+		8635E89A27353A1700C8DB72 /* OthersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OthersViewController.swift; sourceTree = "<group>"; };
+		8635E89B27353A1700C8DB72 /* OverAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverAllViewController.swift; sourceTree = "<group>"; };
+		8635E89F27353A1D00C8DB72 /* UtilityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityViewController.swift; sourceTree = "<group>"; };
+		8635E8A127353A2200C8DB72 /* DetailAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllViewController.swift; sourceTree = "<group>"; };
+		8635E8A227353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfLastMonthViewController.swift; sourceTree = "<group>"; };
+		8635E8A327353A2300C8DB72 /* DetailAllLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllLastMonthViewController.swift; sourceTree = "<group>"; };
+		8635E8A427353A2300C8DB72 /* DetailMyselfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfViewController.swift; sourceTree = "<group>"; };
 		86388875271AE3E90068AAAC /* ProfileConfigurationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationCell.swift; sourceTree = "<group>"; };
 		86388876271AE3E90068AAAC /* ProfileConfigurationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileConfigurationCell.xib; sourceTree = "<group>"; };
 		864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAnimatedModel.swift; sourceTree = "<group>"; };
-		865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailAllViewController.swift; sourceTree = "<group>"; };
-		865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMyselfViewController.swift; sourceTree = "<group>"; };
 		865B9CE727216128000CCFB2 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		865B9CE827216128000CCFB2 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		86A0387927102A740044803F /* Kakeibo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kakeibo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,15 +156,15 @@
 		862AF719272B1D1800C2B5DC /* loadModel */ = {
 			isa = PBXGroup;
 			children = (
-				862AF71E273000F700C2B5DC /* JoinGroupFalseSets.swift */,
-				862AF71F273000F700C2B5DC /* JoinGroupTrueSets.swift */,
-				862AF720273000F700C2B5DC /* LoadDBModel.swift */,
-				8635E834273051D000C8DB72 /* UserSearchSets.swift */,
-				862AF722273000F700C2B5DC /* MemberSets.swift */,
-				862AF724273000F700C2B5DC /* MonthGroupDetailsSets.swift */,
-				862AF721273000F700C2B5DC /* MonthMyDetailsSets.swift */,
-				862AF723273000F700C2B5DC /* NotificationSets.swift */,
-				862AF71D273000F700C2B5DC /* SendDBModel.swift */,
+				8635E86F273433F200C8DB72 /* EditDBModel.swift */,
+				8635E86B273433F100C8DB72 /* JoinGroupFalseSets.swift */,
+				8635E871273433F300C8DB72 /* JoinGroupTrueSets.swift */,
+				8635E86C273433F200C8DB72 /* LoadDBModel.swift */,
+				8635E86D273433F200C8DB72 /* MonthGroupDetailsSets.swift */,
+				8635E86A273433F100C8DB72 /* MonthMyDetailsSets.swift */,
+				8635E86E273433F200C8DB72 /* NotificationSets.swift */,
+				8635E870273433F200C8DB72 /* SendDBModel.swift */,
+				8635E872273433F300C8DB72 /* UserSearchSets.swift */,
 			);
 			path = loadModel;
 			sourceTree = "<group>";
@@ -183,27 +183,27 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		8635E82F27302B0E00C8DB72 /* Settlement */ = {
+		8635E8A927353A5500C8DB72 /* PagingController */ = {
 			isa = PBXGroup;
 			children = (
-				865B9CDF271F4D1B000CCFB2 /* DetailAllViewController.swift */,
-				865B9CE1271F4D36000CCFB2 /* DetailMyselfViewController.swift */,
-				8635E83027302B4F00C8DB72 /* DetailAllLastMonthViewController.swift */,
-				8635E83227302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift */,
-			);
-			path = Settlement;
-			sourceTree = "<group>";
-		};
-		865B9CB6271EDBD1000CCFB2 /* PagingController */ = {
-			isa = PBXGroup;
-			children = (
-				8635E82F27302B0E00C8DB72 /* Settlement */,
-				860B41B72722E78800948CE6 /* OverAllViewController.swift */,
-				860B41B92722E79800948CE6 /* UtilityViewController.swift */,
-				860B41BB2722E7A600948CE6 /* FoodViewController.swift */,
-				860B41BD2722E7B500948CE6 /* OthersViewController.swift */,
+				8635E89927353A1700C8DB72 /* FoodViewController.swift */,
+				8635E89A27353A1700C8DB72 /* OthersViewController.swift */,
+				8635E89B27353A1700C8DB72 /* OverAllViewController.swift */,
+				8635E89F27353A1D00C8DB72 /* UtilityViewController.swift */,
+				8635E8AA27353A7500C8DB72 /* New Group */,
 			);
 			path = PagingController;
+			sourceTree = "<group>";
+		};
+		8635E8AA27353A7500C8DB72 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+				8635E8A327353A2300C8DB72 /* DetailAllLastMonthViewController.swift */,
+				8635E8A127353A2200C8DB72 /* DetailAllViewController.swift */,
+				8635E8A227353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift */,
+				8635E8A427353A2300C8DB72 /* DetailMyselfViewController.swift */,
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		86A0387027102A740044803F = {
@@ -255,7 +255,7 @@
 				86A038D62719B6A60044803F /* GroupMemberViewController.swift */,
 				86A038D82719C7740044803F /* DetailLastMonthViewController.swift */,
 				86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */,
-				865B9CB6271EDBD1000CCFB2 /* PagingController */,
+				8635E8A927353A5500C8DB72 /* PagingController */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -406,51 +406,51 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8635E8A827353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift in Sources */,
 				86388877271AE3E90068AAAC /* ProfileConfigurationCell.swift in Sources */,
 				86A038CB2719ABD80044803F /* DetailThisMonthViewController.swift in Sources */,
+				8635E874273433F300C8DB72 /* JoinGroupFalseSets.swift in Sources */,
+				8635E877273433F300C8DB72 /* NotificationSets.swift in Sources */,
 				862AF71B272C17A500C2B5DC /* AlertModel.swift in Sources */,
-				862AF72B273000F700C2B5DC /* NotificationSets.swift in Sources */,
 				86A038D32719B5520044803F /* GroupConfigurationViewController.swift in Sources */,
-				862AF726273000F700C2B5DC /* JoinGroupFalseSets.swift in Sources */,
 				86A038CD2719ABF40044803F /* MonthlyDataViewController.swift in Sources */,
+				8635E8A027353A1D00C8DB72 /* UtilityViewController.swift in Sources */,
 				86A038D12719B53C0044803F /* GroupDetailViewController.swift in Sources */,
-				862AF728273000F700C2B5DC /* LoadDBModel.swift in Sources */,
 				86A0388127102A740044803F /* LoginViewController.swift in Sources */,
+				8635E8A627353A2300C8DB72 /* DetailAllLastMonthViewController.swift in Sources */,
 				86A038CF2719B3700044803F /* PaymentViewController.swift in Sources */,
+				8635E878273433F300C8DB72 /* EditDBModel.swift in Sources */,
 				86A038BD27197A830044803F /* NewGroupViewController.swift in Sources */,
-				865B9CE2271F4D36000CCFB2 /* DetailMyselfViewController.swift in Sources */,
-				862AF729273000F700C2B5DC /* MonthMyDetailsSets.swift in Sources */,
-				865B9CE0271F4D1B000CCFB2 /* DetailAllViewController.swift in Sources */,
+				8635E879273433F300C8DB72 /* SendDBModel.swift in Sources */,
 				86A038BF27197A990044803F /* CreateGroupViewController.swift in Sources */,
+				8635E8A527353A2300C8DB72 /* DetailAllViewController.swift in Sources */,
 				86A038C127197AAB0044803F /* SearchViewController.swift in Sources */,
-				862AF72C273000F700C2B5DC /* MonthGroupDetailsSets.swift in Sources */,
 				86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */,
-				860B41BA2722E79800948CE6 /* UtilityViewController.swift in Sources */,
 				862AF700272AB98E00C2B5DC /* GraphModel.swift in Sources */,
 				86A038C92719ABAF0044803F /* SettlementViewController.swift in Sources */,
+				8635E89D27353A1700C8DB72 /* OverAllViewController.swift in Sources */,
 				864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */,
-				860B41BC2722E7A600948CE6 /* FoodViewController.swift in Sources */,
-				8635E83327302B6800C8DB72 /* DetailMyselfLastMonthViewController.swift in Sources */,
+				8635E89E27353A1700C8DB72 /* FoodViewController.swift in Sources */,
+				8635E875273433F300C8DB72 /* LoadDBModel.swift in Sources */,
 				86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */,
 				86A0387D27102A740044803F /* AppDelegate.swift in Sources */,
 				86A038C327197AD30044803F /* ProfileDetailViewController.swift in Sources */,
+				8635E89C27353A1700C8DB72 /* OthersViewController.swift in Sources */,
 				86A038C527197AF50044803F /* ProfileConfigurationViewController.swift in Sources */,
+				8635E876273433F300C8DB72 /* MonthGroupDetailsSets.swift in Sources */,
 				86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */,
+				8635E87B273433F300C8DB72 /* UserSearchSets.swift in Sources */,
 				865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */,
-				862AF727273000F700C2B5DC /* JoinGroupTrueSets.swift in Sources */,
 				8635E8482733245F00C8DB72 /* DetailCell.swift in Sources */,
+				8635E8A727353A2300C8DB72 /* DetailMyselfViewController.swift in Sources */,
 				86A038BB27197A6F0044803F /* NotificationViewController.swift in Sources */,
 				862AF708272B1CE400C2B5DC /* LoginModel.swift in Sources */,
-				8635E83127302B4F00C8DB72 /* DetailAllLastMonthViewController.swift in Sources */,
-				860B41B82722E78800948CE6 /* OverAllViewController.swift in Sources */,
-				862AF72A273000F700C2B5DC /* MemberSets.swift in Sources */,
+				8635E87A273433F300C8DB72 /* JoinGroupTrueSets.swift in Sources */,
+				8635E873273433F300C8DB72 /* MonthMyDetailsSets.swift in Sources */,
 				86A038B927197A5C0044803F /* ProfileViewController.swift in Sources */,
 				86A0387F27102A740044803F /* SceneDelegate.swift in Sources */,
 				86A038B727197A430044803F /* RegisterViewController.swift in Sources */,
-				8635E835273051D000C8DB72 /* UserSearchSets.swift in Sources */,
 				86A038D52719B5860044803F /* AdditionViewController.swift in Sources */,
-				862AF725273000F700C2B5DC /* SendDBModel.swift in Sources */,
-				860B41BE2722E7B500948CE6 /* OthersViewController.swift in Sources */,
 				86A038C72719AB940044803F /* MonthDataViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

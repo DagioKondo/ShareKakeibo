@@ -7,21 +7,30 @@
 //
 import UIKit
 import CropViewController
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
-class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SendOKDelegate{
     
     
     
-    //    var collectionDeligate:CollectionDeligate?
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var settlementTextField: UITextField!
     @IBOutlet weak var searchUserButton: UIButton!
     @IBOutlet weak var createGroupButton: UIButton!
     @IBOutlet weak var groupImageView: UIImageView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var warningLabel: UILabel!
+    
+    var sendDBModel = SendDBModel()
+    var db = Firestore.firestore()
     
     var selectedUserImageArray = [String]()
-    var emailArray = [String]()
+    var userIDArray = [String]()
+    var userID = String()
+    var userName = String()
+    var profileImage = String()
     
     var alertModel = AlertModel()
     
@@ -46,9 +55,8 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         layout.scrollDirection = .horizontal
         collectionView.collectionViewLayout = layout
         
-        
     }
-
+    
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
     }
@@ -60,7 +68,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     @IBAction func searchUserButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         performSegue(withIdentifier: "searchVC", sender: nil)
-       
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -69,13 +77,13 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     }
     
     
-    func SendArray(selectedUserImageArray: [String],emailArray: [String]) {
+    func SendArray(selectedUserImageArray: [String],userIDArray: [String]) {
         print(selectedUserImageArray)
-        print(emailArray)
+        print(userIDArray)
         self.selectedUserImageArray = selectedUserImageArray
-        self.emailArray = emailArray
+        self.userIDArray = userIDArray
         collectionView.reloadData()
-        print(self.emailArray)
+        print(self.userIDArray)
     }
     
     
@@ -95,7 +103,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
         
-        cell.profileImage!.image = UIImage(systemName: selectedUserImageArray[indexPath.row])
+        cell.profileImage!.sd_setImage(with: URL(string: selectedUserImageArray[indexPath.row]), completed: nil)
         cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
         print("daigoitemAt")
         print(cell.deleteButton.tag)
@@ -104,23 +112,56 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     }
     
     @objc func tapDeleteButton(_ sender:UIButton){
-        //        print(sender.superview?.superview?.superview)
-        //        print(sender.superview)
-        //        print(sender.superview?.superview)
         let cell = sender.superview?.superview as! UICollectionViewCell
         let indexPath = collectionView.indexPath(for: cell)
-        print(indexPath?.row)
         selectedUserImageArray.remove(at: indexPath!.row)
-        emailArray.remove(at: indexPath!.row)
-        print(emailArray)
+        userIDArray.remove(at: indexPath!.row)
+        print(userIDArray)
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
     
     @IBAction func createGroupButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
+        if groupNameTextField.text == "" || settlementTextField.text == ""{
+            warningLabel.text = "グループ名と決済日は必須入力です"
+        }else{
+            userID = UserDefaults.standard.object(forKey: "userID") as! String
+            userName = UserDefaults.standard.object(forKey: "userName") as! String
+            profileImage = UserDefaults.standard.object(forKey: "profileImage") as! String
+            
+            if groupImageView.image == nil{
+                groupImageView.image = UIImage(named: "home2")
+            }
+            sendDBModel.sendOKDelegate = self
+            let data = groupImageView.image?.jpegData(compressionQuality: 1.0)
+            sendDBModel.sendGroupImage(data: data!)
+        }
     }
     
+    func sendImage_OK(url: String) {
+        let groupDocument = db.collection("groupManagement").document()
+        let groupID = groupDocument.documentID
+        UserDefaults.standard.setValue(groupID, forKey: "groupID")
+        
+        db.collection("groupManagement").document(groupID).setData([
+            "groupName": groupNameTextField.text!,
+            "groupImage": url,
+            "settlementDay": settlementTextField.text!,"groupID": groupID,
+            "joinGroupDic":["\(userID)": true] as Dictionary<String,Bool>,
+            "userNameDic":["\(userID)":userName],
+            "settlementDic":["\(userID)":false],
+            "myTotalPaymentAmountDic":["\(userID)":0],
+            "profileImageDic":["\(userID)":profileImage]
+        ])
+        
+        for userID in userIDArray{
+            db.collection("groupManagement").document(groupID).setData([
+                "joinGroupDic":["\(userID)": false]
+            ], merge: true)
+        }
+        navigationController?.popViewController(animated: true)
+    }
     
     @IBAction func back(_ sender: Any) {
         navigationController?.popViewController(animated: true)
@@ -139,7 +180,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         if info[.originalImage] as? UIImage != nil{
             let pickerImage = info[.originalImage] as! UIImage
             let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
-        
+            
             cropController.delegate = self
             cropController.customAspectRatio = groupImageView.frame.size
             //cropBoxのサイズを固定する。
@@ -160,7 +201,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         self.groupImageView.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }
-
+    
     
     /*
      // MARK: - Navigation

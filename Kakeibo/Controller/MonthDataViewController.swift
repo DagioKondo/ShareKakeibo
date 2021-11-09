@@ -7,24 +7,20 @@
 
 import UIKit
 import Charts
+import SDWebImage
 
 
 class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDelegate,LoadOKDelegate {
 
-    //追加
-    var loadDBModel = LoadDBModel()
-    var myEmail = String()
-    var groupID = String()
-    var year = String()
-    var month = String()
-    
-    var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     @IBOutlet weak var addPaymentButton: UIButton!
     @IBOutlet weak var configurationButton: UIButton!
     @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var userPaymentThisMonth: UILabel!
     @IBOutlet weak var groupPaymentOfThisMonth: UILabel!
     @IBOutlet weak var paymentAverageOfTithMonth: UILabel!
+    @IBOutlet weak var groupImageView: UIImageView!
+    //追加
+    @IBOutlet weak var thisMonthLabel: UILabel!
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
@@ -34,7 +30,25 @@ class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDeleg
     
     @IBOutlet weak var pieChartView: PieChartView!
     var graphModel = GraphModel()
-    var categorypay = [Int]()
+    var loadDBModel = LoadDBModel()
+    //追加
+    var activityIndicatorView = UIActivityIndicatorView()
+    //削除
+    //var categorypay = [Int]()
+    //変更
+    var userID = String()
+    
+    var groupID = String()
+    //追加
+    let dateFormatter = DateFormatter()
+    
+    var year = String()
+    var month = String()
+    //追加
+    var startDate = Date()
+    var endDate = Date()
+    //
+    var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
     
     override func viewDidLoad() {
@@ -55,8 +69,20 @@ class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDeleg
         scrollView.contentInsetAdjustmentBehavior = .never
         blurView.alpha = 0
         
+        pieChartView.noDataText = "グラフに表示するテキストがありません"
+        pieChartView.noDataTextColor = .red
+        
+        //追加
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
+        
+//        scrollView.refreshControl = UIRefreshControl()
+//        scrollView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
     }
-    //追加
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -64,33 +90,62 @@ class MonthDataViewController: UIViewController,GoToVcDelegate,UIScrollViewDeleg
         let date = calendar.dateComponents([.year,.month], from: Date())
         year = String(date.year!)
         month = String(date.month!)
+        //追加
+//        thisMonthLabel.text = year + "年" + month + "月分"
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        //変更
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadGroupName(email: myEmail, groupID: groupID)
+        //変更
+        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
+    }
+    
+    @objc func refresh() {
+//        scrollView.refreshControl?.endRefreshing()
     }
     
     //追加
-    //groupName取得完了
-    func loadGroupName_OK(groupName: String) {
-        groupNameLabel.text = groupName
-        loadDBModel.loadCategoryGraphOfTithMonth(groupID: groupID, year: year, month: month)
+    func loadSettlementDay_OK(settlementDay: String) {
+        activityIndicatorView.stopAnimating()
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
+        if month == "12"{
+            endDate = dateFormatter.date(from: "\(String(Int(year)! + 1))年\("1")月\(settlementDay)日")!
+            loadDBModel.loadGroupName(groupID: groupID, activityIndicatorView: activityIndicatorView)
+        }else{
+            endDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! + 1))月\(settlementDay)日")!
+            loadDBModel.loadGroupName(groupID: groupID, activityIndicatorView: activityIndicatorView)
+        }
     }
     
+    //変更
+    //groupName,groupImage取得完了
+    func loadGroup_OK(groupName: String, groupImage: String) {
+        activityIndicatorView.stopAnimating()
+        groupNameLabel.text = groupName
+        groupImageView.sd_setImage(with: URL(string: groupImage), completed: nil)
+        loadDBModel.loadCategoryGraphOfTithMonth(groupID: groupID, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
+    }
+    
+    //変更
     //グラフに反映するカテゴリ別合計金額取得完了
-    func loadCategoryGraphOfTithMonth_OK(categoryAmountArray: [Int]) {
-        categorypay = categoryAmountArray
-        graphModel.setPieCht(piecht: pieChartView, categorypay: categorypay)
-        loadDBModel.loadNumberOfPeople(groupID: groupID)
+    func loadCategoryGraphOfTithMonth_OK(categoryPayArray: [Int]) {
+        activityIndicatorView.stopAnimating()
+        graphModel.setPieCht(piecht: pieChartView, categorypay: categoryPayArray)
+        loadDBModel.loadNumberOfPeople(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
 
     //グループ人数取得完了
     func loadNumberOfPeople_OK(numberOfPeople: Int) {
-        loadDBModel.loadMonthTotalAmount(groupID: groupID, year: year, month: month, myEmail: myEmail, numberOfPeople: numberOfPeople)
+        activityIndicatorView.stopAnimating()
+        loadDBModel.loadMonthTotalAmount(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, numberOfPeople: numberOfPeople, activityIndicatorView: activityIndicatorView)
     }
 
     //ログインユーザー決済額、グループの合計出資額、1人当たりの出資額を取得完了
     func loadMonthTotalAmount_OK(myPaymentOfMonth: Int, groupPaymentOfMonth: Int, paymentAverageOfMonth: Int) {
+        activityIndicatorView.stopAnimating()
         self.userPaymentThisMonth.text = String(myPaymentOfMonth) + "　円"
         self.groupPaymentOfThisMonth.text = String(groupPaymentOfMonth) + "　円"
         self.paymentAverageOfTithMonth.text = String(paymentAverageOfMonth) + "　円"

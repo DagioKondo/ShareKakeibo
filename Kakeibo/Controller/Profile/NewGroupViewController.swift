@@ -8,16 +8,20 @@
 import UIKit
 import FirebaseFirestore
 
-class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate {
-
+class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate, EditOKDelegate {
+    
     
     @IBOutlet weak var createGroupButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
+    var indexPath = IndexPath()
     //追加
     var loadDBModel = LoadDBModel()
+    var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     var userID = String()
+    var userName = String()
+    var profileImage = String()
     var groupID = String()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
@@ -29,7 +33,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
@@ -42,9 +46,11 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         
         //追加
         userID = UserDefaults.standard.object(forKey: "userID") as! String
+        userName = UserDefaults.standard.object(forKey: "userName") as! String
+        profileImage = UserDefaults.standard.object(forKey: "profileImage") as! String
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
-        loadDBModel.loadGroupInfo(userID: userID)
+        loadDBModel.loadGroupInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
     //追加
@@ -122,38 +128,51 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func joinButton(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
-        print(sender.superview?.superview)
-        print(sender.superview?.superview?.superview)
+        
         let cell = sender.superview?.superview?.superview as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)
+        indexPath = tableView.indexPath(for: cell)!
         //追加
-        groupID = groupNotJoinArray[indexPath!.row].groupID
+        groupID = groupNotJoinArray[indexPath.row].groupID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
-        db.collection(userID).document(groupID).updateData(["joinGroup" : true as Bool])
+        db.collection("groupManagement").document(groupID).setData([
+            "joinGroupDic": ["\(userID)": true],
+            "userNameDic": ["\(userID)":userName],
+            "settlementDic" : ["\(userID)": 0],
+            "myTotalPaymentAmountDic" : ["\(userID)": 0],
+            "profileImageDic": ["\(userID)": profileImage]
+        ], merge: true)
         performSegue(withIdentifier: "TabBarContoller", sender: nil)
     }
     
     @objc func rejectButton(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
         
-        //追加
-        db.collection(userID).document(groupID).delete()
-        loadDBModel.loadGroupInfo(userID: userID)
+        let cell = sender.superview?.superview?.superview as! UITableViewCell
+        indexPath = tableView.indexPath(for: cell)!
+        
+        editDBModel.editOKDelegate = self
+        groupID = groupNotJoinArray[indexPath.row].groupID
+        editDBModel.editGroupInfoDelete(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
+    func editGroupInfoDelete_OK() {
+        groupNotJoinArray.remove(at: indexPath.row)
+        tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .automatic)
+        activityIndicatorView.stopAnimating()
+    }
     
     @IBAction func back(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

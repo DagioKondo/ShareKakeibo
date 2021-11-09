@@ -12,7 +12,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
-class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate,SendOKDelegate,LoadOKDelegate{
+class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate,SendOKDelegate,EditOKDelegate{
 
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -27,7 +27,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     
     var alertModel = AlertModel()
     var sendDBModel = SendDBModel()
-    var loadDBModel = LoadDBModel()
+    var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     
     
@@ -38,6 +38,8 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
+        
+        editDBModel.editOKDelegate = self
         
         userID = UserDefaults.standard.object(forKey: "userID") as! String
 
@@ -126,6 +128,10 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func sendImage_OK(url: String) {
+        editDBModel.editProfileImageChange(userID: userID, newProfileImage: url)
+    }
+    
+    func editProfileImageChange_OK() {
         
     }
     

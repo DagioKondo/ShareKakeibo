@@ -14,20 +14,22 @@ import FirebaseFirestore
 class SettlementViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate{
     
     
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var userPaymentOfLastMonth: UILabel!
     @IBOutlet weak var settlementCompletionButton: UIButton!
     @IBOutlet weak var checkDetailButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
-    //追加
     var loadDBModel = LoadDBModel()
+    var db = Firestore.firestore()
+    //追加
+    var activityIndicatorView = UIActivityIndicatorView()
+    
     var groupID = String()
-    var myEmail = String()
+    //変更
+    var userID = String()
+    
     var year = String()
     var month = String()
-    var db = Firestore.firestore()
-    
     var userNameArray = [String]()
     var profileImageArray = [String]()
     var settlementArray = [Bool]()
@@ -50,6 +52,12 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         checkDetailButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         checkDetailButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
         
+        //追加
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,20 +69,23 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        //追加
+        
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
-        myEmail = UserDefaults.standard.object(forKey: "myEmail") as! String
+        //変更
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.year,.month], from: Date())
         year = String(date.year!)
         month = String(date.month!)
-        titleLabel.text = "\(year)" + "年" + "\(month)" + "月分の"
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadGroupMemberSettlement(groupID: groupID, myEmail: myEmail)
+        //変更
+        loadDBModel.loadGroupMemberSettlement(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
-    //追加
+    
+    //変更
     //グループの支払い状況の取得完了
-    func loadGroupMemberSettlement_OK(profileImageArray: [String], userNameArray: [String], settlementArray: [Bool], howMuchArray: [Int],userPayment: Int) {
+    func loadGroupMemberSettlement_OK(profileImageArray: [String], userNameArray: [String], settlementArray: [Bool], howMuchArray: [Int], userPayment: Int) {
+        activityIndicatorView.stopAnimating()
         if userPayment < 0{
             userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の受け取りがあります"
         }else{
@@ -98,8 +109,8 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
     @IBAction func settlementCompletionButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
 
-        //追加
-        db.collection(groupID).document(myEmail).updateData(["settlement" : true as Bool])
+        //変更
+        db.collection("groupManagement").document(groupID).setData(["settlementDic" : [userID:true]],merge: true)
     }
     
     @IBAction func checkDetailButton(_ sender: Any) {

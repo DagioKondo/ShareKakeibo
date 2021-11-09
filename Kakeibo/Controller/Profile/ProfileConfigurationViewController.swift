@@ -8,13 +8,16 @@
 import UIKit
 import FirebaseFirestore
 
-class ProfileConfigurationViewController: UIViewController {
+class ProfileConfigurationViewController: UIViewController,EditOKDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var warningLabel: UILabel!
+    
     
     //追加
+    var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     var userID = String()
     var receiveTitle = String()
@@ -31,6 +34,8 @@ class ProfileConfigurationViewController: UIViewController {
         saveButton.layer.cornerRadius = 5
         saveButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         saveButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+        
+        editDBModel.editOKDelegate = self
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -44,10 +49,26 @@ class ProfileConfigurationViewController: UIViewController {
     @IBAction func saveButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         //追加
-        db.collection("usersManagement").document(userID).updateData(["\(receiveDataName)" : "\(textField.text!)"])
-        self.navigationController?.popViewController(animated: true)
+        if receiveDataName == "userName"{
+            if textField.text != ""{
+                editDBModel.editUserNameChange(userID: userID, newUserName: textField.text!)
+            }else{
+                warningLabel.text = "必須入力です"
+            }
+        }else{
+            if textField.text != ""{
+                db.collection("userManagement").document(userID).updateData(["\(receiveDataName)" : "\(textField.text!)"])
+                self.navigationController?.popViewController(animated: true)
+            }else{
+                warningLabel.text = "必須入力です"
+            }
+        }
+        
     }
     
+    func editUserNameChange_OK() {
+        self.navigationController?.popViewController(animated: true)
+    }
     
     @IBAction func back(_ sender: Any) {
         navigationController?.popViewController(animated: true)

@@ -98,6 +98,13 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
+//        tableView.refreshControl = UIRefreshControl()
+//        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
+    }
+    
+    @objc func refresh() {
+//        tableView.refreshControl?.endRefreshing()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,21 +126,25 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             configurationTableView.deselectRow(at: congigurationIndexPath, animated: true)
         }
         
-        userID = UserDefaults.standard.object(forKey: "uesrID") as! String
+        userID = UserDefaults.standard.object(forKey: "userID") as! String
         activityIndicatorView.startAnimating()
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadUserInfo(userID: userID)
+        loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
     func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        UserDefaults.standard.setValue(userName, forKey: "userName")
+        UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
         profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
         userNameLabel.text = userName
         userInfoArray = [userName,email,password]
-        loadDBModel.loadGroupInfo(userID: userID)
+        loadDBModel.loadGroupInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
     func loadGroupInfo_OK() {
         groupJoinArray = loadDBModel.joinGroupTrueSets
+        print(loadDBModel.joinGroupTrueSets)
+        print(groupJoinArray)
         newGroupCountArray = loadDBModel.joinGroupFalseSets
         newGroupCountLabel.text = String(newGroupCountArray.count)
         if newGroupCountArray.count == 0{
