@@ -12,12 +12,10 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
 
     @IBOutlet weak var tableView: UITableView!
 
-    //追加
     var loadDBModel = LoadDBModel()
     var userID = String()
     var groupID = String()
     var day = Int()
-    
     var notificationArray = [NotificationSets]() //ロードしてきた通知が入る配列
     var activityIndicatorView = UIActivityIndicatorView()
     
@@ -40,7 +38,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        //追加
+        
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.day], from: Date())
         day = date.day! + 1
@@ -50,7 +48,6 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
         loadDBModel.loadSettlementNotification(userID: userID, day: String(day), activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     func loadSettlementNotification_OK() {
         notificationArray = loadDBModel.notificationSets
         tableView.reloadData()
@@ -77,7 +74,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //追加
+        
         groupID = notificationArray[indexPath.row].groupID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
         

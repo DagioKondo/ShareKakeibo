@@ -12,9 +12,12 @@ import FirebaseFirestore
 @objc protocol EditOKDelegate {
     @objc optional func editGroupInfoDelete_OK()
     @objc optional func editMonthDetailsDelete_OK()
-    @objc optional func editProfileImageChange_OK()
-    @objc optional func editUserNameChange_OK()
+    //削除
+//    @objc optional func editProfileImageChange_OK()
+//    @objc optional func editUserNameChange_OK()
     @objc optional func editUserDelete_OK()
+    //追加
+    @objc optional func editUserDelete2_OK()
 }
 
 class EditDBModel{
@@ -24,17 +27,18 @@ class EditDBModel{
     var monthMyDetailsSets:[MonthMyDetailsSets] = []
     let dateFormatter = DateFormatter()
     
+    //変更
     //招待を受けているグループで拒否ボタンを押したときのロード
     func editGroupInfoDelete(groupID:String,userID:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
+        db.collection("userManagement").document(userID).getDocument { (snapShot, error) in
             if error != nil{
                 activityIndicatorView.stopAnimating()
                 return
             }
             if let data = snapShot?.data(){
                 var joinGroupDic = data["joinGroupDic"] as! Dictionary<String,Bool>
-                joinGroupDic.removeValue(forKey: userID)
-                self.db.collection("groupManagement").document(groupID).updateData(["joinGroupDic" : joinGroupDic])
+                joinGroupDic.removeValue(forKey: groupID)
+                self.db.collection("userManagement").document(userID).updateData(["joinGroupDic" : joinGroupDic])
                 self.editOKDelegate?.editGroupInfoDelete_OK?()
             }
             activityIndicatorView.stopAnimating()
@@ -58,9 +62,10 @@ class EditDBModel{
                     let data = doc.data()
                     let productName = data["productName"] as! String
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let date = data["paymentDay"] as! Date
+                    let timestamp = data["paymentDay"] as! Timestamp
                     let category = data["category"] as! String
                     let userID = data["userID"] as! String
+                    let date = timestamp.dateValue()
                     let paymentDay = self.dateFormatter.string(from: date)
                     if count == index{
                         self.db.collection(groupID).document(doc.documentID).delete()
@@ -75,38 +80,7 @@ class EditDBModel{
         }
     }
     
-    //プロフィール画像変更するロード
-    func editProfileImageChange(userID:String,newProfileImage:String){
-        db.collection("userManagement").document(userID).updateData(["profileImage" : newProfileImage])
-        db.collection("groupManagement").whereField("profileImageDic", isEqualTo: [[userID]]).getDocuments { (snapShot, error) in
-            if error != nil{
-                return
-            }
-            if let snapShotDic = snapShot?.documents{
-                for doc in snapShotDic{
-                    self.db.collection("groupManagement").document(doc.documentID).setData(["profileImageDic" : [userID:newProfileImage]],merge: true)
-                }
-            }
-            self.editOKDelegate?.editProfileImageChange_OK?()
-        }
-    }
-    
-    //ユーザーネーム変更するロード
-    func editUserNameChange(userID:String,newUserName:String){
-        db.collection("userManagement").document(userID).updateData(["userName" : newUserName])
-        db.collection("groupManagement").whereField("userNameDic", isEqualTo: [[userID]]).getDocuments { (snapShot, error) in
-            if error != nil{
-                return
-            }
-            if let snapShotDic = snapShot?.documents{
-                for doc in snapShotDic{
-                    self.db.collection("groupManagement").document(doc.documentID).setData(["userNameDic" : [userID:newUserName]],merge: true)
-                }
-            }
-            self.editOKDelegate?.editUserNameChange_OK?()
-        }
-    }
-    
+    //変更
     //ユーザーが退会したときのロード
     func editUserDelete(groupID:String,userID:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
@@ -115,18 +89,37 @@ class EditDBModel{
                 return
             }
             if let data = snapShot?.data(){
-                var joinGroupDic = data["joinGroupDic"] as! Dictionary<String,Bool>
-                var userNameDic = data["userNameDic"] as! Dictionary<String,String>
+//                var count = 0
                 var settlementDic = data["settlementDic"] as! Dictionary<String,Bool>
-                var myTotalPaymentAmountDic = data["myTotalPaymentAmountDic"] as! Dictionary<String,Int>
-                var profileImageDic = data["profileImageDic"] as! Dictionary<String,String>
-                joinGroupDic.removeValue(forKey: userID)
-                userNameDic.removeValue(forKey: userID)
+                var userIDArray = data["userIDArray"] as! Array<String>
+                userIDArray.removeAll(where: {$0 == userID})
+//                for ID in userIDArray{
+//                    if ID == userID{
+//                        userIDArray.remove(at: count)
+//                    }
+//                    count = count + 1
+//                }
                 settlementDic.removeValue(forKey: userID)
-                myTotalPaymentAmountDic.removeValue(forKey: userID)
-                profileImageDic.removeValue(forKey: userID)
-                self.db.collection("groupManagement").document(groupID).updateData(["joinGroupDic" : joinGroupDic,"userNameDic" : userNameDic,"settlementDic" : settlementDic,"myTotalPaymentAmountDic" : myTotalPaymentAmountDic,"profileImageDic" : profileImageDic])
+                self.db.collection("groupManagement").document(groupID).updateData(["settlementDic" : settlementDic,"userIDArray" : userIDArray])
                 self.editOKDelegate?.editUserDelete_OK?()
+            }
+            activityIndicatorView.stopAnimating()
+        }
+    }
+    
+    //追加
+    //ユーザーが退会したときのロード２
+    func editUserDelete2(groupID:String,userID:String,activityIndicatorView:UIActivityIndicatorView){
+        db.collection("userManagement").document(userID).getDocument { (snapShot, error) in
+            if error != nil{
+                activityIndicatorView.stopAnimating()
+                return
+            }
+            if let data = snapShot?.data(){
+                var joinGroupDic = data["joinGroupDic"] as! Dictionary<String,Bool>
+                joinGroupDic.removeValue(forKey: groupID)
+                self.db.collection("userManagement").document(userID).updateData(["joinGroupDic" : joinGroupDic])
+                self.editOKDelegate?.editUserDelete2_OK?()
             }
             activityIndicatorView.stopAnimating()
         }

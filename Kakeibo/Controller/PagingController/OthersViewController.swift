@@ -12,8 +12,6 @@ class OthersViewController: UIViewController,LoadOKDelegate {
 
     var graphModel = GraphModel()
     var yAxisValues = [Int]()
-    
-    //追加
     var loadDBModel = LoadDBModel()
     var activityIndicatorView = UIActivityIndicatorView()
     var groupID = String()
@@ -24,24 +22,13 @@ class OthersViewController: UIViewController,LoadOKDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        削除
-//        yAxisValues = [200000,100000,290000,300000,200000,100000,290000,300000,200000,100000,290000,300000]
-//
-//        let lineChartsView = LineChartView()
-//        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
-//        lineChartsView.frame = CGRect(x: 0, y: 80, width: view.frame.width, height: 350)
-//        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
-//        self.view.addSubview(lineChartsView)
         
-        //追加
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
         view.addSubview(activityIndicatorView)
     }
-
-    //追加
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -53,8 +40,8 @@ class OthersViewController: UIViewController,LoadOKDelegate {
         loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     //決済日取得完了
+    //今年の期間を定める
     func loadSettlementDay_OK(settlementDay: String) {
         activityIndicatorView.stopAnimating()
         dateFormatter.dateFormat = "yyyy年MM月dd日"
@@ -65,6 +52,7 @@ class OthersViewController: UIViewController,LoadOKDelegate {
         loadDBModel.loadMonthlyOthersTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
     }
     
+    //１〜１２月のその他の推移を取得完了
     func loadMonthlyTransition_OK(countArray: [Int]) {
         activityIndicatorView.stopAnimating()
         yAxisValues = countArray

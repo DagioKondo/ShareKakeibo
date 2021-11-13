@@ -18,6 +18,8 @@ class DetailCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        profileImage.layer.cornerRadius = 30
         // Initialization code
     }
 

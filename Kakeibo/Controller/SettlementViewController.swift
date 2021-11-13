@@ -21,28 +21,27 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
     
     var loadDBModel = LoadDBModel()
     var db = Firestore.firestore()
-    //追加
     var activityIndicatorView = UIActivityIndicatorView()
-    
     var groupID = String()
-    //変更
     var userID = String()
-    
     var year = String()
     var month = String()
+    //追加
+    let dateFormatter = DateFormatter()
+    var startDate = Date()
+    var endDate = Date()
+    
     var userNameArray = [String]()
     var profileImageArray = [String]()
     var settlementArray = [Bool]()
     var howMuchArray = [Int]()
+    //追加
+    var settlementDic = Dictionary<String,Bool>()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
         
         settlementCompletionButton.layer.cornerRadius = 5
         settlementCompletionButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
@@ -52,7 +51,6 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         checkDetailButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
         checkDetailButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
         
-        //追加
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
@@ -71,7 +69,6 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         }
         
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
-        //変更
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.year,.month], from: Date())
@@ -79,23 +76,67 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         month = String(date.month!)
         loadDBModel.loadOKDelegate = self
         //変更
-        loadDBModel.loadGroupMemberSettlement(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
+        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
+    }
+    
+    //追加
+    //決済日取得完了
+    //決済月を求める
+    func loadSettlementDay_OK(settlementDay: String) {
+        activityIndicatorView.stopAnimating()
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        if month == "12"{
+            startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
+            endDate = dateFormatter.date(from: "\(String(Int(year)! + 1))年\("1")月\(settlementDay)日")!
+        }else{
+            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
+            endDate = dateFormatter.date(from: "\(year)年\((month))月\(settlementDay)日")!
+        }
+        loadDBModel.loadUserIDAndSettlementDic(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
     //変更
-    //グループの支払い状況の取得完了
-    func loadGroupMemberSettlement_OK(profileImageArray: [String], userNameArray: [String], settlementArray: [Bool], howMuchArray: [Int], userPayment: Int) {
-        activityIndicatorView.stopAnimating()
-        if userPayment < 0{
-            userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の受け取りがあります"
-        }else{
-            userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の支払いがあります"
+    //メンバーの決済可否を取得完了
+    func loadUserIDAndSettlementDic_OK(settlementDic: Dictionary<String, Bool>, userIDArray: [String]) {
+        self.settlementDic = settlementDic
+        settlementArray = Array(settlementDic.values)
+        loadDBModel.loadMonthPayment(groupID: groupID, startDate: startDate, endDate: endDate)
+    }
+    
+    //追加
+    //(グループの合計金額)と(1人当たりの金額)と(支払いに参加したユーザーの数)取得完了
+    func loadMonthPayment_OK(groupPaymentOfMonth: Int, paymentAverageOfMonth: Int, userIDArray: [String]) {
+        var totalDic = Dictionary<String,Int>()
+        userNameArray = []
+        profileImageArray = []
+        
+        //グループの支払い状況の取得完了
+        loadDBModel.loadMonthSettlement(groupID: groupID, userID: nil, userIDArray: userIDArray, startDate: startDate, endDate: endDate) { [self] myTotalPay, userID in
+            totalDic.updateValue(myTotalPay, forKey: userID)
+            //各メンバーの決済額の配列
+            howMuchArray = totalDic.map{($1 - paymentAverageOfMonth) * -1}
+            //自分の決済額
+            var userPayment = totalDic[userID]!
+            userPayment = paymentAverageOfMonth - userPayment
+            if userPayment < 0{
+                userPaymentOfLastMonth.text = "あなたは" + String(userPayment * -1) + "の受け取りがあります"
+            }else{
+                userPaymentOfLastMonth.text = "あなたは" + String(userPayment) + "の支払いがあります"
+            }
         }
-        self.profileImageArray = profileImageArray
-        self.userNameArray = userNameArray
-        self.settlementArray = settlementArray
-        self.howMuchArray = howMuchArray
-        tableView.reloadData()
+        
+        //各メンバーのプロフィール画像、名前取得完了
+        loadDBModel.loadGroupMember(userIDArray: userIDArray) { [self] UserSets in
+            profileImageArray.append(UserSets.profileImage)
+            userNameArray.append(UserSets.userName)
+            
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.separatorStyle = .none
+            tableView.reloadData()
+        }
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -110,7 +151,12 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
 
         //変更
-        db.collection("groupManagement").document(groupID).setData(["settlementDic" : [userID:true]],merge: true)
+        if settlementDic[userID] == true{
+            db.collection("groupManagement").document(groupID).setData(["settlementDic" : [userID:false]],merge: true)
+        }else{
+            db.collection("groupManagement").document(groupID).setData(["settlementDic" : [userID:true]],merge: true)
+        }
+        loadDBModel.loadUserIDAndSettlementDic(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
     @IBAction func checkDetailButton(_ sender: Any) {
@@ -119,7 +165,7 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return userNameArray.count
+        return settlementArray.count
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -151,7 +197,12 @@ class SettlementViewController: UIViewController,UITableViewDelegate,UITableView
             checkSettlementLabel.text = "未決済"
             checkSettlementLabel.backgroundColor = .systemRed
         }
-        howMuchLabel.text = String(howMuchArray[indexPath.row])
+        //変更
+        if howMuchArray[indexPath.row] < 0{
+            howMuchLabel.text = String(howMuchArray[indexPath.row] * -1) + "の支払"
+        }else{
+            howMuchLabel.text = String(howMuchArray[indexPath.row]) + "の受取"
+        }
         cellView.layer.cornerRadius = 5
         cellView.layer.masksToBounds = false
         cellView.layer.cornerRadius = 5

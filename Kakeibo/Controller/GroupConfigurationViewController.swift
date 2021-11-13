@@ -22,11 +22,9 @@ class GroupConfigurationViewController: UIViewController,CropViewControllerDeleg
     
     var sendDBModel = SendDBModel()
     var db = Firestore.firestore()
-    
+    var alertModel = AlertModel()
     var selectedUserImageArray = [String]()
     var groupID = String()
-    
-    var alertModel = AlertModel()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
@@ -70,7 +68,7 @@ class GroupConfigurationViewController: UIViewController,CropViewControllerDeleg
     }
     
     @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func groupImageView(_ sender: Any) {

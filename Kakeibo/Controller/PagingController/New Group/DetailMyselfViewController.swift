@@ -10,7 +10,6 @@ import Parchment
 
 class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate,EditOKDelegate {
     
-    //追加
     var loadDBModel = LoadDBModel()
     var editDBModel = EditDBModel()
     var monthMyDetailsSets = [MonthMyDetailsSets]()
@@ -22,26 +21,19 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
     var month = String()
     var startDate = Date()
     var endDate = Date()
-    
     var tableView = UITableView()
-    //変更
-    var profileImageDic = Dictionary<String,String>()
-//    var paymentArray = [String]()
-    var userNameDic = Dictionary<String,String>()
-//    var dateArray = [String]()
-//    var categoryArray = [String]()
+    var profileImage = String()
+    var userName = String()
+    var indexPath = IndexPath()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.separatorStyle = .none
         tableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "detailCell")
         tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(tableView)
         
-        //追加
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
@@ -51,7 +43,6 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //追加
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.year,.month], from: Date())
         year = String(date.year!)
@@ -63,49 +54,51 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
         loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     //決済日取得完了
+    //決済月を求める
     func loadSettlementDay_OK(settlementDay: String) {
         activityIndicatorView.stopAnimating()
         dateFormatter.dateFormat = "yyyy年MM月dd日"
         dateFormatter.locale = Locale(identifier: "ja_JP")
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
         if month == "12"{
+            startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
             endDate = dateFormatter.date(from: "\(String(Int(year)! + 1))年\("1")月\(settlementDay)日")!
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
         }else{
-            endDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! + 1))月\(settlementDay)日")!
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
+            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
+            endDate = dateFormatter.date(from: "\(year)年\((month))月\(settlementDay)日")!
         }
+        loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
-    //全体の明細を取得完了
+    //自分の明細を取得完了
     func loadMonthDetails_OK() {
         activityIndicatorView.stopAnimating()
         monthMyDetailsSets = loadDBModel.monthMyDetailsSets
-        loadDBModel.loadGroupMember(groupID: groupID)
+        //変更
+        loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
     //追加
-    //明細に表示するユーザーネームとプロフィール画像取得完了
-    func loadGroupMember_OK(profileImageDic: Dictionary<String, String>, userNameDic: Dictionary<String, String>) {
-        activityIndicatorView.stopAnimating()
-        self.profileImageDic = profileImageDic
-        self.userNameDic = userNameDic
+    //自分のユーザーネーム、プロフィール画像を取得完了
+    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        self.profileImage = profileImage
+        self.userName = userName
+        tableView.delegate = self
+        tableView.dataSource = self
         
         tableView.reloadData()
     }
-
-    //追加
+    
+    //データ削除完了
     func editMonthDetailsDelete_OK() {
         monthMyDetailsSets = []
         monthMyDetailsSets = editDBModel.monthMyDetailsSets
+        tableView.deleteRows(at: [indexPath], with: .automatic)
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return monthMyDetailsSets.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -114,11 +107,10 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
-        
-        //追加
-        cell.profileImage.sd_setImage(with: URL(string: profileImageDic[monthMyDetailsSets[indexPath.row].userID]!), completed: nil)
+        //変更
+        cell.profileImage.sd_setImage(with: URL(string: profileImage), completed: nil)
         cell.paymentLabel.text = String(monthMyDetailsSets[indexPath.row].paymentAmount)
-        cell.userNameLabel.text = userNameDic[monthMyDetailsSets[indexPath.row].userID]
+        cell.userNameLabel.text = userName
         cell.dateLabel.text = monthMyDetailsSets[indexPath.row].paymentDay
         cell.category.text = monthMyDetailsSets[indexPath.row].category
         
@@ -130,8 +122,8 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
         // 削除のアクションを設定する
         let deleteAction = UIContextualAction(style: .destructive, title:"delete") { [self]
             (ctxAction, view, completionHandler) in
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            //変更、追加
+            self.indexPath = indexPath
+            //データ削除
             editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
             completionHandler(true)
         }
@@ -145,7 +137,6 @@ class DetailMyselfViewController: UIViewController,UITableViewDelegate,UITableVi
         swipeAction.performsFirstActionWithFullSwipe = false
         
         return swipeAction
-        
     }
     
     /*

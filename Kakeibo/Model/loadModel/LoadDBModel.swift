@@ -12,18 +12,19 @@ import FirebaseFirestore
 @objc protocol LoadOKDelegate {
     @objc optional func loadUserInfo_OK(userName:String,profileImage:String,email:String,password:String)
     @objc optional func loadUserSearch_OK()
-    @objc optional func loadGroupInfo_OK()
+    //追加
+    @objc optional func loadUserJoinGroup_OK(joinGroupDic:Dictionary<String,Bool>)
+    
     @objc optional func loadGroupName_OK(groupName:String,groupImage:String)
     @objc optional func loadSettlementNotification_OK()
     @objc optional func loadSettlementDay_OK(settlementDay:String)
-    @objc optional func loadGroupMember_OK(profileImageDic:Dictionary<String,String>,userNameDic:Dictionary<String,String>)
+    @objc optional func loadUserIDAndSettlementDic_OK(settlementDic:Dictionary<String,Bool>,userIDArray:[String])
     @objc optional func loadMonthDetails_OK()
     @objc optional func loadCategoryGraphOfTithMonth_OK(categoryPayArray:[Int])
     @objc optional func loadMonthlyTransition_OK(countArray:[Int])
-    @objc optional func loadMonthTotalAmount_OK(myPaymentOfMonth: Int, groupPaymentOfMonth: Int, paymentAverageOfMonth: Int)
-    @objc optional func loadNumberOfPeople_OK(numberOfPeople:Int)
-    @objc optional func loadMytotalAmount_OK(myTotalPaymentAmount:Int)
-    @objc optional func loadGroupMemberSettlement_OK(profileImageArray:[String],userNameArray:[String],settlementArray:[Bool],howMuchArray:[Int],userPayment:Int)
+    //追加
+    @objc optional func loadMonthPayment_OK(groupPaymentOfMonth:Int,paymentAverageOfMonth:Int,userIDArray:[String])
+    
 }
 
 class LoadDBModel{
@@ -31,30 +32,29 @@ class LoadDBModel{
     var loadOKDelegate:LoadOKDelegate?
     var db = Firestore.firestore()
     var userSearchSets:[UserSearchSets] = []
-    var joinGroupTrueSets:[JoinGroupTrueSets] = []
-    var joinGroupFalseSets:[JoinGroupFalseSets] = []
     var notificationSets:[NotificationSets] = []
     var monthMyDetailsSets:[MonthMyDetailsSets] = []
     var monthGroupDetailsSets:[MonthGroupDetailsSets] = []
-    var january = 0
-    var february = 0
-    var march = 0
-    var april = 0
-    var may = 0
-    var june = 0
-    var july = 0
-    var august = 0
-    var september = 0
-    var october = 0
-    var november = 0
-    var december = 0
+    var januaryCount = 0
+    var februaryCount = 0
+    var marchCount = 0
+    var aprilCount = 0
+    var mayCount = 0
+    var juneCount = 0
+    var julyCount = 0
+    var augustCount = 0
+    var septemberCount = 0
+    var octoberCount = 0
+    var novemberCount = 0
+    var decemberCount = 0
     let dateFormatter = DateFormatter()
     var countArray = [Int]()
-    var numberOfPeople = 0
+    
     
     //userの情報を取得するメソッド
     func loadUserInfo(userID:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("userManagement").document(userID).addSnapshotListener { (snapShot, error) in
+            
             if error != nil{
                 activityIndicatorView.stopAnimating()
                 return
@@ -70,6 +70,7 @@ class LoadDBModel{
     //メールアドレスで検索するメソッド。メールアドレスと一致するユーザー情報を取得。
     func loadUserSearch(email:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("userManagement").whereField("email", isEqualTo: email).addSnapshotListener { (snapShot, error) in
+            
             self.userSearchSets = []
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -89,42 +90,51 @@ class LoadDBModel{
         }
     }
     
-    //ルームの参加不参加を取得するメソッド
-    func loadGroupInfo(userID:String,activityIndicatorView:UIActivityIndicatorView){
-        print(userID)
-        db.collection("groupManagement").whereField("joinGroupDic", in: [[userID:true],[userID:false]]).addSnapshotListener { (snapShot, error) in
-            self.joinGroupTrueSets = []
-            self.joinGroupFalseSets = []
+    //追加
+    //参加しているか参加していないかの配列を取得するロード
+    func loadUserJoinGroup(userID:String){
+        db.collection("userManagement").document(userID).addSnapshotListener { (snapShot, error) in
+            
             if error != nil{
-                activityIndicatorView.stopAnimating()
                 return
             }
-            if let snapShotDoc = snapShot?.documents{
-                for doc in snapShotDoc{
-                    let data = doc.data()
-                    let joinGroupDic = data["joinGroupDic"] as? Dictionary<String,Bool>
-                    let groupName = data["groupName"] as? String
-                    let groupImage = data["groupImage"] as? String
-                    let groupID = data["groupID"] as? String
-                    switch joinGroupDic![userID] {
-                    case true:   //←グループに参加している場合
-                        let newTrue = JoinGroupTrueSets(groupName: groupName!,
-                                                        groupImage: groupImage!, groupID: groupID!)
-                        self.joinGroupTrueSets.append(newTrue)
-                    case false:  //←グループに参加していない場合
-                        let newFalse = JoinGroupFalseSets(groupName: groupName!, groupImage: groupImage!, groupID: groupID!)
-                        self.joinGroupFalseSets.append(newFalse)
-                    default: break
-                    }
-                }
+            let data = snapShot?.data()
+            if let joinGroupDic = data!["joinGroupDic"] as? Dictionary<String,Bool>{
+                self.loadOKDelegate?.loadUserJoinGroup_OK?(joinGroupDic: joinGroupDic)
             }
-            self.loadOKDelegate?.loadGroupInfo_OK?()
         }
     }
     
-    //今見ているグループ名、グループ画像を取得するロード。
+    //追加
+    //参加している、招待されてるルームの情報を取得するロード
+    func loadGroupInfo(joinGroupDic:Dictionary<String,Bool>,completion:@escaping(JoinGroupSets)->()){
+        for (key, value) in joinGroupDic{
+            db.collection("groupManagement").document(key).addSnapshotListener { (snapShot, error) in
+                
+                if error != nil{
+                    return
+                }
+                if let data = snapShot?.data(){
+                    let groupName = data["groupName"] as? String
+                    let groupImage = data["groupImage"] as? String
+                    let groupID = data["groupID"] as? String
+                    switch value {
+                    case true:   //←グループに参加している場合
+                        let newTrue = JoinGroupSets(groupName: groupName!, groupImage: groupImage!, groupID: groupID!, join: true)
+                        completion(newTrue)
+                    case false:  //←グループに参加していない場合
+                        let newFalse = JoinGroupSets(groupName: groupName!, groupImage: groupImage!, groupID: groupID!, join: false)
+                        completion(newFalse)
+                    }
+                }
+            }
+        }
+    }
+    
+    //グループ名、グループ画像を取得するロード。
     func loadGroupName(groupID:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
+            
             if error != nil{
                 activityIndicatorView.stopAnimating()
                 return
@@ -137,9 +147,11 @@ class LoadDBModel{
         }
     }
     
+    //変更
     //決済日を取得し決済通知するロード
     func loadSettlementNotification(userID:String,day:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").whereField("joinGroupDic", isEqualTo: [userID:true]).addSnapshotListener { (snapShot, error) in
+        db.collection("groupManagement").whereField("userIDArray", arrayContains: userID).addSnapshotListener { (snapShot, error) in
+            
             self.notificationSets = []
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -164,6 +176,7 @@ class LoadDBModel{
     //決済日を取得するロード
     func loadSettlementDay(groupID:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
+            
             if error != nil{
                 activityIndicatorView.stopAnimating()
                 return
@@ -176,16 +189,39 @@ class LoadDBModel{
         }
     }
     
-    //グループに所属する人の名前とプロフィール画像を取得するロード
-    func loadGroupMember(groupID:String){
-        db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
+    //追加
+    //グループに所属する人のuserIDと決済可否を取得するロード
+    func loadUserIDAndSettlementDic(groupID:String,activityIndicatorView:UIActivityIndicatorView){
+        db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
+            
             if error != nil{
+                activityIndicatorView.stopAnimating()
                 return
             }
             if let data = snapShot?.data(){
-                let profileImageDic = data["profileImageDic"] as! Dictionary<String,String>
-                let userNameDic = data["userNameDic"] as! Dictionary<String,String>
-                self.loadOKDelegate?.loadGroupMember_OK?(profileImageDic: profileImageDic, userNameDic: userNameDic)
+                let settlementDic = data["settlementDic"] as! Dictionary<String,Bool>
+                let userIDArray = data["userIDArray"] as! Array<String>
+                self.loadOKDelegate?.loadUserIDAndSettlementDic_OK?(settlementDic: settlementDic, userIDArray: userIDArray)
+            }
+            activityIndicatorView.stopAnimating()
+        }
+    }
+    
+    //変更
+    //グループに所属する人の名前とプロフィール画像を取得するロード
+    func loadGroupMember(userIDArray:[String],completion:@escaping(UserSets)->()){
+        for userID in userIDArray{
+            
+            db.collection("userManagement").document(userID).addSnapshotListener { (snapShot, error) in
+                if error != nil{
+                    return
+                }
+                if let data = snapShot?.data(){
+                    let profileImage = data["profileImage"] as! String
+                    let userName = data["userName"] as! String
+                    let newData = UserSets(profileImage: profileImage, userName: userName, userID: userID)
+                    completion(newData)
+                }
             }
         }
     }
@@ -199,6 +235,7 @@ class LoadDBModel{
         if userID == nil{
             //全体の明細のロード(月分)
             db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                
                 self.monthGroupDetailsSets = []
                 if error != nil{
                     activityIndicatorView.stopAnimating()
@@ -209,9 +246,10 @@ class LoadDBModel{
                         let data = doc.data()
                         let productName = data["productName"] as! String
                         let paymentAmount = data["paymentAmount"] as! Int
-                        let date = data["paymentDay"] as! Date
+                        let timestamp = data["paymentDay"] as! Timestamp
                         let category = data["category"] as! String
                         let userID = data["userID"] as! String
+                        let date = timestamp.dateValue()
                         let paymentDay = self.dateFormatter.string(from: date)
                         let groupNewData = MonthGroupDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
                         self.monthGroupDetailsSets.append(groupNewData)
@@ -222,6 +260,7 @@ class LoadDBModel{
         }else if userID != nil{
             //自分の明細のロード(月分)
             db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                
                 self.monthMyDetailsSets = []
                 if error != nil{
                     activityIndicatorView.stopAnimating()
@@ -232,9 +271,10 @@ class LoadDBModel{
                         let data = doc.data()
                         let productName = data["productName"] as! String
                         let paymentAmount = data["paymentAmount"] as! Int
-                        let date = data["paymentDay"] as! Date
+                        let timestamp = data["paymentDay"] as! Timestamp
                         let category = data["category"] as! String
                         let userID = data["userID"] as! String
+                        let date = timestamp.dateValue()
                         let paymentDay = self.dateFormatter.string(from: date)
                         let myNewData = MonthMyDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
                         self.monthMyDetailsSets.append(myNewData)
@@ -247,6 +287,7 @@ class LoadDBModel{
     
     //カテゴリ別の合計金額金額
     func loadCategoryGraphOfTithMonth(groupID:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
+        
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
             var categoryPayArray = [Int]()
             var foodCount = 0
@@ -293,6 +334,7 @@ class LoadDBModel{
     
     //1〜12月の全体の推移
     func loadMonthlyAllTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
+        
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { [self] (snapShot, error) in
             self.countArray = []
             self.dateFormatter.dateFormat = "yyyy年MM月dd日"
@@ -318,41 +360,43 @@ class LoadDBModel{
                 for doc in snapShotDoc{
                     let data = doc.data()
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let paymentDay = data["paymentDay"] as! Date
+                    let timestamp = data["paymentDay"] as! Timestamp
+                    let paymentDay = timestamp.dateValue()
                     if startDate < paymentDay && paymentDay >= january!{
-                        self.january = self.january + paymentAmount
+                        januaryCount = januaryCount + paymentAmount
                     }else if january! < paymentDay && paymentDay >= february!{
-                        self.february = self.february + paymentAmount
+                        februaryCount = februaryCount + paymentAmount
                     }else if february! < paymentDay && paymentDay >= march!{
-                        self.march = self.march + paymentAmount
+                        marchCount = marchCount + paymentAmount
                     }else if march! < paymentDay && paymentDay >= april!{
-                        self.april = self.april + paymentAmount
+                        aprilCount = aprilCount + paymentAmount
                     }else if april! < paymentDay && paymentDay >= may!{
-                        self.may = self.may + paymentAmount
+                        mayCount = mayCount + paymentAmount
                     }else if may! < paymentDay && paymentDay >= june!{
-                        self.june = self.june + paymentAmount
+                        juneCount = juneCount + paymentAmount
                     }else if june! < paymentDay && paymentDay >= july!{
-                        self.july = self.july + paymentAmount
+                        julyCount = julyCount + paymentAmount
                     }else if july! < paymentDay && paymentDay >= august!{
-                        self.august = self.august + paymentAmount
+                        augustCount = augustCount + paymentAmount
                     }else if august! < paymentDay && paymentDay >= september!{
-                        self.september = self.september + paymentAmount
+                        septemberCount = septemberCount + paymentAmount
                     }else if september! < paymentDay && paymentDay >= october!{
-                        self.october = self.october + paymentAmount
+                        octoberCount = octoberCount + paymentAmount
                     }else if october! < paymentDay && paymentDay >= november!{
-                        self.november = self.november + paymentAmount
+                        novemberCount = novemberCount + paymentAmount
                     }else if november! < paymentDay && paymentDay >= december!{
-                        self.december = self.december + paymentAmount
+                        decemberCount = decemberCount + paymentAmount
                     }
                 }
             }
-            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
+            self.countArray = [januaryCount,februaryCount,marchCount,aprilCount,mayCount,juneCount,julyCount,augustCount,septemberCount,octoberCount,novemberCount,decemberCount]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとの光熱費の推移
     func loadMonthlyUtilityTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
+        
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).whereField("category", isEqualTo: "水道代").whereField("category", isEqualTo: "電気代").whereField("category", isEqualTo: "ガス代").addSnapshotListener { [self] (snapShot, error) in
             self.countArray = []
             self.dateFormatter.dateFormat = "yyyy年MM月dd日"
@@ -378,42 +422,45 @@ class LoadDBModel{
                 for doc in snapShotDoc{
                     let data = doc.data()
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let paymentDay = data["paymentDay"] as! Date
+                    let timestamp = data["paymentDay"] as! Timestamp
+                    let paymentDay = timestamp.dateValue()
                     if startDate < paymentDay && paymentDay >= january!{
-                        self.january = self.january + paymentAmount
+                        januaryCount = januaryCount + paymentAmount
                     }else if january! < paymentDay && paymentDay >= february!{
-                        self.february = self.february + paymentAmount
+                        februaryCount = februaryCount + paymentAmount
                     }else if february! < paymentDay && paymentDay >= march!{
-                        self.march = self.march + paymentAmount
+                        marchCount = marchCount + paymentAmount
                     }else if march! < paymentDay && paymentDay >= april!{
-                        self.april = self.april + paymentAmount
+                        aprilCount = aprilCount + paymentAmount
                     }else if april! < paymentDay && paymentDay >= may!{
-                        self.may = self.may + paymentAmount
+                        mayCount = mayCount + paymentAmount
                     }else if may! < paymentDay && paymentDay >= june!{
-                        self.june = self.june + paymentAmount
+                        juneCount = juneCount + paymentAmount
                     }else if june! < paymentDay && paymentDay >= july!{
-                        self.july = self.july + paymentAmount
+                        julyCount = julyCount + paymentAmount
                     }else if july! < paymentDay && paymentDay >= august!{
-                        self.august = self.august + paymentAmount
+                        augustCount = augustCount + paymentAmount
                     }else if august! < paymentDay && paymentDay >= september!{
-                        self.september = self.september + paymentAmount
+                        septemberCount = septemberCount + paymentAmount
                     }else if september! < paymentDay && paymentDay >= october!{
-                        self.october = self.october + paymentAmount
+                        octoberCount = octoberCount + paymentAmount
                     }else if october! < paymentDay && paymentDay >= november!{
-                        self.november = self.november + paymentAmount
+                        novemberCount = novemberCount + paymentAmount
                     }else if november! < paymentDay && paymentDay >= december!{
-                        self.december = self.december + paymentAmount
+                        decemberCount = decemberCount + paymentAmount
                     }
                 }
             }
-            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
+            self.countArray = [januaryCount,februaryCount,marchCount,aprilCount,mayCount,juneCount,julyCount,augustCount,septemberCount,octoberCount,novemberCount,decemberCount]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとの食費の推移
     func loadMonthlyFoodTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
+        
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).whereField("category", isEqualTo: "食費").addSnapshotListener { [self] (snapShot, error) in
+
             self.countArray = []
             self.dateFormatter.dateFormat = "yyyy年MM月dd日"
             self.dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -438,42 +485,45 @@ class LoadDBModel{
                 for doc in snapShotDoc{
                     let data = doc.data()
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let paymentDay = data["paymentDay"] as! Date
+                    let timestamp = data["paymentDay"] as! Timestamp
+                    let paymentDay = timestamp.dateValue()
                     if startDate < paymentDay && paymentDay >= january!{
-                        self.january = self.january + paymentAmount
+                        januaryCount = januaryCount + paymentAmount
                     }else if january! < paymentDay && paymentDay >= february!{
-                        self.february = self.february + paymentAmount
+                        februaryCount = februaryCount + paymentAmount
                     }else if february! < paymentDay && paymentDay >= march!{
-                        self.march = self.march + paymentAmount
+                        marchCount = marchCount + paymentAmount
                     }else if march! < paymentDay && paymentDay >= april!{
-                        self.april = self.april + paymentAmount
+                        aprilCount = aprilCount + paymentAmount
                     }else if april! < paymentDay && paymentDay >= may!{
-                        self.may = self.may + paymentAmount
+                        mayCount = mayCount + paymentAmount
                     }else if may! < paymentDay && paymentDay >= june!{
-                        self.june = self.june + paymentAmount
+                        juneCount = juneCount + paymentAmount
                     }else if june! < paymentDay && paymentDay >= july!{
-                        self.july = self.july + paymentAmount
+                        julyCount = julyCount + paymentAmount
                     }else if july! < paymentDay && paymentDay >= august!{
-                        self.august = self.august + paymentAmount
+                        augustCount = augustCount + paymentAmount
                     }else if august! < paymentDay && paymentDay >= september!{
-                        self.september = self.september + paymentAmount
+                        septemberCount = septemberCount + paymentAmount
                     }else if september! < paymentDay && paymentDay >= october!{
-                        self.october = self.october + paymentAmount
+                        octoberCount = octoberCount + paymentAmount
                     }else if october! < paymentDay && paymentDay >= november!{
-                        self.november = self.november + paymentAmount
+                        novemberCount = novemberCount + paymentAmount
                     }else if november! < paymentDay && paymentDay >= december!{
-                        self.december = self.december + paymentAmount
+                        decemberCount = decemberCount + paymentAmount
                     }
                 }
             }
-            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
+            self.countArray = [januaryCount,februaryCount,marchCount,aprilCount,mayCount,juneCount,julyCount,augustCount,septemberCount,octoberCount,novemberCount,decemberCount]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
     //1〜12月の項目ごとのその他の推移
     func loadMonthlyOthersTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
+        
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).whereField("category", isEqualTo: "通信費").whereField("category", isEqualTo: "家賃").whereField("category", isEqualTo: "その他").addSnapshotListener { [self] (snapShot, error) in
+            
             self.countArray = []
             self.dateFormatter.dateFormat = "yyyy年MM月dd日"
             self.dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -498,144 +548,118 @@ class LoadDBModel{
                 for doc in snapShotDoc{
                     let data = doc.data()
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let paymentDay = data["paymentDay"] as! Date
+                    let timestamp = data["paymentDay"] as! Timestamp
+                    let paymentDay = timestamp.dateValue()
                     if startDate < paymentDay && paymentDay >= january!{
-                        self.january = self.january + paymentAmount
+                        januaryCount = januaryCount + paymentAmount
                     }else if january! < paymentDay && paymentDay >= february!{
-                        self.february = self.february + paymentAmount
+                        februaryCount = februaryCount + paymentAmount
                     }else if february! < paymentDay && paymentDay >= march!{
-                        self.march = self.march + paymentAmount
+                        marchCount = marchCount + paymentAmount
                     }else if march! < paymentDay && paymentDay >= april!{
-                        self.april = self.april + paymentAmount
+                        aprilCount = aprilCount + paymentAmount
                     }else if april! < paymentDay && paymentDay >= may!{
-                        self.may = self.may + paymentAmount
+                        mayCount = mayCount + paymentAmount
                     }else if may! < paymentDay && paymentDay >= june!{
-                        self.june = self.june + paymentAmount
+                        juneCount = juneCount + paymentAmount
                     }else if june! < paymentDay && paymentDay >= july!{
-                        self.july = self.july + paymentAmount
+                        julyCount = julyCount + paymentAmount
                     }else if july! < paymentDay && paymentDay >= august!{
-                        self.august = self.august + paymentAmount
+                        augustCount = augustCount + paymentAmount
                     }else if august! < paymentDay && paymentDay >= september!{
-                        self.september = self.september + paymentAmount
+                        septemberCount = septemberCount + paymentAmount
                     }else if september! < paymentDay && paymentDay >= october!{
-                        self.october = self.october + paymentAmount
+                        octoberCount = octoberCount + paymentAmount
                     }else if october! < paymentDay && paymentDay >= november!{
-                        self.november = self.november + paymentAmount
+                        novemberCount = novemberCount + paymentAmount
                     }else if november! < paymentDay && paymentDay >= december!{
-                        self.december = self.december + paymentAmount
+                        decemberCount = decemberCount + paymentAmount
                     }
                 }
             }
-            self.countArray = [self.january,self.february,self.march,self.april,self.may,self.june,self.july,self.august,self.september,self.october,self.november,self.december]
+            self.countArray = [januaryCount,februaryCount,marchCount,aprilCount,mayCount,juneCount,julyCount,augustCount,septemberCount,octoberCount,novemberCount,decemberCount]
             self.loadOKDelegate?.loadMonthlyTransition_OK?(countArray: self.countArray)
         }
     }
     
-    //グループ人数を取得するロード
-    func loadNumberOfPeople(groupID:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
-            if error != nil{
-                activityIndicatorView.stopAnimating()
-                return
-            }
-            if let data = snapShot?.data(){
-                let userNameDic = data["userNameDic"] as! Dictionary<String,String>
-                self.numberOfPeople = userNameDic.count
-            }
-            self.loadOKDelegate?.loadNumberOfPeople_OK?(numberOfPeople: self.numberOfPeople)
-        }
-    }
-    
-    //(自分の支払い合計金額)と(全体の合計金額のロード)と(1人当たりの出資額)のロード(月分)
-    func loadMonthTotalAmount(groupID:String,userID:String,startDate:Date,endDate:Date,numberOfPeople:Int,activityIndicatorView:UIActivityIndicatorView){
+    //追加
+    //(グループの合計金額)と(1人当たりの金額)と(支払いに参加したユーザー)をロード
+    func loadMonthPayment(groupID:String,startDate:Date,endDate:Date){
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
-            var totalMyAmount = 0
+            
             var groupPaymentOfMonth = 0
-            var myPaymentOfMonth = 0
-            var paymentAverageOfMonth = 0
+            var userIDDic = Dictionary<String,String>()
             if error != nil{
-                activityIndicatorView.stopAnimating()
                 return
             }
             if let snapShotDoc = snapShot?.documents{
                 for doc in snapShotDoc{
                     let data = doc.data()
                     let paymentAmount = data["paymentAmount"] as! Int
-                    let myUserID = data["userID"] as! String
-                    if myUserID == userID{
-                        totalMyAmount = totalMyAmount + paymentAmount
-                    }else{
-                        groupPaymentOfMonth = groupPaymentOfMonth + paymentAmount
+                    let userID = data["userID"] as! String
+                    groupPaymentOfMonth = groupPaymentOfMonth + paymentAmount
+                    userIDDic.updateValue(userID, forKey: userID)
+                }
+                let userIDArray = Array(userIDDic.values)
+                let numberOfPeople = userIDArray.count
+                if numberOfPeople == 0{
+                    let paymentAverageOfMonth = 0
+                    self.loadOKDelegate?.loadMonthPayment_OK?(groupPaymentOfMonth: groupPaymentOfMonth, paymentAverageOfMonth: paymentAverageOfMonth, userIDArray: userIDArray)
+
+                }else{
+                    let paymentAverageOfMonth = groupPaymentOfMonth / numberOfPeople
+                    self.loadOKDelegate?.loadMonthPayment_OK?(groupPaymentOfMonth: groupPaymentOfMonth, paymentAverageOfMonth: paymentAverageOfMonth, userIDArray: userIDArray)
+                }
+                
+            }
+        }
+    }
+    
+    //追加
+    //グループの支払状況のロード
+    //各メンバーの支払い金額を取得するロード
+    func loadMonthSettlement(groupID:String,userID:String?,userIDArray:[String]?,startDate:Date,endDate:Date,completion:@escaping(Int,String)->()){
+        
+        if userID == nil{
+            for userID in userIDArray!{
+                db.collection(groupID).whereField("userID", isEqualTo: userID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
+                    
+                    var myTotalPay = 0
+                    if error != nil{
+                        return
+                    }
+                    if let snapShotDoc = snapShot?.documents{
+                        for doc in snapShotDoc{
+                            let data = doc.data()
+                            let paymentAmount = data["paymentAmount"] as! Int
+                            //自分の支払い合計金額
+                            myTotalPay = myTotalPay + paymentAmount
+                        }
+                    }
+                    completion(myTotalPay, userID)
+                }
+            }
+        }else{
+            db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
+                
+                var myTotalPay = 0
+                if error != nil{
+                    print(error.debugDescription)
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        //自分の支払い合計金額
+                        myTotalPay = myTotalPay + paymentAmount
                     }
                 }
-                //グループの合計金額
-                groupPaymentOfMonth = groupPaymentOfMonth + totalMyAmount
-                //1人当たりの合計金額
-                paymentAverageOfMonth = groupPaymentOfMonth / numberOfPeople
-                //自分の支払い合計金額
-                myPaymentOfMonth = paymentAverageOfMonth - totalMyAmount
+                completion(myTotalPay, userID!)
             }
-            self.loadOKDelegate?.loadMonthTotalAmount_OK?(myPaymentOfMonth: myPaymentOfMonth, groupPaymentOfMonth: groupPaymentOfMonth, paymentAverageOfMonth: paymentAverageOfMonth)
         }
     }
-    
-    
-    //今月自分が使った金額を取得するロード
-    //月が変わったら、ここをロードして値を0にしなければならない
-    func loadMytotalAmount(groupID:String,userID:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
-            var myTotalPaymentAmount = 0
-            if error != nil{
-                activityIndicatorView.stopAnimating()
-                return
-            }
-            if let data = snapShot?.data(){
-                let myTotalPaymentAmountDic = data["myTotalPaymentAmount"] as! Dictionary<String,Int>
-                myTotalPaymentAmount = myTotalPaymentAmountDic[userID]!
-            }
-            self.loadOKDelegate?.loadMytotalAmount_OK?(myTotalPaymentAmount: myTotalPaymentAmount)
-        }
-    }
-    
-    //グループの支払状況のロード
-    //(userName)と(決済の可否)と(各メンバーのプロフィール画像)と(自分の決済額)と(各メンバーの決済額)を取得するロード
-    func loadGroupMemberSettlement(groupID:String,userID:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
-            var profileImageArray = [String]()
-            var userNameArray = [String]()
-            var settlementArray = [Bool]()
-            var howMuchArray = [Int]()
-            var userPayment = Int()
-            
-            if error != nil{
-                activityIndicatorView.stopAnimating()
-                return
-            }
-            if let data = snapShot?.data(){
-                let profileImageDic = data["profileImageDic"] as! Dictionary<String,String>
-                let userNameDic = data["userNameDic"] as! Dictionary<String,String>
-                let settlementDic = data["settlementDic"] as! Dictionary<String,Bool>
-                let myTotalPaymentAmountDic = data["myTotalPaymentAmount"] as! Dictionary<String,Int>
-                //プロフィール画像、ユーザーネーム、決済可否
-                profileImageArray = Array(profileImageDic.values)
-                userNameArray = Array(userNameDic.values)
-                settlementArray = Array(settlementDic.values)
-                //合計金額
-                let myTotalPaymentAmountArray = Array(myTotalPaymentAmountDic.values)
-                let totalPaymentAmount = myTotalPaymentAmountArray.reduce(0,+)
-                //人数
-                self.numberOfPeople = userNameDic.count
-                //1人当たりの支出額
-                let perPerson = totalPaymentAmount / self.numberOfPeople
-                //各メンバーの決済額の配列
-                howMuchArray = myTotalPaymentAmountDic.map{($1 - perPerson) * -1}
-                //自分の決済額
-                userPayment = myTotalPaymentAmountDic[userID]!
-                userPayment = perPerson - userPayment
-            }
-            self.loadOKDelegate?.loadGroupMemberSettlement_OK?(profileImageArray: profileImageArray, userNameArray: userNameArray, settlementArray: settlementArray, howMuchArray: howMuchArray, userPayment: userPayment)
-        }
-    }
+
     
 }
 

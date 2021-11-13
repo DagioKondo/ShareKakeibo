@@ -12,8 +12,6 @@ class OverAllViewController: UIViewController,LoadOKDelegate {
 
     var graphModel = GraphModel()
     var yAxisValues = [Int]()
-    
-    //追加
     var loadDBModel = LoadDBModel()
     var activityIndicatorView = UIActivityIndicatorView()
     var groupID = String()
@@ -24,24 +22,13 @@ class OverAllViewController: UIViewController,LoadOKDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        削除
-//        yAxisValues = [200000,100000,290000,300000,200000,100000,290000,300000,200000,100000,290000,300000]
-//
-//
-//        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
-//        lineChartsView.frame = CGRect(x: 0, y: 80, width: view.frame.width, height: 350)
-//        graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues)
-//        self.view.addSubview(lineChartsView)
         
-        //追加
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
         view.addSubview(activityIndicatorView)
     }
     
-    //追加
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -53,8 +40,8 @@ class OverAllViewController: UIViewController,LoadOKDelegate {
         loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     //決済日取得完了
+    //今年の期間を定める
     func loadSettlementDay_OK(settlementDay: String) {
         activityIndicatorView.stopAnimating()
         dateFormatter.dateFormat = "yyyy年MM月dd日"
@@ -62,10 +49,10 @@ class OverAllViewController: UIViewController,LoadOKDelegate {
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
         startDate = dateFormatter.date(from: "\(String(Int(year)! - 1))年\("12")月\(settlementDay)日")!
         endDate = dateFormatter.date(from: "\(year)年\("12")月\(settlementDay)日")!
+        print(endDate)
         loadDBModel.loadMonthlyAllTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     //１〜１２月の全体の推移取得完了
     func loadMonthlyTransition_OK(countArray: [Int]) {
         activityIndicatorView.stopAnimating()

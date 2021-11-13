@@ -25,20 +25,18 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     @IBOutlet weak var profileOrangeView: UIView!//profileImageViewの後ろのオレンジのビュー
     @IBOutlet weak var newGroupCountLabel: UILabel!
     
-    var newGroupCountArray = [JoinGroupFalseSets]()
     var loadDBModel = LoadDBModel()
     var userID = String()
     var groupID = String()
-    var groupJoinArray = [JoinGroupTrueSets]()
-    var userInfoArray = [String]()
+    //変更
+    var groupJoinArray = [JoinGroupSets]()
+    var newGroupCountArray = [JoinGroupSets]()
     
+    var userInfoArray = [String]()
     var loginModel = LoginModel()
     var auth = Auth.auth()
-    
     var activityIndicatorView = UIActivityIndicatorView()
     var originalNavigationControllerDelegate: UIGestureRecognizerDelegate?
-    
-    
     var configurationTableView = UITableView() //設定バーのテーブルビューだよ
     let configurationNameArray = ["プロフィールを変更","ログアウト"]
     let configurationImageArray = ["person.fill","exit"]
@@ -63,8 +61,6 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         configurationTableView.dataSource = self
         //        configurationTableView.isScrollEnabled = false
         
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.separatorStyle = .none
         
         configurationLabel.text = "設定"
@@ -98,13 +94,6 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
-//        tableView.refreshControl = UIRefreshControl()
-//        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        
-    }
-    
-    @objc func refresh() {
-//        tableView.refreshControl?.endRefreshing()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -133,33 +122,45 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     }
     
     func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        activityIndicatorView.stopAnimating()
         UserDefaults.standard.setValue(userName, forKey: "userName")
         UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
         profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
         userNameLabel.text = userName
         userInfoArray = [userName,email,password]
-        loadDBModel.loadGroupInfo(userID: userID, activityIndicatorView: activityIndicatorView)
+        //変更
+        loadDBModel.loadUserJoinGroup(userID: userID)
+        newGroupCountLabel.isHidden = true
     }
     
-    func loadGroupInfo_OK() {
-        groupJoinArray = loadDBModel.joinGroupTrueSets
-        print(loadDBModel.joinGroupTrueSets)
-        print(groupJoinArray)
-        newGroupCountArray = loadDBModel.joinGroupFalseSets
-        newGroupCountLabel.text = String(newGroupCountArray.count)
-        if newGroupCountArray.count == 0{
-            newGroupCountLabel.isHidden = true
-        }else if newGroupCountArray.count < 10{
-            newGroupCountLabel.isHidden = false
+    //追加
+    //どのグループに参加しているか招待されているかを取得完了
+    func loadUserJoinGroup_OK(joinGroupDic: Dictionary<String, Bool>) {
+        self.groupJoinArray = []
+        self.newGroupCountArray = []
+        //参加、不参加ごとにのグループの情報を取得完了
+        loadDBModel.loadGroupInfo(joinGroupDic: joinGroupDic) { [self] JoinGroupSets in
+            if JoinGroupSets.join == true{
+                self.groupJoinArray.append(JoinGroupSets)
+            }else if JoinGroupSets.join == false{
+                self.newGroupCountArray.append(JoinGroupSets)
+            }
             newGroupCountLabel.text = String(newGroupCountArray.count)
-        }else if newGroupCountArray.count >= 10{
-            newGroupCountLabel.isHidden = false
-            newGroupCountLabel.text = String(newGroupCountArray.count)
-            newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+            if newGroupCountArray.count == 0{
+                newGroupCountLabel.isHidden = true
+            }else if newGroupCountArray.count < 10{
+                newGroupCountLabel.isHidden = false
+                newGroupCountLabel.text = String(newGroupCountArray.count)
+            }else if newGroupCountArray.count >= 10{
+                newGroupCountLabel.isHidden = false
+                newGroupCountLabel.text = String(newGroupCountArray.count)
+                newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+            }
+            
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.reloadData()
         }
-        tableView.reloadData()
-        activityIndicatorView.stopAnimating()
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -173,9 +174,9 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }
     }
     
-    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return false
-    }
+//    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return false
+//    }
     
     //スクロール中に呼ばれる
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -252,7 +253,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             let cellView = cell?.contentView.viewWithTag(1) as! UIView
             let groupImage = cell?.contentView.viewWithTag(2) as! UIImageView
             let groupNameLabel = cell?.contentView.viewWithTag(3) as! UILabel
-         
+            
             groupImage.layer.cornerRadius = 30
             groupImage.sd_setImage(with: URL(string: groupJoinArray[indexPath.row].groupImage), completed: nil)
             groupNameLabel.text = groupJoinArray[indexPath.row].groupName
@@ -273,7 +274,8 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             if indexPath.row == 0{
                 let ProfileDetailVC = storyboard?.instantiateViewController(withIdentifier: "ProfileDetailVC") as! ProfileDetailViewController
                 ProfileDetailVC.userInfoArray = userInfoArray
-                ProfileDetailVC.profileImageView.image = self.profileImageView.image
+                print(self.profileImageView.image!)
+                ProfileDetailVC.receiveImage = self.profileImageView.image!
                 navigationController?.pushViewController(ProfileDetailVC, animated: true)
                 scrollToOriginal()
             }else if indexPath.row == 1{
@@ -281,7 +283,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
                     try auth.signOut()
                     navigationController?.popViewController(animated: true)
                 } catch let error {
-//                    loginModel?.showError(error, showLabel: errorShow)
+                    //                    loginModel?.showError(error, showLabel: errorShow)
                     let alert = UIAlertController(title: "エラーです", message: "", preferredStyle: .alert)
                     let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
                     alert.addAction(cancelAction)
@@ -294,7 +296,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             navigationController?.pushViewController(tabBarContoller, animated: true)
             
             //この先ユーザーがどのルームを使うか認識したいのでroomIDを上書き保存する
-            groupID = loadDBModel.joinGroupTrueSets[indexPath.row].groupID
+            groupID = groupJoinArray[indexPath.row].groupID
             UserDefaults.standard.setValue(groupID, forKey: "groupID")
         }
     }

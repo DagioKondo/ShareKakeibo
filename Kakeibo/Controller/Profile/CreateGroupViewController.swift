@@ -14,7 +14,7 @@ import FirebaseStorage
 class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SendOKDelegate{
     
     
-    
+
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var settlementTextField: UITextField!
     @IBOutlet weak var searchUserButton: UIButton!
@@ -56,7 +56,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         collectionView.collectionViewLayout = layout
         
     }
-    
+
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
     }
@@ -68,7 +68,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     @IBAction func searchUserButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
         performSegue(withIdentifier: "searchVC", sender: nil)
-        
+       
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -103,7 +103,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
         
-        cell.profileImage!.sd_setImage(with: URL(string: selectedUserImageArray[indexPath.row]), completed: nil)
+        cell.profileImage!.image = UIImage(systemName: selectedUserImageArray[indexPath.row])
         cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
         print("daigoitemAt")
         print(cell.deleteButton.tag)
@@ -144,22 +144,28 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         let groupID = groupDocument.documentID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
         
+        //変更
         db.collection("groupManagement").document(groupID).setData([
             "groupName": groupNameTextField.text!,
             "groupImage": url,
             "settlementDay": settlementTextField.text!,"groupID": groupID,
-            "joinGroupDic":["\(userID)": true] as Dictionary<String,Bool>,
-            "userNameDic":["\(userID)":userName],
-            "settlementDic":["\(userID)":false],
-            "myTotalPaymentAmountDic":["\(userID)":0],
-            "profileImageDic":["\(userID)":profileImage]
+            "settlementDic":["\(userID)": false],
+            "userIDArray":[userID]
         ])
+        //追加
+        db.collection("userManagement").document(userID).setData([
+            "joinGroupDic" : ["\(groupID)": true]
+            ],merge: true)
         
-        for userID in userIDArray{
-            db.collection("groupManagement").document(groupID).setData([
-                "joinGroupDic":["\(userID)": false]
+        //変更
+        for usersID in userIDArray{
+            db.collection("userManagement").document(usersID).setData([
+                "joinGroupDic":["\(groupID)": false]
             ], merge: true)
         }
+        
+        //追加
+//        db.collection(groupID).document().setData(["paymentDay" : Any])
         navigationController?.popViewController(animated: true)
     }
     
@@ -180,7 +186,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         if info[.originalImage] as? UIImage != nil{
             let pickerImage = info[.originalImage] as! UIImage
             let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
-            
+        
             cropController.delegate = self
             cropController.customAspectRatio = groupImageView.frame.size
             //cropBoxのサイズを固定する。
@@ -201,7 +207,7 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         self.groupImageView.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }
-    
+
     
     /*
      // MARK: - Navigation

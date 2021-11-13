@@ -9,20 +9,17 @@ import UIKit
 import FirebaseFirestore
 
 class ProfileConfigurationViewController: UIViewController,EditOKDelegate {
-
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var warningLabel: UILabel!
     
-    
-    //追加
     var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     var userID = String()
     var receiveTitle = String()
     var receiveDataName = String()
-    
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
     
@@ -48,22 +45,12 @@ class ProfileConfigurationViewController: UIViewController,EditOKDelegate {
     
     @IBAction func saveButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
-        //追加
-        if receiveDataName == "userName"{
-            if textField.text != ""{
-                editDBModel.editUserNameChange(userID: userID, newUserName: textField.text!)
-            }else{
-                warningLabel.text = "必須入力です"
-            }
+        //変更
+        if textField.text != ""{
+            db.collection("userManagement").document(userID).updateData(["\(receiveDataName)" : "\(textField.text!)"])
         }else{
-            if textField.text != ""{
-                db.collection("userManagement").document(userID).updateData(["\(receiveDataName)" : "\(textField.text!)"])
-                self.navigationController?.popViewController(animated: true)
-            }else{
-                warningLabel.text = "必須入力です"
-            }
+            warningLabel.text = "必須入力です"
         }
-        
     }
     
     func editUserNameChange_OK() {
@@ -75,13 +62,13 @@ class ProfileConfigurationViewController: UIViewController,EditOKDelegate {
     }
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

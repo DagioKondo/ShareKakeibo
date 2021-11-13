@@ -18,6 +18,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
+    var receiveImage = UIImage()
     var nameArray = ["名前","メールアドレス","パスワード"]
     var dataNameArray = ["userName","email","password"]
     var userInfoArray = [String]()
@@ -34,6 +35,7 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        profileImageView.image = receiveImage
         profileImageView.layer.cornerRadius = 120
         tableView.delegate = self
         tableView.dataSource = self
@@ -127,8 +129,9 @@ class ProfileDetailViewController: UIViewController, UITableViewDelegate, UITabl
         cropViewController.dismiss(animated: true, completion: nil)
     }
     
+    //変更
     func sendImage_OK(url: String) {
-        editDBModel.editProfileImageChange(userID: userID, newProfileImage: url)
+        db.collection("userManagement").document(userID).updateData(["profileImage" : url])
     }
     
     func editProfileImageChange_OK() {
