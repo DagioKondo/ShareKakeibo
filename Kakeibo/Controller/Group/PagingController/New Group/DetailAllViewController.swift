@@ -42,7 +42,6 @@ class DetailAllViewController: UIViewController{
         activityIndicatorView.color = .darkGray
         view.addSubview(activityIndicatorView)
         
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
