@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseFirestore
 
-class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,LoadOKDelegate, EditOKDelegate {
+class NewGroupViewController: UIViewController {
     
     
     @IBOutlet weak var createGroupButton: UIButton!
@@ -25,7 +25,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
-    var groupNotJoinArray = [JoinGroupSets]()
+    var groupNotJoinArray = [GroupSets]()
     var activityIndicatorView = UIActivityIndicatorView()
     
     
@@ -52,20 +52,8 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
         //変更
-        loadDBModel.loadUserJoinGroup(userID: userID)
-    }
-    
-    //追加
-    //どのグループに参加しているか招待されているかを取得完了
-    func loadUserJoinGroup_OK(joinGroupDic: Dictionary<String, Bool>) {
-        self.groupNotJoinArray = []
-        //参加、不参加ごとにのグループの情報を取得完了
-        loadDBModel.loadGroupInfo(joinGroupDic: joinGroupDic) { JoinGroupSets in
-            if JoinGroupSets.join == false{
-                self.groupNotJoinArray.append(JoinGroupSets)
-            }
-            self.tableView.reloadData()
-        }
+        loadDBModel.loadNotJoinGroup(userID: userID)
+        
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -90,49 +78,7 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         createGroupButton.layer.shadowOpacity = 0.5
         createGroupButton.layer.shadowRadius = 1
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groupNotJoinArray.count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 85
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let invitationView = cell.contentView.viewWithTag(1)!
-        let groupNameLabel = cell.contentView.viewWithTag(2) as! UILabel
-        let joinButton = cell.contentView.viewWithTag(3) as! UIButton
-        let rejectButton = cell.contentView.viewWithTag(4) as! UIButton
-        
-        cell.selectionStyle = .none //セルのハイライトを消している
-        
-        invitationView.layer.cornerRadius = 5
-        invitationView.layer.masksToBounds = false
-        invitationView.layer.cornerRadius = 5
-        invitationView.layer.shadowOffset = CGSize(width: 1, height: 1)
-        invitationView.layer.shadowOpacity = 0.2
-        invitationView.layer.shadowRadius = 1
-        
-        groupNameLabel.text = groupNotJoinArray[indexPath.row].groupName
-        
-        joinButton.layer.cornerRadius = 3
-        joinButton.addTarget(self, action: #selector(joinButton(_:)), for: .touchUpInside)
-        joinButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
-        joinButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
-        
-        rejectButton.layer.cornerRadius = 3
-        rejectButton.addTarget(self, action: #selector(rejectButton(_:)), for: .touchUpInside)
-        rejectButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
-        rejectButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
-        
-        return cell
-    }
+  
     
     @objc func joinButton(_ sender:UIButton){
         buttonAnimatedModel.endAnimation(sender: sender)
@@ -163,24 +109,75 @@ class NewGroupViewController: UIViewController, UITableViewDelegate, UITableView
         editDBModel.editGroupInfoDelete(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+
+}
+//MARK:- TabeleView
+extension NewGroupViewController:UITableViewDelegate, UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return groupNotJoinArray.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 85
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let invitationView = cell.contentView.viewWithTag(1)!
+        let groupNameLabel = cell.contentView.viewWithTag(2) as! UILabel
+        let joinButton = cell.contentView.viewWithTag(3) as! UIButton
+        let rejectButton = cell.contentView.viewWithTag(4) as! UIButton
+        
+        cell.selectionStyle = .none //セルのハイライトを消している
+        
+        invitationView.layer.cornerRadius = 5
+        invitationView.layer.masksToBounds = false
+        invitationView.layer.shadowOffset = CGSize(width: 1, height: 3)
+        invitationView.layer.shadowOpacity = 0.2
+        invitationView.layer.shadowRadius = 3
+        
+        groupNameLabel.text = groupNotJoinArray[indexPath.row].groupName
+        
+        joinButton.layer.cornerRadius = 3
+        joinButton.addTarget(self, action: #selector(joinButton(_:)), for: .touchUpInside)
+        joinButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
+        joinButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+        
+        rejectButton.layer.cornerRadius = 3
+        rejectButton.addTarget(self, action: #selector(rejectButton(_:)), for: .touchUpInside)
+        rejectButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
+        rejectButton.addTarget(self, action: #selector(touchUpOutside(_:)), for: .touchUpOutside)
+        
+        return cell
+    }
+    
+}
+
+//MARK:- LoadOKDelegate,EditOKDelegate
+extension NewGroupViewController:LoadOKDelegate, EditOKDelegate{
+    
+    //どのグループに参加しているか招待されているかを取得完了
+    func loadNotJoinGroup_OK(groupIDArray: [String], notJoinCount: Int) {
+        groupNotJoinArray = []
+        //招待されているグループの情報を取得完了
+        loadDBModel.loadNotJoinGroupInfo(groupIDArray: groupIDArray) { JoinGroupSets in
+            self.groupNotJoinArray.append(JoinGroupSets)
+            self.tableView.reloadData()
+        }
+    }
+    
     func editGroupInfoDelete_OK() {
         groupNotJoinArray.remove(at: indexPath.row)
         tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .automatic)
         activityIndicatorView.stopAnimating()
     }
-    
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }

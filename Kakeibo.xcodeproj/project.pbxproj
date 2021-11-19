@@ -12,7 +12,7 @@
 		8617BE24273E85E9007417A1 /* LoadDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE21273E85E9007417A1 /* LoadDBModel.swift */; };
 		8617BE2B273E85F2007417A1 /* MonthGroupDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE25273E85F2007417A1 /* MonthGroupDetailsSets.swift */; };
 		8617BE2C273E85F2007417A1 /* MonthMyDetailsSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE26273E85F2007417A1 /* MonthMyDetailsSets.swift */; };
-		8617BE2D273E85F2007417A1 /* JoinGroupSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE27273E85F2007417A1 /* JoinGroupSets.swift */; };
+		8617BE2D273E85F2007417A1 /* GroupSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE27273E85F2007417A1 /* GroupSets.swift */; };
 		8617BE2E273E85F2007417A1 /* NotificationSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE28273E85F2007417A1 /* NotificationSets.swift */; };
 		8617BE2F273E85F2007417A1 /* UserSearchSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE29273E85F2007417A1 /* UserSearchSets.swift */; };
 		8617BE30273E85F2007417A1 /* UserSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617BE2A273E85F2007417A1 /* UserSets.swift */; };
@@ -60,6 +60,7 @@
 		86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D62719B6A60044803F /* GroupMemberViewController.swift */; };
 		86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D82719C7740044803F /* DetailLastMonthViewController.swift */; };
 		86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */; };
+		86EF6C1F274537E600F9D8D0 /* SettlementSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */; };
 		C25F0C74DDF82920E5B386FC /* Pods_Kakeibo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45F04BDF83913AC2A80BE6F4 /* Pods_Kakeibo.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +73,7 @@
 		8617BE21273E85E9007417A1 /* LoadDBModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDBModel.swift; sourceTree = "<group>"; };
 		8617BE25273E85F2007417A1 /* MonthGroupDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthGroupDetailsSets.swift; sourceTree = "<group>"; };
 		8617BE26273E85F2007417A1 /* MonthMyDetailsSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthMyDetailsSets.swift; sourceTree = "<group>"; };
-		8617BE27273E85F2007417A1 /* JoinGroupSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGroupSets.swift; sourceTree = "<group>"; };
+		8617BE27273E85F2007417A1 /* GroupSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupSets.swift; sourceTree = "<group>"; };
 		8617BE28273E85F2007417A1 /* NotificationSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSets.swift; sourceTree = "<group>"; };
 		8617BE29273E85F2007417A1 /* UserSearchSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchSets.swift; sourceTree = "<group>"; };
 		8617BE2A273E85F2007417A1 /* UserSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSets.swift; sourceTree = "<group>"; };
@@ -122,6 +123,7 @@
 		86A038D62719B6A60044803F /* GroupMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberViewController.swift; sourceTree = "<group>"; };
 		86A038D82719C7740044803F /* DetailLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLastMonthViewController.swift; sourceTree = "<group>"; };
 		86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastMonthDataViewController.swift; sourceTree = "<group>"; };
+		86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementSets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,12 +169,13 @@
 		8617BE1E273E85CF007417A1 /* DataSets */ = {
 			isa = PBXGroup;
 			children = (
-				8617BE27273E85F2007417A1 /* JoinGroupSets.swift */,
+				8617BE27273E85F2007417A1 /* GroupSets.swift */,
 				8617BE25273E85F2007417A1 /* MonthGroupDetailsSets.swift */,
 				8617BE26273E85F2007417A1 /* MonthMyDetailsSets.swift */,
 				8617BE28273E85F2007417A1 /* NotificationSets.swift */,
 				8617BE29273E85F2007417A1 /* UserSearchSets.swift */,
 				8617BE2A273E85F2007417A1 /* UserSets.swift */,
+				86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */,
 			);
 			path = DataSets;
 			sourceTree = "<group>";
@@ -252,18 +255,7 @@
 				86A0388027102A740044803F /* LoginViewController.swift */,
 				86A038B627197A430044803F /* RegisterViewController.swift */,
 				862AF71C272C366C00C2B5DC /* Profile */,
-				86A038C62719AB930044803F /* MonthDataViewController.swift */,
-				86A038C82719ABAF0044803F /* SettlementViewController.swift */,
-				86A038D42719B5860044803F /* AdditionViewController.swift */,
-				86A038CA2719ABD80044803F /* DetailThisMonthViewController.swift */,
-				86A038CC2719ABF40044803F /* MonthlyDataViewController.swift */,
-				86A038CE2719B3700044803F /* PaymentViewController.swift */,
-				86A038D02719B53C0044803F /* GroupDetailViewController.swift */,
-				86A038D22719B5520044803F /* GroupConfigurationViewController.swift */,
-				86A038D62719B6A60044803F /* GroupMemberViewController.swift */,
-				86A038D82719C7740044803F /* DetailLastMonthViewController.swift */,
-				86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */,
-				8635E8A927353A5500C8DB72 /* PagingController */,
+				86EF6C202746A06700F9D8D0 /* Group */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -294,6 +286,25 @@
 				865B9CE827216128000CCFB2 /* CollectionViewCell.xib */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		86EF6C202746A06700F9D8D0 /* Group */ = {
+			isa = PBXGroup;
+			children = (
+				86A038C62719AB930044803F /* MonthDataViewController.swift */,
+				86A038C82719ABAF0044803F /* SettlementViewController.swift */,
+				86A038D42719B5860044803F /* AdditionViewController.swift */,
+				86A038CA2719ABD80044803F /* DetailThisMonthViewController.swift */,
+				86A038CC2719ABF40044803F /* MonthlyDataViewController.swift */,
+				86A038CE2719B3700044803F /* PaymentViewController.swift */,
+				86A038D02719B53C0044803F /* GroupDetailViewController.swift */,
+				86A038D22719B5520044803F /* GroupConfigurationViewController.swift */,
+				86A038D62719B6A60044803F /* GroupMemberViewController.swift */,
+				86A038D82719C7740044803F /* DetailLastMonthViewController.swift */,
+				86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */,
+				8635E8A927353A5500C8DB72 /* PagingController */,
+			);
+			path = Group;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -423,12 +434,13 @@
 				8635E8A027353A1D00C8DB72 /* UtilityViewController.swift in Sources */,
 				86A038D12719B53C0044803F /* GroupDetailViewController.swift in Sources */,
 				8617BE2C273E85F2007417A1 /* MonthMyDetailsSets.swift in Sources */,
+				86EF6C1F274537E600F9D8D0 /* SettlementSets.swift in Sources */,
 				86A0388127102A740044803F /* LoginViewController.swift in Sources */,
 				8635E8A627353A2300C8DB72 /* DetailAllLastMonthViewController.swift in Sources */,
 				86A038CF2719B3700044803F /* PaymentViewController.swift in Sources */,
 				86A038BD27197A830044803F /* NewGroupViewController.swift in Sources */,
 				86A038BF27197A990044803F /* CreateGroupViewController.swift in Sources */,
-				8617BE2D273E85F2007417A1 /* JoinGroupSets.swift in Sources */,
+				8617BE2D273E85F2007417A1 /* GroupSets.swift in Sources */,
 				8635E8A527353A2300C8DB72 /* DetailAllViewController.swift in Sources */,
 				86A038C127197AAB0044803F /* SearchViewController.swift in Sources */,
 				8617BE30273E85F2007417A1 /* UserSets.swift in Sources */,

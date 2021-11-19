@@ -12,6 +12,8 @@ import UIKit
     
     @objc optional func loginOK(userID:String)
     @objc optional func registerOK(userID:String)
+    @objc optional func upDateOK(value: String)
+    @objc optional func reauthenticationOK(check:Int)
     
 }
 
@@ -95,6 +97,38 @@ class LoginModel{
         
     }
     
+    
+    func updateUserDataOfEmail(emailTextField:UITextField, errorShowLabel:UILabel){
+        
+        if auth.currentUser == nil{
+            print("***updateUserOfEmail***")
+            print("currentUserがnilです")
+            
+        }
+        
+        auth.currentUser?.updateEmail(to: emailTextField.text!, completion: { [self] error in
+                if error != nil{
+                    print(error.debugDescription)
+                    self.showError(error, showLabel: errorShowLabel)
+                }else{
+                    errorShowLabel.text = "メールアドレスを変更しました"
+                    loginOKDelegate?.upDateOK?(value: emailTextField.text!)
+                }
+            })
+        }
+    
+    
+    func updateUserDataOfPassword(passwordTextField:UITextField, errorShowLabel:UILabel){
+        auth.currentUser?.updatePassword(to: passwordTextField.text!, completion: { [self] error in
+                if error != nil{
+                    self.showError(error, showLabel: errorShowLabel)
+                }else{
+                    errorShowLabel.text = "パスワードを変更しました"
+                    loginOKDelegate?.upDateOK?(value: passwordTextField.text!)
+                }
+            })
+        }
+    
     func showError(_ errorOrNil: Error?,showLabel:UILabel){
         
         guard let error = errorOrNil else { return }
@@ -102,6 +136,25 @@ class LoginModel{
         
         showLabel.text = message
         
+    }
+    
+    func reauthentication(viewController:UIViewController, userInfoArray: [String]){
+        let user = auth.currentUser
+        let email = userInfoArray[1]
+        let password = userInfoArray[2]
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        user?.reauthenticate(with: credential, completion: { result, error in
+            if error != nil{
+                print(error.debugDescription)
+                return
+            }else{
+//                let ProfileConfigurationVC = viewController.storyboard?.instantiateViewController(identifier: "ProfileConfigurationVC") as! ProfileConfigurationViewController
+//                ProfileConfigurationVC.userInfoArray = userInfoArray
+//                print(userInfoArray)
+                viewController.performSegue(withIdentifier: "ProfileConfigurationVC", sender: nil)
+                
+            }
+        })
     }
     
     func errorMessage(of error:Error) -> String{

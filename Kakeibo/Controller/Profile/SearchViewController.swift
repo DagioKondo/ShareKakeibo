@@ -9,11 +9,10 @@ import UIKit
 import SDWebImage
 
 protocol CollectionDeligate {
-    func SendArray(selectedUserImageArray:[String],userIDArray: [String])
+    func SendArray(selectedUserImageArray:[String],userIDArray: [String],userNameArray: [String])
 }
 
-
-class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate {
+class SearchViewController: UIViewController {
     
     var collectionDeligate:CollectionDeligate?
     
@@ -55,7 +54,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         tableView.layer.shadowOffset = CGSize(width: 0, height: 1)
         tableView.layer.shadowOpacity = 0.5
         tableView.layer.shadowRadius = 1
-//        tableView.isHidden = true
         tableView.transform = CGAffineTransform(scaleX: 0, y: 0)
         loadDBModel.loadOKDelegate = self
         
@@ -64,11 +62,22 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         activityIndicatorView.color = .darkGray
         view.addSubview(activityIndicatorView)
     }
-    
-    override func viewWillLayoutSubviews() {
-        
+ 
+    @IBAction func decideButton(_ sender: Any) {
+        collectionDeligate?.SendArray(selectedUserImageArray: selectedUserImageArray, userIDArray: userIDArray, userNameArray: userNameArray)
+        print(selectedUserImageArray)
+        dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func searchUserButton(_ sender: Any) {
+        activityIndicatorView.startAnimating()
+        nothingLabel.isHidden = true
+        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
+    }
+
+}
+// MARK: - CollectionView
+extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return selectedUserImageArray.count
     }
@@ -88,6 +97,18 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.zero
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
     @objc func tapDeleteButton(_ sender:UIButton){
         let cell = sender.superview?.superview as! UICollectionViewCell
         let indexPath = collectionView.indexPath(for: cell)
@@ -98,15 +119,14 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        collectionView.reloadData()
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
     
+}
+
+// MARK: - TableView
+extension SearchViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return userSearchSets.count
@@ -143,25 +163,18 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }, completion:  { _ in
             //               self.tableView.isHidden = true
         })
+
         collectionView.reloadData()
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 74
     }
     
-    @IBAction func decideButton(_ sender: Any) {
-        collectionDeligate?.SendArray(selectedUserImageArray: selectedUserImageArray, userIDArray: userIDArray)
-        print(selectedUserImageArray)
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func searchUserButton(_ sender: Any) {
-        activityIndicatorView.startAnimating()
-        nothingLabel.isHidden = true
-        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
-    }
+}
+
+// MARK: - LoadOKDelegate
+extension SearchViewController: LoadOKDelegate{
     
     func loadUserSearch_OK() {
         self.userSearchSets = loadDBModel.userSearchSets
@@ -190,29 +203,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 self.activityIndicatorView.stopAnimating()
             })
         }
-        
     }
     
-    
-    
-    /*
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
-
-
-    /*
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-

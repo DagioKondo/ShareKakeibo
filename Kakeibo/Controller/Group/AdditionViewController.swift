@@ -12,7 +12,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 
-class AdditionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource,LoadOKDelegate {
+class AdditionViewController: UIViewController {
 
     
     @IBOutlet weak var invitationButton: UIButton!
@@ -63,6 +63,39 @@ class AdditionViewController: UIViewController, UICollectionViewDelegate, UIColl
         view.addSubview(activityIndicatorView)
     }
     
+    
+    @IBAction func invitationButton(_ sender: Any) {
+        let groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        for usersID in userIDArray{
+            db.collection("userManagement").document(usersID).setData(["joinGroupDic":["\(groupID)": false]], merge: true)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func searchUserButton(_ sender: Any) {
+        activityIndicatorView.startAnimating()
+        nothingLabel.isHidden = true
+        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
+    }
+    
+    @IBAction func back(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    /*
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
+// MARK: - CollectionView
+extension AdditionViewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return selectedUserImageArray.count
     }
@@ -91,15 +124,14 @@ class AdditionViewController: UIViewController, UICollectionViewDelegate, UIColl
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        collectionView.reloadData()
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
     
+}
+
+// MARK: - TableView
+extension AdditionViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userSearchSets.count
@@ -144,19 +176,10 @@ class AdditionViewController: UIViewController, UICollectionViewDelegate, UIColl
         return 74
     }
     
-    @IBAction func invitationButton(_ sender: Any) {
-        let groupID = UserDefaults.standard.object(forKey: "groupID") as! String
-        for usersID in userIDArray{
-            db.collection("userManagement").document(usersID).setData(["joinGroupDic":["\(groupID)": false]], merge: true)
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func searchUserButton(_ sender: Any) {
-        activityIndicatorView.startAnimating()
-        nothingLabel.isHidden = true
-        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
-    }
+}
+
+// MARK: - LoadOKDeegate
+extension AdditionViewController:LoadOKDelegate{
     
     func loadUserSearch_OK() {
         
@@ -188,28 +211,4 @@ class AdditionViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     
-    @IBAction func back(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    
-    /*
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
-
-    /*
-    // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-

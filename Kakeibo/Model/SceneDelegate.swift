@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let viewController = storyboard.instantiateViewController(identifier: "LoginVC")
             let navigationVC = UINavigationController(rootViewController: viewController)
+            
             window.rootViewController = navigationVC
         }
         

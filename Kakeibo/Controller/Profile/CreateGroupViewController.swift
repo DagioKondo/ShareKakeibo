@@ -11,8 +11,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
-class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CollectionDeligate,CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SendOKDelegate{
-    
+class CreateGroupViewController: UIViewController{
     
 
     @IBOutlet weak var groupNameTextField: UITextField!
@@ -28,11 +27,16 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
     
     var selectedUserImageArray = [String]()
     var userIDArray = [String]()
+    var userNameArray = [String]()
+    
     var userID = String()
     var userName = String()
     var profileImage = String()
     
     var alertModel = AlertModel()
+    
+    var pickerView = UIPickerView()
+    let settlementArray = ["5","10","15","20","25"]
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
@@ -55,6 +59,8 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         layout.scrollDirection = .horizontal
         collectionView.collectionViewLayout = layout
         
+        makePicker()
+        
     }
 
     @objc func touchDown(_ sender:UIButton){
@@ -76,50 +82,9 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         searchVC.collectionDeligate = self
     }
     
-    
-    func SendArray(selectedUserImageArray: [String],userIDArray: [String]) {
-        print(selectedUserImageArray)
-        print(userIDArray)
-        self.selectedUserImageArray = selectedUserImageArray
-        self.userIDArray = userIDArray
-        collectionView.reloadData()
-        print(self.userIDArray)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        settlementTextField.endEditing(true)
     }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedUserImageArray.count
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
-        
-        cell.profileImage!.image = UIImage(systemName: selectedUserImageArray[indexPath.row])
-        cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
-        print("daigoitemAt")
-        print(cell.deleteButton.tag)
-        
-        return cell
-    }
-    
-    @objc func tapDeleteButton(_ sender:UIButton){
-        let cell = sender.superview?.superview as! UICollectionViewCell
-        let indexPath = collectionView.indexPath(for: cell)
-        selectedUserImageArray.remove(at: indexPath!.row)
-        userIDArray.remove(at: indexPath!.row)
-        print(userIDArray)
-        collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
-    }
-    
     
     @IBAction func createGroupButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
@@ -138,6 +103,92 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
             sendDBModel.sendGroupImage(data: data!)
         }
     }
+    
+    @IBAction func back(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func groupImageView(_ sender: Any) {
+        alertModel.satsueiAlert(viewController: self)
+    }
+    
+    @IBAction func groupImageViewButton(_ sender: Any) {
+        alertModel.satsueiAlert(viewController: self)
+    }
+
+}
+
+//MARK:- UICollectionView
+extension CreateGroupViewController:UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return selectedUserImageArray.count
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as! CollectionViewCell
+        
+        cell.profileImage.sd_setImage(with: URL(string: selectedUserImageArray[indexPath.row]), completed: nil)
+        cell.deleteButton!.addTarget(self, action: #selector(tapDeleteButton(_:)), for: .touchUpInside)
+        cell.userNameLabel.text = userNameArray[indexPath.row]
+        print("daigoitemAt")
+        print(cell.deleteButton.tag)
+        
+        return cell
+    }
+    
+    @objc func tapDeleteButton(_ sender:UIButton){
+        let cell = sender.superview?.superview as! UICollectionViewCell
+        let indexPath = collectionView.indexPath(for: cell)
+        selectedUserImageArray.remove(at: indexPath!.row)
+        userIDArray.remove(at: indexPath!.row)
+        print(userIDArray)
+        collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
+    }
+    
+}
+
+//MARK:- ImagePicker
+extension CreateGroupViewController:CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if info[.originalImage] as? UIImage != nil{
+            let pickerImage = info[.originalImage] as! UIImage
+            let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
+        
+            cropController.delegate = self
+            cropController.customAspectRatio = groupImageView.frame.size
+            //cropBoxのサイズを固定する。
+            cropController.cropView.cropBoxResizeEnabled = false
+            //pickerを閉じたら、cropControllerを表示する。
+            picker.dismiss(animated: true) {
+                self.present(cropController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        //トリミング編集が終えたら、呼び出される。
+        self.groupImageView.image = image
+        cropViewController.dismiss(animated: true, completion: nil)
+    }
+    
+}
+//MARK:- SendOKDelegate
+extension CreateGroupViewController:SendOKDelegate{
     
     func sendImage_OK(url: String) {
         let groupDocument = db.collection("groupManagement").document()
@@ -169,54 +220,53 @@ class CreateGroupViewController: UIViewController,UICollectionViewDelegate, UICo
         navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
+}
+//MARK:- Picker
+extension CreateGroupViewController:UIPickerViewDelegate,UIPickerViewDataSource{
     
-    @IBAction func groupImageView(_ sender: Any) {
-        alertModel.satsueiAlert(viewController: self)
-    }
-    
-    @IBAction func groupImageViewButton(_ sender: Any) {
-        alertModel.satsueiAlert(viewController: self)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func makePicker(){
+        pickerView.dataSource = self
+        pickerView.delegate = self
+        settlementTextField.inputView = pickerView
         
-        if info[.originalImage] as? UIImage != nil{
-            let pickerImage = info[.originalImage] as! UIImage
-            let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
-        
-            cropController.delegate = self
-            cropController.customAspectRatio = groupImageView.frame.size
-            //cropBoxのサイズを固定する。
-            cropController.cropView.cropBoxResizeEnabled = false
-            //pickerを閉じたら、cropControllerを表示する。
-            picker.dismiss(animated: true) {
-                self.present(cropController, animated: true, completion: nil)
-            }
-        }
+        let toolbar = UIToolbar()
+        toolbar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44)
+        let doneButtonItem = UIBarButtonItem(title: "決定", style: .done, target: self, action: #selector(self.doneButtonOfpicker))
+        toolbar.setItems([doneButtonItem], animated: true)
+        settlementTextField.inputAccessoryView = toolbar
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+    @objc func doneButtonOfpicker(){
+        settlementTextField.endEditing(true)
+    }
+   
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return settlementArray.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        settlementTextField.text = settlementArray[row]
+        return settlementArray[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        settlementTextField.text = settlementArray[row]
     }
     
-    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
-        //トリミング編集が終えたら、呼び出される。
-        self.groupImageView.image = image
-        cropViewController.dismiss(animated: true, completion: nil)
-    }
+}
 
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+//MARK:- CollectionDelegate
+
+extension CreateGroupViewController:CollectionDeligate{
+    func SendArray(selectedUserImageArray: [String], userIDArray: [String], userNameArray: [String]) {
+        print(selectedUserImageArray)
+        print(userIDArray)
+        self.selectedUserImageArray = selectedUserImageArray
+        self.userIDArray = userIDArray
+        self.userNameArray = userNameArray
+        collectionView.reloadData()
+        print(self.userIDArray)
+    }
     
 }

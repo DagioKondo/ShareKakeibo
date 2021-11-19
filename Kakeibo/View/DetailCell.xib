@@ -97,6 +97,7 @@
                 <outlet property="paymentLabel" destination="aEq-gh-lRP" id="ZMd-7E-AuG"/>
                 <outlet property="profileImage" destination="LTk-Zn-Vkv" id="qSY-S2-jNv"/>
                 <outlet property="userNameLabel" destination="UxC-3k-wXA" id="cGU-wQ-qRT"/>
+                <outlet property="view" destination="Te3-eQ-07v" id="dm6-DB-bld"/>
             </connections>
             <point key="canvasLocation" x="95.652173913043484" y="110.15625"/>
         </tableViewCell>

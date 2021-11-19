@@ -47,13 +47,14 @@ class EditDBModel{
     
     //自分の明細を削除したときにロード
     func editMonthDetailsDelete(groupID:String,userID:String,startDate:Date,endDate:Date,index:Int,activityIndicatorView:UIActivityIndicatorView){
-        db.collection(groupID).whereField("userID", isEqualTo: userID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").getDocuments { (snapShot, error) in
+        db.collection(groupID).whereField("userID", isEqualTo: userID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
             self.monthMyDetailsSets = []
             self.dateFormatter.dateFormat = "yyyy/MM/dd"
             self.dateFormatter.locale = Locale(identifier: "ja_JP")
             self.dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
             if error != nil{
                 activityIndicatorView.stopAnimating()
+                error.debugDescription
                 return
             }
             if let snapShotDoc = snapShot?.documents{
@@ -70,8 +71,8 @@ class EditDBModel{
                     if count == index{
                         self.db.collection(groupID).document(doc.documentID).delete()
                     }else{
-                        let myNewData = MonthMyDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
-                        self.monthMyDetailsSets.append(myNewData)
+//                        let myNewData = MonthMyDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
+//                        self.monthMyDetailsSets.append(myNewData)
                     }
                     count = count + 1
                 }

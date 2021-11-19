@@ -12,7 +12,7 @@ import Firebase
 import FirebaseAuth
 
 
-class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate,LoadOKDelegate{
+class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     
     
     @IBOutlet weak var contentViewWidthConstraint: NSLayoutConstraint!
@@ -29,8 +29,8 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     var userID = String()
     var groupID = String()
     //変更
-    var groupJoinArray = [JoinGroupSets]()
-    var newGroupCountArray = [JoinGroupSets]()
+    var groupJoinArray = [GroupSets]()
+    var newGroupCountArray = [GroupSets]()
     
     var userInfoArray = [String]()
     var loginModel = LoginModel()
@@ -42,7 +42,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     let configurationImageArray = ["person.fill","exit"]
     let configurationLabel = UILabel()
     var swipeView = UIVisualEffectView()
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,8 +94,27 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
+        getFileNamesFromPreferences()
+        
     }
     
+    func getFileNamesFromPreferences() {
+           // Libraryまでのファイルパスを取得
+           let filePath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]
+
+           // filePathにPreferencesを追加
+           let preferences = filePath.appendingPathComponent("Preferences")
+
+           // Library/Preferences内のファイルのパスを取得
+           guard let fileNames = try? FileManager.default.contentsOfDirectory(at: preferences, includingPropertiesForKeys: nil) else {
+               return
+           }
+           // Library/Preferences内のファイル名を出力
+           fileNames.compactMap { fileName in
+               print(fileName.lastPathComponent)
+           }
+       }
+ 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -121,47 +140,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
-    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
-        activityIndicatorView.stopAnimating()
-        UserDefaults.standard.setValue(userName, forKey: "userName")
-        UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
-        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
-        userNameLabel.text = userName
-        userInfoArray = [userName,email,password]
-        //変更
-        loadDBModel.loadUserJoinGroup(userID: userID)
-        newGroupCountLabel.isHidden = true
-    }
-    
-    //追加
-    //どのグループに参加しているか招待されているかを取得完了
-    func loadUserJoinGroup_OK(joinGroupDic: Dictionary<String, Bool>) {
-        self.groupJoinArray = []
-        self.newGroupCountArray = []
-        //参加、不参加ごとにのグループの情報を取得完了
-        loadDBModel.loadGroupInfo(joinGroupDic: joinGroupDic) { [self] JoinGroupSets in
-            if JoinGroupSets.join == true{
-                self.groupJoinArray.append(JoinGroupSets)
-            }else if JoinGroupSets.join == false{
-                self.newGroupCountArray.append(JoinGroupSets)
-            }
-            newGroupCountLabel.text = String(newGroupCountArray.count)
-            if newGroupCountArray.count == 0{
-                newGroupCountLabel.isHidden = true
-            }else if newGroupCountArray.count < 10{
-                newGroupCountLabel.isHidden = false
-                newGroupCountLabel.text = String(newGroupCountArray.count)
-            }else if newGroupCountArray.count >= 10{
-                newGroupCountLabel.isHidden = false
-                newGroupCountLabel.text = String(newGroupCountArray.count)
-                newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
-            }
-            
-            tableView.delegate = self
-            tableView.dataSource = self
-            tableView.reloadData()
-        }
-    }
+   
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -178,30 +157,7 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
 //        return false
 //    }
     
-    //スクロール中に呼ばれる
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.tag == 1{
-            swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
-            swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
-            print("daigobounds")
-            print(scrollView.bounds)
-            print("daigoframe")
-            print(scrollView.frame)
-            print(scrollView.contentOffset.x)
-        }
-    }
-    
-    func scrollToPage() {
-        var frame:CGRect = self.scrollView.frame
-        frame.origin.x = 260
-        self.scrollView.scrollRectToVisible(frame, animated: true)
-    }
-    
-    func scrollToOriginal(){
-        var frame:CGRect = self.scrollView.frame
-        frame.origin.x = 0
-        self.scrollView.scrollRectToVisible(frame, animated: true)
-    }
+   
     
     @objc func swipeViewTap(_ sender:UITapGestureRecognizer){
         scrollToOriginal()
@@ -210,6 +166,64 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
     @IBAction func configurationButton(_ sender: Any) {
         scrollToPage()
     }
+    
+ 
+    
+    @IBAction func notificationButton(_ sender: Any) {
+        let notificationVC = storyboard?.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationViewController
+        navigationController?.pushViewController(notificationVC, animated: true)
+    }
+    
+    @IBAction func newGroupButton(_ sender: Any) {
+        let newGroupVC = storyboard?.instantiateViewController(withIdentifier: "NewGroupVC") as! NewGroupViewController
+        navigationController?.pushViewController(newGroupVC, animated: true)
+    }
+    
+}
+//MARK:- LoadOKDelegate
+extension ProfileViewController: LoadOKDelegate{
+    
+    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
+        activityIndicatorView.stopAnimating()
+        UserDefaults.standard.setValue(userName, forKey: "userName")
+        UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
+        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
+        userNameLabel.text = userName
+        userInfoArray = [userName,email,password]
+        //変更
+        loadDBModel.loadJoinGroup(groupID: groupID, userID: userID)
+        newGroupCountLabel.isHidden = true
+    }
+    
+    //参加しているグループの情報を取得完了
+    func loadJoinGroup_OK() {
+        groupJoinArray = loadDBModel.groupSets
+        loadDBModel.loadNotJoinGroup(userID: userID)
+    }
+    
+    //不参加のグループの数を取得完了
+        func loadNotJoinGroup_OK(groupIDArray: [String], notJoinCount: Int) {
+            print(notJoinCount)
+            newGroupCountLabel.text = String(notJoinCount)
+            if notJoinCount == 0{
+                newGroupCountLabel.isHidden = true
+            }else if notJoinCount < 10{
+                newGroupCountLabel.isHidden = false
+                newGroupCountLabel.text = String(notJoinCount)
+            }else if notJoinCount >= 10{
+                newGroupCountLabel.isHidden = false
+                newGroupCountLabel.text = String(notJoinCount)
+                newGroupCountLabel.frame.size = CGSize(width: 25, height: 20)
+            }
+            
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.reloadData()
+        }
+}
+
+//MARK:- TableView
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView.tag == 0{
@@ -259,10 +273,9 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             groupNameLabel.text = groupJoinArray[indexPath.row].groupName
             cellView.layer.cornerRadius = 5
             cellView.layer.masksToBounds = false
-            cellView.layer.cornerRadius = 5
-            cellView.layer.shadowOffset = CGSize(width: 1, height: 1)
+            cellView.layer.shadowOffset = CGSize(width: 1, height: 3)
             cellView.layer.shadowOpacity = 0.2
-            cellView.layer.shadowRadius = 1
+            cellView.layer.shadowRadius = 3
             
             return cell!
         }
@@ -274,16 +287,22 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
             if indexPath.row == 0{
                 let ProfileDetailVC = storyboard?.instantiateViewController(withIdentifier: "ProfileDetailVC") as! ProfileDetailViewController
                 ProfileDetailVC.userInfoArray = userInfoArray
-                print(self.profileImageView.image!)
-                ProfileDetailVC.receiveImage = self.profileImageView.image!
+                ProfileDetailVC.profileImage = self.profileImageView.image!
                 navigationController?.pushViewController(ProfileDetailVC, animated: true)
                 scrollToOriginal()
             }else if indexPath.row == 1{
                 do {
                     try auth.signOut()
+                    UserDefaults.standard.removePersistentDomain(forName: "com.daigoSwift.Kakeibo.plist")
+                    let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let viewController = storyboard.instantiateViewController(identifier: "LoginVC")
+                    let navigationVC = UINavigationController(rootViewController: viewController)
+                    window!.rootViewController = navigationVC
                     navigationController?.popViewController(animated: true)
                 } catch let error {
                     //                    loginModel?.showError(error, showLabel: errorShow)
+                    print(error)
                     let alert = UIAlertController(title: "エラーです", message: "", preferredStyle: .alert)
                     let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
                     alert.addAction(cancelAction)
@@ -301,27 +320,32 @@ class ProfileViewController: UIViewController,UIScrollViewDelegate, UITableViewD
         }
     }
     
-    
-    @IBAction func notificationButton(_ sender: Any) {
-        let notificationVC = storyboard?.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationViewController
-        navigationController?.pushViewController(notificationVC, animated: true)
+}
+
+//MARK:- UIScrollViewDelegate
+extension ProfileViewController: UIScrollViewDelegate{
+    //スクロール中に呼ばれる
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.tag == 1{
+            swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
+            swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
+            print("daigobounds")
+            print(scrollView.bounds)
+            print("daigoframe")
+            print(scrollView.frame)
+            print(scrollView.contentOffset.x)
+        }
     }
     
-    @IBAction func newGroupButton(_ sender: Any) {
-        let newGroupVC = storyboard?.instantiateViewController(withIdentifier: "NewGroupVC") as! NewGroupViewController
-        navigationController?.pushViewController(newGroupVC, animated: true)
+    func scrollToPage() {
+        var frame:CGRect = self.scrollView.frame
+        frame.origin.x = 260
+        self.scrollView.scrollRectToVisible(frame, animated: true)
     }
     
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    func scrollToOriginal(){
+        var frame:CGRect = self.scrollView.frame
+        frame.origin.x = 0
+        self.scrollView.scrollRectToVisible(frame, animated: true)
+    }
 }

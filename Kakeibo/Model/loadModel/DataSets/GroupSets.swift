@@ -7,10 +7,8 @@
 
 import Foundation
 
-struct JoinGroupSets {
+struct GroupSets {
     let groupName:String
     let groupImage:String
     let groupID:String
-    let join:Bool
 }
-
