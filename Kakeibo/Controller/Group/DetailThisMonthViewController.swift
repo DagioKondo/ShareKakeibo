@@ -15,6 +15,7 @@ class DetailThisMonthViewController: UIViewController {
     @IBOutlet weak var addPaymentButton: UIButton!
     @IBOutlet weak var headerView: UIView!
     
+    var pagingVC = PagingViewController()
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
@@ -26,7 +27,7 @@ class DetailThisMonthViewController: UIViewController {
         DetailAllVC.title = "グループ全体"
         DetailMyselfVC.title = "個人"
         
-        let pagingVC = PagingViewController(viewControllers: [
+        pagingVC = PagingViewController(viewControllers: [
             DetailAllVC,
             DetailMyselfVC
         ])
@@ -92,6 +93,11 @@ class DetailThisMonthViewController: UIViewController {
         addPaymentButton.layer.shadowRadius = 1
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let paymentVC = segue.destination as! PaymentViewController
+        paymentVC.presentationController?.delegate = self
+    }
+    
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
         addPaymentButton.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -118,4 +124,10 @@ class DetailThisMonthViewController: UIViewController {
      }
      */
     
+}
+
+extension  DetailThisMonthViewController: UIAdaptivePresentationControllerDelegate{
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        pagingVC.reloadData()
+    }
 }

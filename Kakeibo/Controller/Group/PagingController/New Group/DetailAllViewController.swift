@@ -69,6 +69,13 @@ class DetailAllViewController: UIViewController{
         loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: nil, activityIndicatorView: activityIndicatorView)
     }
     
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//       
+//        monthGroupDetailsSets = []
+//    }
+
+
 }
 
 // MARK: - LoadOKDelegate

@@ -9,6 +9,8 @@ import UIKit
 import Parchment
 
 class MonthlyDataViewController: UIViewController {
+    
+    var pagingVC = PagingViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +25,7 @@ class MonthlyDataViewController: UIViewController {
         foodVC.title = "食費"
         othersVC.title = "その他"
         
-        let pagingVC = PagingViewController(viewControllers: [
+        pagingVC = PagingViewController(viewControllers: [
             overAllVC,
             utilityVC,
             foodVC,
@@ -52,6 +54,7 @@ class MonthlyDataViewController: UIViewController {
         pagingVC.menuItemSpacing = 10
         pagingVC.menuHorizontalAlignment = .center
         
+        
         foodVC.lineChartsView.translatesAutoresizingMaskIntoConstraints = false
         foodVC.lineChartsView.leadingAnchor.constraint(equalTo: foodVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         foodVC.lineChartsView.trailingAnchor.constraint(equalTo: foodVC.view.safeAreaLayoutGuide.trailingAnchor,constant: -35).isActive = true
@@ -78,6 +81,14 @@ class MonthlyDataViewController: UIViewController {
         
     }
     
+//    override func viewWillAppear(_ animated: Bool) {
+////        pagingVC.select(pagingItem: pagingVC., animated: true)
+////        if let first = pagingVC.visibleItems.items.first {
+////            pagingVC.select(pagingItem: first)
+////         }
+//        pagingVC.select(index: 0, animated: true)
+//    }
+    
 
     /*
     // MARK: - Navigation
@@ -90,3 +101,4 @@ class MonthlyDataViewController: UIViewController {
     */
 
 }
+

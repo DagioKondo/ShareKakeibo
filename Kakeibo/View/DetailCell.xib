@@ -17,9 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="390" height="85"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" id="Te3-eQ-07v">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Te3-eQ-07v">
                         <rect key="frame" x="5" y="7" width="380" height="70"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.3.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LTk-Zn-Vkv">
                                 <rect key="frame" x="8" y="5.5" width="60" height="60"/>
@@ -89,6 +88,12 @@
                     </view>
                 </subviews>
                 <color key="backgroundColor" red="0.97254908080000002" green="0.94901961089999998" blue="0.9529411793" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                <constraints>
+                    <constraint firstItem="Te3-eQ-07v" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="B2a-jt-goe"/>
+                    <constraint firstAttribute="trailing" secondItem="Te3-eQ-07v" secondAttribute="trailing" constant="5" id="CJn-Zr-KOS"/>
+                    <constraint firstItem="Te3-eQ-07v" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="h6N-K5-Wjw"/>
+                    <constraint firstAttribute="bottom" secondItem="Te3-eQ-07v" secondAttribute="bottom" constant="8" id="s3w-uX-Q7b"/>
+                </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>

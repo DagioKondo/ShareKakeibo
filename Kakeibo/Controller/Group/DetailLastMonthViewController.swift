@@ -52,6 +52,7 @@ class DetailLastMonthViewController: UIViewController {
         pagingVC.menuItemSize = .selfSizing(estimatedWidth: 100, height: 40)
         pagingVC.menuItemSpacing = 80
         pagingVC.menuHorizontalAlignment = .center
+        pagingVC.select(index: 0)
         
         DetailAllLastMonthVC.tableView.translatesAutoresizingMaskIntoConstraints = false
         DetailAllLastMonthVC.tableView.leadingAnchor.constraint(equalTo: DetailAllLastMonthVC.view.safeAreaLayoutGuide.leadingAnchor).isActive = true

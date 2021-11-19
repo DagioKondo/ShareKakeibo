@@ -73,6 +73,13 @@ class DetailMyselfViewController: UIViewController {
         loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
+//    override func viewDidDisappear(_ animated: Bool) {
+//        monthMyDetailsSets = []
+//    }
+//
+    
+    
+    
 }
 
 // MARK: - LoadOKDelegate,EditOKDelegate
@@ -132,6 +139,7 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
         cell.dateLabel.text = monthMyDetailsSets[indexPath.row].paymentDay
         cell.category.text = monthMyDetailsSets[indexPath.row].category
         cell.view.layer.cornerRadius = 5
+//        cell.view.translatesAutoresizingMaskIntoConstraints = true
         cell.view.layer.masksToBounds = false
         cell.view.layer.shadowOffset = CGSize(width: 1, height: 3)
         cell.view.layer.shadowOpacity = 0.2
