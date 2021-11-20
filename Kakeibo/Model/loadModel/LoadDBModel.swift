@@ -79,9 +79,10 @@ class LoadDBModel{
     
     //参加しているグループの情報を取得するロード
     func loadJoinGroup(groupID:String,userID:String){
-        db.collection("groupManagement").whereField("userIDArray", arrayContains: userID).addSnapshotListener { (snapShot, error) in
+        db.collection("groupManagement").whereField("userIDArray", arrayContains: userID).order(by: "create_at").addSnapshotListener { (snapShot, error) in
             self.groupSets = []
             if error != nil{
+                print(error.debugDescription)
                 return
             }
             if let snapShotDoc = snapShot?.documents{
@@ -90,10 +91,11 @@ class LoadDBModel{
                     let groupName = data["groupName"] as! String
                     let groupImage = data["groupImage"] as! String
                     let groupID = data["groupID"] as! String
-                    let newData = GroupSets(groupName: groupName, groupImage: groupImage, groupID: groupID)
+                    let newData = GroupSets(groupName: groupName, groupImage: groupImage, groupID: groupID, create_at: nil)
                     self.groupSets.append(newData)
                 }
             }
+            self.groupSets.reverse()
             self.loadOKDelegate?.loadJoinGroup_OK?()
         }
     }
@@ -133,7 +135,8 @@ class LoadDBModel{
                     let groupName = data["groupName"] as! String
                     let groupImage = data["groupImage"] as! String
                     let groupID = data["groupID"] as! String
-                    let newData = GroupSets(groupName: groupName, groupImage: groupImage, groupID: groupID)
+                    let create_at = data["create_at"] as! Double
+                    let newData = GroupSets(groupName: groupName, groupImage: groupImage, groupID: groupID, create_at: create_at)
                     completion(newData)
                 }
             }
@@ -236,69 +239,68 @@ class LoadDBModel{
     //全体の明細のロード(月分)
     //自分の明細のロード(月分)
     func loadMonthDetails(groupID:String,startDate:Date,endDate:Date,userID:String?,activityIndicatorView:UIActivityIndicatorView){
-            self.dateFormatter.dateFormat = "yyyy/MM/dd"
-            self.dateFormatter.locale = Locale(identifier: "ja_JP")
-            self.dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-            if userID == nil{
-                //全体の明細のロード(月分)
-                db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
-                    
-                    self.monthGroupDetailsSets = []
-                    if error != nil{
-                        activityIndicatorView.stopAnimating()
-                        return
-                    }
-                    if let snapShotDoc = snapShot?.documents{
-                        for doc in snapShotDoc{
-                            let data = doc.data()
-                            let productName = data["productName"] as! String
-                            let paymentAmount = data["paymentAmount"] as! Int
-                            let timestamp = data["paymentDay"] as! Timestamp
-                            let category = data["category"] as! String
-                            let userID = data["userID"] as! String
-                            let date = timestamp.dateValue()
-                            let paymentDay = self.dateFormatter.string(from: date)
-                            let groupNewData = MonthGroupDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
-                            self.monthGroupDetailsSets.append(groupNewData)
-                        }
-                    }
-                    self.loadOKDelegate?.loadMonthDetails_OK?()
+        self.dateFormatter.dateFormat = "yyyy/MM/dd"
+        self.dateFormatter.locale = Locale(identifier: "ja_JP")
+        self.dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        if userID == nil{
+            //全体の明細のロード(月分)
+            db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                
+                self.monthGroupDetailsSets = []
+                if error != nil{
+                    activityIndicatorView.stopAnimating()
+                    return
                 }
-            }else if userID != nil{
-                //自分の明細のロード(月分)
-                db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
-                    
-                    self.monthMyDetailsSets = []
-                    if error != nil{
-                        activityIndicatorView.stopAnimating()
-                        return
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let productName = data["productName"] as! String
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        let timestamp = data["paymentDay"] as! Timestamp
+                        let category = data["category"] as! String
+                        let userID = data["userID"] as! String
+                        let date = timestamp.dateValue()
+                        let paymentDay = self.dateFormatter.string(from: date)
+                        let groupNewData = MonthGroupDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID)
+                        self.monthGroupDetailsSets.append(groupNewData)
                     }
-                    if let snapShotDoc = snapShot?.documents{
-                        for doc in snapShotDoc{
-                            let data = doc.data()
-                            let documentID = doc.documentID
-                            let productName = data["productName"] as! String
-                            let paymentAmount = data["paymentAmount"] as! Int
-                            let timestamp = data["paymentDay"] as! Timestamp
-                            let category = data["category"] as! String
-                            let userID = data["userID"] as! String
-                            let date = timestamp.dateValue()
-                            let paymentDay = self.dateFormatter.string(from: date)
-                            let myNewData = MonthMyDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID, documentID: documentID)
-                            self.monthMyDetailsSets.append(myNewData)
-                        }
-                    }
-                    self.loadOKDelegate?.loadMonthDetails_OK?()
                 }
+                self.loadOKDelegate?.loadMonthDetails_OK?()
+            }
+        }else if userID != nil{
+            //自分の明細のロード(月分)
+            db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).order(by: "paymentDay").addSnapshotListener { (snapShot, error) in
+                
+                self.monthMyDetailsSets = []
+                if error != nil{
+                    activityIndicatorView.stopAnimating()
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let documentID = doc.documentID
+                        let productName = data["productName"] as! String
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        let timestamp = data["paymentDay"] as! Timestamp
+                        let category = data["category"] as! String
+                        let userID = data["userID"] as! String
+                        let date = timestamp.dateValue()
+                        let paymentDay = self.dateFormatter.string(from: date)
+                        let myNewData = MonthMyDetailsSets(productName: productName, paymentAmount: paymentAmount, paymentDay: paymentDay, category: category, userID: userID, documentID: documentID)
+                        self.monthMyDetailsSets.append(myNewData)
+                    }
+                }
+                self.loadOKDelegate?.loadMonthDetails_OK?()
             }
         }
+    }
     
     //カテゴリ別の合計金額金額
     func loadCategoryGraphOfTithMonth(groupID:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
         
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
             
-    //            var categoryPayArray = [Int]()
             var foodCount = 0
             var waterCount = 0
             var electricityCount = 0
@@ -345,7 +347,6 @@ class LoadDBModel{
                         break
                     }
                 }
-    //                categoryPayArray = [foodCount,waterCount,electricityCount,gasCount,communicationCount,rentCount,othersCount]
                 
                 for (key,value) in categoryDic{
                     if value == 0{
@@ -353,11 +354,10 @@ class LoadDBModel{
                     }
                 }
             }
-            
             self.loadOKDelegate?.loadCategoryGraphOfTithMonth_OK?(categoryDic: categoryDic)
         }
     }
-
+    
     
     //1〜12月の全体の推移
     func loadMonthlyAllTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
@@ -515,7 +515,7 @@ class LoadDBModel{
     func loadMonthlyFoodTransition(groupID:String,year:String,settlementDay:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
         
         db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).whereField("category", isEqualTo: "食費").addSnapshotListener { [self] (snapShot, error) in
-
+            
             countArray = []
             dateFormatter.dateFormat = "yyyy年MM月dd日"
             dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -689,92 +689,47 @@ class LoadDBModel{
     //グループの支払状況のロード
     //各メンバーの支払い金額を取得するロード
     func loadMonthSettlement(groupID:String,userID:String?,startDate:Date,endDate:Date){
-            if userID == nil{
-                    db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
-                        
-                        self.settlementSets = []
-                        if error != nil{
-                            return
-                        }
-                        if let snapShotDoc = snapShot?.documents{
-                            for doc in snapShotDoc{
-                                let data = doc.data()
-                                let paymentAmount = data["paymentAmount"] as! Int
-                                let userID = data["userID"] as! String
-                                let newData = SettlementSets(paymentAmount: paymentAmount, userID: userID)
-                                self.settlementSets.append(newData)
-                            }
-                            self.loadOKDelegate?.loadMonthSettlement_OK?()
-                        }
-                    }
-            }else{
-                db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
-                    
-                    self.settlementSets = []
-                    var myTotalPay = 0
-                    if error != nil{
-                        print(error.debugDescription)
-                        return
-                    }
-                    if let snapShotDoc = snapShot?.documents{
-                        for doc in snapShotDoc{
-                            let data = doc.data()
-                            let paymentAmount = data["paymentAmount"] as! Int
-                            //自分の支払い合計金額
-                            myTotalPay = myTotalPay + paymentAmount
-                        }
-                        let newData = SettlementSets(paymentAmount: myTotalPay, userID: nil)
+        if userID == nil{
+            db.collection(groupID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
+                
+                self.settlementSets = []
+                if error != nil{
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        let userID = data["userID"] as! String
+                        let newData = SettlementSets(paymentAmount: paymentAmount, userID: userID)
                         self.settlementSets.append(newData)
-                        self.loadOKDelegate?.loadMonthSettlement_OK?()
                     }
-                    
+                    self.loadOKDelegate?.loadMonthSettlement_OK?()
                 }
             }
+        }else{
+            db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
+                
+                self.settlementSets = []
+                var myTotalPay = 0
+                if error != nil{
+                    print(error.debugDescription)
+                    return
+                }
+                if let snapShotDoc = snapShot?.documents{
+                    for doc in snapShotDoc{
+                        let data = doc.data()
+                        let paymentAmount = data["paymentAmount"] as! Int
+                        //自分の支払い合計金額
+                        myTotalPay = myTotalPay + paymentAmount
+                    }
+                    let newData = SettlementSets(paymentAmount: myTotalPay, userID: nil)
+                    self.settlementSets.append(newData)
+                    self.loadOKDelegate?.loadMonthSettlement_OK?()
+                }
+                
+            }
         }
-        
+    }
     
-    
-
-//    func loadMonthSettlement(groupID:String,userID:String?,userIDArray:[String]?,startDate:Date,endDate:Date,completion:@escaping(Int,String)->()){
-//
-//        if userID == nil{
-//            for userID in userIDArray!{
-//                db.collection(groupID).whereField("userID", isEqualTo: userID).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
-//
-//                    var myTotalPay = 0
-//                    if error != nil{
-//                        return
-//                    }
-//                    if let snapShotDoc = snapShot?.documents{
-//                        for doc in snapShotDoc{
-//                            let data = doc.data()
-//                            let paymentAmount = data["paymentAmount"] as! Int
-//                            //自分の支払い合計金額
-//                            myTotalPay = myTotalPay + paymentAmount
-//                        }
-//                    }
-//                    completion(myTotalPay, userID)
-//                }
-//            }
-//        }else{
-//            db.collection(groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThan: startDate).whereField("paymentDay", isLessThanOrEqualTo: endDate).addSnapshotListener { (snapShot, error) in
-//
-//                var myTotalPay = 0
-//                if error != nil{
-//                    print(error.debugDescription)
-//                    return
-//                }
-//                if let snapShotDoc = snapShot?.documents{
-//                    for doc in snapShotDoc{
-//                        let data = doc.data()
-//                        let paymentAmount = data["paymentAmount"] as! Int
-//                        //自分の支払い合計金額
-//                        myTotalPay = myTotalPay + paymentAmount
-//                    }
-//                }
-//                completion(myTotalPay, userID!)
-//            }
-//        }
-//    }
 }
-

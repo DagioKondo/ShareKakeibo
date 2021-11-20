@@ -26,6 +26,7 @@ class NewGroupViewController: UIViewController {
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
     var groupNotJoinArray = [GroupSets]()
+    var sortedGroupNotJoinArray = [GroupSets]()
     var activityIndicatorView = UIActivityIndicatorView()
     
     
@@ -166,13 +167,14 @@ extension NewGroupViewController:LoadOKDelegate, EditOKDelegate{
     
     //どのグループに参加しているか招待されているかを取得完了
     func loadNotJoinGroup_OK(groupIDArray: [String], notJoinCount: Int) {
-        groupNotJoinArray = []
-        //招待されているグループの情報を取得完了
-        loadDBModel.loadNotJoinGroupInfo(groupIDArray: groupIDArray) { JoinGroupSets in
-            self.groupNotJoinArray.append(JoinGroupSets)
-            self.tableView.reloadData()
-        }
-    }
+           groupNotJoinArray = []
+           //招待されているグループの情報を取得完了
+           loadDBModel.loadNotJoinGroupInfo(groupIDArray: groupIDArray) { JoinGroupSets in
+               self.groupNotJoinArray.append(JoinGroupSets)
+               self.sortedGroupNotJoinArray = self.groupNotJoinArray.sorted(by: {($0.create_at! > $1.create_at!)})
+               self.tableView.reloadData()
+           }
+       }
     
     func editGroupInfoDelete_OK() {
         groupNotJoinArray.remove(at: indexPath.row)

@@ -200,8 +200,9 @@ extension CreateGroupViewController:SendOKDelegate{
             "groupName": groupNameTextField.text!,
             "groupImage": url,
             "settlementDay": settlementTextField.text!,"groupID": groupID,
-            "settlementDic":["\(userID)": false],
-            "userIDArray":[userID]
+            "settlementDic": ["\(userID)": false],
+            "userIDArray": [userID],
+            "create_at": Date().timeIntervalSince1970
         ])
         //追加
         db.collection("userManagement").document(userID).setData([

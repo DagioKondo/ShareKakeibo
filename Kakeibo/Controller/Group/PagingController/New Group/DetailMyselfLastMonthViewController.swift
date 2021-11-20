@@ -7,6 +7,8 @@
 
 import UIKit
 import Parchment
+import Firebase
+import FirebaseFirestore
 
 class DetailMyselfLastMonthViewController: UIViewController {
     
@@ -24,6 +26,8 @@ class DetailMyselfLastMonthViewController: UIViewController {
     var tableView = UITableView()
     var profileImage = String()
     var userName = String()
+    
+    var db = Firestore.firestore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +143,8 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
             (ctxAction, view, completionHandler) in
             tableView.deleteRows(at: [indexPath], with: .automatic)
             //データ削除
-            editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
+            db.collection(groupID).document(loadDBModel.monthMyDetailsSets[indexPath.row].documentID).delete()
+            monthMyDetailsSets.remove(at: indexPath.row)
             completionHandler(true)
         }
         // 削除ボタンのデザインを設定する
