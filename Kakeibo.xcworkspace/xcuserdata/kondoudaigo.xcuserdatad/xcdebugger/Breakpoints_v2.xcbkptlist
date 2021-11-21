@@ -295,54 +295,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D1DC9046-E7AC-4114-8B5A-2B646B59D54A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Kakeibo/Model/loadModel/EditDBModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "editMonthDetailsDelete(groupID:userID:startDate:endDate:index:activityIndicatorView:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D1DC9046-E7AC-4114-8B5A-2B646B59D54A - c6f4f59980306c46"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Kakeibo.EditDBModel.editMonthDetailsDelete(groupID: Swift.String, userID: Swift.String, startDate: Foundation.Date, endDate: Foundation.Date, index: Swift.Int, activityIndicatorView: __C.UIActivityIndicatorView) -&gt; ()"
-                  moduleName = "Kakeibo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/EditDBModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50"
-                  offsetFromSymbolStart = "244">
-               </Location>
-               <Location
-                  uuid = "D1DC9046-E7AC-4114-8B5A-2B646B59D54A - a5c470c16bafd656"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Kakeibo.EditDBModel.editMonthDetailsDelete(groupID: Swift.String, userID: Swift.String, startDate: Foundation.Date, endDate: Foundation.Date, index: Swift.Int, activityIndicatorView: __C.UIActivityIndicatorView) -&gt; ()"
-                  moduleName = "Kakeibo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/EditDBModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "51"
-                  endingLineNumber = "51"
-                  offsetFromSymbolStart = "396">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "51ADB5D8-06B4-492F-A374-B3C5C7BC5204"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -561,22 +513,6 @@
             startingLineNumber = "154"
             endingLineNumber = "154"
             landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "50C66B72-422E-412C-B4D4-90B7AD198498"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Kakeibo/Model/loadModel/EditDBModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "editMonthDetailsDelete(groupID:userID:startDate:endDate:index:activityIndicatorView:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -203,12 +203,12 @@
 				8635E89A27353A1700C8DB72 /* OthersViewController.swift */,
 				8635E89B27353A1700C8DB72 /* OverAllViewController.swift */,
 				8635E89F27353A1D00C8DB72 /* UtilityViewController.swift */,
-				8635E8AA27353A7500C8DB72 /* New Group */,
+				8635E8AA27353A7500C8DB72 /* DetailController */,
 			);
 			path = PagingController;
 			sourceTree = "<group>";
 		};
-		8635E8AA27353A7500C8DB72 /* New Group */ = {
+		8635E8AA27353A7500C8DB72 /* DetailController */ = {
 			isa = PBXGroup;
 			children = (
 				8635E8A327353A2300C8DB72 /* DetailAllLastMonthViewController.swift */,
@@ -216,7 +216,7 @@
 				8635E8A227353A2300C8DB72 /* DetailMyselfLastMonthViewController.swift */,
 				8635E8A427353A2300C8DB72 /* DetailMyselfViewController.swift */,
 			);
-			path = "New Group";
+			path = DetailController;
 			sourceTree = "<group>";
 		};
 		86A0387027102A740044803F = {

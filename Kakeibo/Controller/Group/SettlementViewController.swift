@@ -220,7 +220,8 @@ extension SettlementViewController: UITableViewDelegate,UITableViewDataSource{
         profileImage.sd_setImage(with: URL(string: sortedProfileImageDic[indexPath.row].value), completed: nil)
         userNameLabel.text = sortedUserNameDic[indexPath.row].value
         
-        checkSettlementLabel.layer.cornerRadius = 5
+        checkSettlementLabel.layer.masksToBounds = false
+        checkSettlementLabel.layer.cornerRadius = 10
         
         if sortedSettlementDic[indexPath.row].value == true{
             checkSettlementLabel.text = "決済済み"

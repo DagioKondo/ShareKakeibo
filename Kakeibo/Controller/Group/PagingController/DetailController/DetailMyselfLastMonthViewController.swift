@@ -13,7 +13,6 @@ import FirebaseFirestore
 class DetailMyselfLastMonthViewController: UIViewController {
     
     var loadDBModel = LoadDBModel()
-    var editDBModel = EditDBModel()
     var monthMyDetailsSets = [MonthMyDetailsSets]()
     var activityIndicatorView = UIActivityIndicatorView()
     var groupID = String()
@@ -55,7 +54,6 @@ class DetailMyselfLastMonthViewController: UIViewController {
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
-        editDBModel.editOKDelegate = self
         loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
@@ -90,13 +88,6 @@ extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.reloadData()
-    }
-    
-    //データ削除完了
-    func editMonthDetailsDelete_OK() {
-        monthMyDetailsSets = []
-        monthMyDetailsSets = editDBModel.monthMyDetailsSets
         tableView.reloadData()
     }
     
@@ -136,10 +127,10 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
         // 削除のアクションを設定する
         let deleteAction = UIContextualAction(style: .destructive, title:"delete") { [self]
             (ctxAction, view, completionHandler) in
-            tableView.deleteRows(at: [indexPath], with: .automatic)
             //データ削除
-            db.collection("paymentData").document(loadDBModel.monthMyDetailsSets[indexPath.row].documentID).delete()
+            db.collection("paymentData").document(monthMyDetailsSets[indexPath.row].documentID).delete()
             monthMyDetailsSets.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
         // 削除ボタンのデザインを設定する

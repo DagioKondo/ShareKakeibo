@@ -13,7 +13,6 @@ import FirebaseFirestore
 class DetailMyselfViewController: UIViewController {
     
     var loadDBModel = LoadDBModel()
-    var editDBModel = EditDBModel()
     var monthMyDetailsSets = [MonthMyDetailsSets]()
     var activityIndicatorView = UIActivityIndicatorView()
     var groupID = String()
@@ -58,7 +57,6 @@ class DetailMyselfViewController: UIViewController {
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         loadDBModel.loadOKDelegate = self
-        editDBModel.editOKDelegate = self
         
         activityIndicatorView.stopAnimating()
         settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
@@ -100,10 +98,6 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
         tableView.reloadData()
     }
     
-    //データ削除完了
-    func editMonthDetailsDelete_OK() {
-        
-    }
 }
 
 // MARK: - TableView
