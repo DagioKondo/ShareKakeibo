@@ -29,7 +29,6 @@ class MonthDataViewController: UIViewController{
     
     @IBOutlet weak var pieChartView: PieChartView!
     var graphModel = GraphModel()
-    
     var loadDBModel = LoadDBModel()
     var activityIndicatorView = UIActivityIndicatorView()
     var userID = String()
@@ -42,7 +41,6 @@ class MonthDataViewController: UIViewController{
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
-    var checkCount = 0
     
     var dateModel = DateModel()
     var settlementDayOfInt = Int()
@@ -90,17 +88,7 @@ class MonthDataViewController: UIViewController{
         loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        print(self.navigationController?.viewControllers)
-        if checkCount == 1{
-            print(self.navigationController?.viewControllers)
-            navigationController?.popViewController(animated: true)
-            checkCount = 0
-        }
-    }
-
+    
     @objc func touchDown(_ sender:UIButton){
         buttonAnimatedModel.startAnimation(sender: sender)
         addPaymentButton.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -168,7 +156,7 @@ extension MonthDataViewController:LoadOKDelegate {
         graphModel.setPieCht(piecht: pieChartView, categoryDic: sortedCategoryDic)
         loadDBModel.loadUserIDAndSettlementDic(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
-    //追加
+    
     //グループに参加しているメンバーを取得完了
     func loadUserIDAndSettlementDic_OK(settlementDic: Dictionary<String, Bool>, userIDArray: [String]) {
         activityIndicatorView.stopAnimating()
@@ -176,7 +164,7 @@ extension MonthDataViewController:LoadOKDelegate {
             loadDBModel.loadMonthPayment(groupID: groupID, userIDArray: userIDArray, startDate: minDate, endDate: maxDate)
         }
     }
-    //変更
+    
     //グループの合計出資額、1人当たりの出資額を取得完了
     func loadMonthPayment_OK(groupPaymentOfMonth: Int, paymentAverageOfMonth: Int, userIDArray: [String]) {
         self.groupPaymentOfThisMonth.text = String(groupPaymentOfMonth) + "　円"
@@ -186,7 +174,7 @@ extension MonthDataViewController:LoadOKDelegate {
             loadDBModel.loadMonthSettlement(groupID: groupID, userID: userID, startDate: minDate, endDate: maxDate)
         }
     }
-    //追加
+    
     //自分の支払額を取得完了
     func loadMonthSettlement_OK() {
         self.userPaymentThisMonth.text = String(loadDBModel.settlementSets[0].paymentAmount!) + "　円"
@@ -220,7 +208,6 @@ extension MonthDataViewController:GoToVcDelegate{
             performSegue(withIdentifier: segueID, sender: nil)
         }else{
             self.navigationController?.popViewController(animated: true)
-            checkCount = 1
         }
     }
     

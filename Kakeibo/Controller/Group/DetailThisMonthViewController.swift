@@ -75,7 +75,7 @@ class DetailThisMonthViewController: UIViewController {
         addPaymentButton.layer.shadowRadius = 1
         
         self.view.bringSubviewToFront(addPaymentButton)
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

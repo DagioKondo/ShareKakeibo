@@ -52,7 +52,6 @@ class NewGroupViewController: UIViewController {
         profileImage = UserDefaults.standard.object(forKey: "profileImage") as! String
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
-        //変更
         loadDBModel.loadNotJoinGroup(userID: userID)
         
     }
@@ -86,7 +85,6 @@ class NewGroupViewController: UIViewController {
         
         let cell = sender.superview?.superview?.superview as! UITableViewCell
         indexPath = tableView.indexPath(for: cell)!
-        //追加
         groupID = groupNotJoinArray[indexPath.row].groupID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
         db.collection("userManagement").document(userID).setData([
@@ -96,7 +94,7 @@ class NewGroupViewController: UIViewController {
             "settlementDic": [userID: false],
             "userIDArray": FieldValue.arrayUnion([userID])
         ],merge: true)
-        performSegue(withIdentifier: "TabBarContoller", sender: nil)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func rejectButton(_ sender:UIButton){

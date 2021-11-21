@@ -12,7 +12,7 @@ protocol GoToVcDelegate {
 }
 
 class GroupDetailViewController: UIViewController {
-
+    
     var goToVcDelegate:GoToVcDelegate?
     var editDBModel = EditDBModel()
     
@@ -24,35 +24,11 @@ class GroupDetailViewController: UIViewController {
         super.viewDidLoad()
         
         editDBModel.editOKDelegate = self
-
+        
         activityIndicatorView.center = view.center
         activityIndicatorView.style = .large
         activityIndicatorView.color = .darkGray
         view.addSubview(activityIndicatorView)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        if #available(iOS 13.0, *) {
-                presentingViewController?.beginAppearanceTransition(false, animated: animated)
-            }
-        super.viewWillAppear(animated)
-        
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if #available(iOS 13.0, *) {
-
-            presentingViewController?.beginAppearanceTransition(true, animated: animated)
-            presentingViewController?.endAppearanceTransition()
-        }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if #available(iOS 13.0, *) {
-            presentingViewController?.endAppearanceTransition()
-        }
     }
     
     @IBAction func back(_ sender: Any) {
@@ -80,7 +56,7 @@ class GroupDetailViewController: UIViewController {
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         editDBModel.editUserDelete(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
-
+    
 }
 
 // MARK: - EditOKDelegate
@@ -92,7 +68,6 @@ extension GroupDetailViewController: EditOKDelegate{
     }
     
     func editUserDelete2_OK() {
-        dismiss(animated: true, completion: nil)        
         goToVcDelegate?.goToVC(segueID: "")
     }
     

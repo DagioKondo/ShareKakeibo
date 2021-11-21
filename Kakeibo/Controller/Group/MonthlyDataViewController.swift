@@ -11,7 +11,7 @@ import Parchment
 class MonthlyDataViewController: UIViewController {
     
     var pagingVC = PagingViewController()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,7 +31,7 @@ class MonthlyDataViewController: UIViewController {
             foodVC,
             othersVC
         ])
-     
+        
         self.addChild(pagingVC)
         self.view.addSubview(pagingVC.view)
         pagingVC.didMove(toParent: self)
@@ -81,24 +81,24 @@ class MonthlyDataViewController: UIViewController {
         
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-////        pagingVC.select(pagingItem: pagingVC., animated: true)
-////        if let first = pagingVC.visibleItems.items.first {
-////            pagingVC.select(pagingItem: first)
-////         }
-//        pagingVC.select(index: 0, animated: true)
-//    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    ////        pagingVC.select(pagingItem: pagingVC., animated: true)
+    ////        if let first = pagingVC.visibleItems.items.first {
+    ////            pagingVC.select(pagingItem: first)
+    ////         }
+    //        pagingVC.select(index: 0, animated: true)
+    //    }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 

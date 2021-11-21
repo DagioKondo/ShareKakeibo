@@ -28,7 +28,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     var loadDBModel = LoadDBModel()
     var userID = String()
     var groupID = String()
-    //変更
     var groupJoinArray = [GroupSets]()
     var newGroupCountArray = [GroupSets]()
     
@@ -190,7 +189,6 @@ extension ProfileViewController: LoadOKDelegate{
         profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
         userNameLabel.text = userName
         userInfoArray = [userName,email,password]
-        //変更
         loadDBModel.loadJoinGroup(groupID: groupID, userID: userID)
         newGroupCountLabel.isHidden = true
     }

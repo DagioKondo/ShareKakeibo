@@ -26,11 +26,9 @@ class DetailMyselfViewController: UIViewController {
     var profileImage = String()
     var userName = String()
     var indexPath = IndexPath()
-    
     var settlementDay = String()
     
     var db = Firestore.firestore()
-    
     var dateModel = DateModel()
     
     override func viewDidLoad() {
@@ -67,10 +65,10 @@ class DetailMyselfViewController: UIViewController {
         
     }
     
-//    override func viewDidDisappear(_ animated: Bool) {
-//        monthMyDetailsSets = []
-//    }
-//
+    //    override func viewDidDisappear(_ animated: Bool) {
+    //        monthMyDetailsSets = []
+    //    }
+    //
     
     
     
@@ -83,11 +81,9 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
     func loadMonthDetails_OK() {
         activityIndicatorView.stopAnimating()
         monthMyDetailsSets = loadDBModel.monthMyDetailsSets
-        //変更
         loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
-    //追加
     //自分のユーザーネーム、プロフィール画像を取得完了
     func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
         self.profileImage = profileImage
@@ -120,7 +116,6 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
-        //変更
         cell.profileImage.sd_setImage(with: URL(string: profileImage), completed: nil)
         print("****cellForRowAt****")
         print(monthMyDetailsSets.count)
@@ -129,7 +124,7 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
         cell.dateLabel.text = monthMyDetailsSets[indexPath.row].paymentDay
         cell.category.text = monthMyDetailsSets[indexPath.row].category
         cell.view.layer.cornerRadius = 5
-//        cell.view.translatesAutoresizingMaskIntoConstraints = true
+        //        cell.view.translatesAutoresizingMaskIntoConstraints = true
         cell.view.layer.masksToBounds = false
         cell.view.layer.shadowOffset = CGSize(width: 1, height: 3)
         cell.view.layer.shadowOpacity = 0.2
@@ -137,19 +132,19 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
         
         return cell
     }
-
+    
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         // 削除のアクションを設定する
-      
+        
         let deleteAction = UIContextualAction(style: .destructive, title:"delete") { [self]
             (ctxAction, view, completionHandler) in
             self.indexPath = indexPath
             print("***trailingSwipeActionsConfigurationForRowAt***")
             print(self.indexPath)
             //データ削除
-//            editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
+            //            editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
             print(groupID)
             print(loadDBModel.monthMyDetailsSets)
             db.collection("paymentData").document(monthMyDetailsSets[indexPath.row].documentID).delete()

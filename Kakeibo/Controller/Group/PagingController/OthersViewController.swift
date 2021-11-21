@@ -9,7 +9,7 @@ import UIKit
 import Charts
 
 class OthersViewController: UIViewController {
-
+    
     var graphModel = GraphModel()
     var yAxisValues = [Int]()
     var loadDBModel = LoadDBModel()
@@ -81,7 +81,7 @@ class OthersViewController: UIViewController {
         month = date.month!
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         loadDBModel.loadOKDelegate = self
-//        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
+        //        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
         
         activityIndicatorView.stopAnimating()
         dateFormatter.dateFormat = "yyyy年MM月dd日"
@@ -94,7 +94,7 @@ class OthersViewController: UIViewController {
         loadDBModel.loadMonthlyOthersTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
     }
     
-   
+    
     @objc func nextYear(_ sender: UIButton){
         yearCount = yearCount + 1
         month = 0
@@ -114,7 +114,7 @@ class OthersViewController: UIViewController {
         print(endDate)
         loadDBModel.loadMonthlyOthersTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
     }
-
+    
 }
 
 // MARK: - LoadOKDelegate
@@ -122,18 +122,18 @@ class OthersViewController: UIViewController {
 extension OthersViewController: LoadOKDelegate{
     //決済日取得完了
     //今年の期間を定める
-//    func loadSettlementDay_OK(settlementDay: String) {
-//        activityIndicatorView.stopAnimating()
-//        dateFormatter.dateFormat = "yyyy年MM月dd日"
-//        dateFormatter.locale = Locale(identifier: "ja_JP")
-//        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-//
-//        self.settlementDay = settlementDay
-//        startDate = dateFormatter.date(from: "\(Int(year)! - 1)年\("12")月\(settlementDay)日")!
-//        endDate = dateFormatter.date(from: "\(year)年\("12")月\(settlementDay)日")!
-//        yearLabel.text = "\(year)年"
-//        loadDBModel.loadMonthlyOthersTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
-//    }
+    //    func loadSettlementDay_OK(settlementDay: String) {
+    //        activityIndicatorView.stopAnimating()
+    //        dateFormatter.dateFormat = "yyyy年MM月dd日"
+    //        dateFormatter.locale = Locale(identifier: "ja_JP")
+    //        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+    //
+    //        self.settlementDay = settlementDay
+    //        startDate = dateFormatter.date(from: "\(Int(year)! - 1)年\("12")月\(settlementDay)日")!
+    //        endDate = dateFormatter.date(from: "\(year)年\("12")月\(settlementDay)日")!
+    //        yearLabel.text = "\(year)年"
+    //        loadDBModel.loadMonthlyOthersTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
+    //    }
     
     //１〜１２月のその他の推移を取得完了
     func loadMonthlyTransition_OK(countArray: [Int]) {

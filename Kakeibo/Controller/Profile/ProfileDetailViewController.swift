@@ -13,7 +13,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class ProfileDetailViewController: UIViewController,EditOKDelegate{
-
+    
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
@@ -23,14 +23,13 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     var password = String()
     var email = String()
     
-//    var receiveImage = UIImage()
+    //    var receiveImage = UIImage()
     var nameArray = ["名前","メールアドレス","パスワード"]
     var dataNameArray = ["userName","email","password"]
     var userInfoArray = [String]()
     var sendString = String()
     var sendData = String()
     var userID = String()
-    
     var alertModel = AlertModel()
     var sendDBModel = SendDBModel()
     var editDBModel = EditDBModel()
@@ -52,7 +51,7 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         sendDBModel.sendOKDelegate = self
         
         userID = UserDefaults.standard.object(forKey: "userID") as! String
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +71,7 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         ProfileConfigurationVC.userID = userID
         ProfileConfigurationVC.userInfoArray = userInfoArray
     }
-
+    
     @IBAction func profileImageView(_ sender: UITapGestureRecognizer) {
         alertModel.satsueiAlert(viewController: self)
     }
@@ -87,17 +86,17 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         }
         navigationController?.popViewController(animated: true)
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 // MARK: - TableView
@@ -139,7 +138,7 @@ extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource
 
 // MARK: - SendOKDelegate
 extension ProfileDetailViewController:SendOKDelegate{
-    //変更
+    
     func sendImage_OK(url: String) {
         db.collection("userManagement").document(userID).updateData(["profileImage" : url])
     }
@@ -154,7 +153,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
         if info[.originalImage] as? UIImage != nil{
             let pickerImage = info[.originalImage] as! UIImage
             let cropController = CropViewController(croppingStyle: .default, image: pickerImage)
-        
+            
             cropController.delegate = self
             cropController.customAspectRatio = profileImageView.frame.size
             //cropBoxのサイズを固定する。
@@ -182,7 +181,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
 // MARK: - profileConfigurationVCDelegate
 
 extension ProfileDetailViewController: profileConfigurationVCDelegate{
-    //変更_山口
+    
     func delivery(value: [String]) {
         userInfoArray = value
         tableView.reloadData()

@@ -55,7 +55,7 @@ class DetailAllViewController: UIViewController{
         activityIndicatorView.startAnimating()
         
         //決済日をuserDefaultから取り出し、決済月を求める
-       
+        
         self.settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
         let settlementDayOfInt = Int(settlementDay)!
         dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in

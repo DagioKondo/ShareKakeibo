@@ -57,7 +57,7 @@ class ProfileConfigurationViewController: UIViewController {
     
     @IBAction func saveButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
-        //変更
+        
         if textField.text == ""{
             warningLabel.text = "必須入力です"
         }else if receiveDataName == "userName"{

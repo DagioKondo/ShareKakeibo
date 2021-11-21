@@ -35,7 +35,6 @@ class GroupMemberViewController: UIViewController {
         
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         loadDBModel.loadOKDelegate = self
-        //変更
         loadDBModel.loadUserIDAndSettlementDic(groupID: groupID, activityIndicatorView: activityIndicatorView)
     }
     
@@ -47,7 +46,7 @@ class GroupMemberViewController: UIViewController {
 
 // MARK: - LoadOKDelegate
 extension GroupMemberViewController:LoadOKDelegate{
-    //変更
+    
     //userID取得完了
     func loadUserIDAndSettlementDic_OK(settlementDic: Dictionary<String, Bool>, userIDArray: [String]) {
         profileImageArray = []
@@ -85,7 +84,7 @@ extension GroupMemberViewController:UITableViewDelegate, UITableViewDataSource{
         
         profileImage.sd_setImage(with: URL(string: profileImageArray[indexPath.row]), completed: nil)
         profileImage.layer.cornerRadius = 30
-    
+        
         userNameLabel.text = userNameArray[indexPath.row]
         cellView!.layer.cornerRadius = 5
         cellView!.layer.masksToBounds = false
@@ -96,26 +95,26 @@ extension GroupMemberViewController:UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
-
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//
-//        // 削除のアクションを設定する
-//        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
-//            (ctxAction, view, completionHandler) in
-//            self.userNameArray.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//            completionHandler(true)
-//        }
-//        // 削除ボタンのデザインを設定する
-//        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
-//        deleteAction.image = trashImage
-//        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
-//
-//        // スワイプでの削除を無効化して設定する
-//        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
-//        swipeAction.performsFirstActionWithFullSwipe = false
-//
-//        return swipeAction
-//    }
-//    
+    
+    //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    //
+    //        // 削除のアクションを設定する
+    //        let deleteAction = UIContextualAction(style: .destructive, title:"delete") {
+    //            (ctxAction, view, completionHandler) in
+    //            self.userNameArray.remove(at: indexPath.row)
+    //            tableView.deleteRows(at: [indexPath], with: .automatic)
+    //            completionHandler(true)
+    //        }
+    //        // 削除ボタンのデザインを設定する
+    //        let trashImage = UIImage(systemName: "trash.fill")?.withTintColor(UIColor.white , renderingMode: .alwaysTemplate)
+    //        deleteAction.image = trashImage
+    //        deleteAction.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1)
+    //
+    //        // スワイプでの削除を無効化して設定する
+    //        let swipeAction = UISwipeActionsConfiguration(actions:[deleteAction])
+    //        swipeAction.performsFirstActionWithFullSwipe = false
+    //
+    //        return swipeAction
+    //    }
+    //    
 }

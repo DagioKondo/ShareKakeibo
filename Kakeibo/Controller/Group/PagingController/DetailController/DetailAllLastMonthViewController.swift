@@ -24,7 +24,7 @@ class DetailAllLastMonthViewController: UIViewController {
     var userNameArray = [String]()
     var settlementDay = String()
     var dateModel = DateModel()
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

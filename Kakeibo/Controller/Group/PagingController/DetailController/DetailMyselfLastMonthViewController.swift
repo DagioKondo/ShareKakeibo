@@ -27,7 +27,6 @@ class DetailMyselfLastMonthViewController: UIViewController {
     var userName = String()
     
     var db = Firestore.firestore()
-    
     var dateModel = DateModel()
     
     override func viewDidLoad() {
@@ -62,6 +61,7 @@ class DetailMyselfLastMonthViewController: UIViewController {
 // MARK: - LoadOKDelegate,EditOKDelegate
 
 extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
+    
     //決済日取得完了
     //決済月を求める
     func loadSettlementDay_OK(settlementDay: String) {
@@ -76,7 +76,6 @@ extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
     func loadMonthDetails_OK() {
         activityIndicatorView.stopAnimating()
         monthMyDetailsSets = loadDBModel.monthMyDetailsSets
-        //変更
         loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
