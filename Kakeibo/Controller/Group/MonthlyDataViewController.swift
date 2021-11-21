@@ -21,7 +21,7 @@ class MonthlyDataViewController: UIViewController {
         let othersVC = OthersViewController()
         
         overAllVC.title = "全体"
-        utilityVC.title = "光熱費"
+        utilityVC.title = "家賃・光熱費・通信費"
         foodVC.title = "食費"
         othersVC.title = "その他"
         

@@ -4,7 +4,6 @@
 //
 //  Created by 近藤大伍 on 2021/10/20.
 //
-
 import UIKit
 import SDWebImage
 
@@ -20,14 +19,13 @@ class DetailAllViewController: UIViewController{
     var startDate = Date()
     var endDate = Date()
     var tableView = UITableView()
-    //追加、変更
     var userIDArray = [String]()
-    //追加
     var profileImage = String()
     var profileImageArray = [String]()
     var userNameArray = [String]()
     
     var settlementDay = String()
+    var dateModel = DateModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,28 +52,26 @@ class DetailAllViewController: UIViewController{
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         loadDBModel.loadOKDelegate = self
         
-        activityIndicatorView.stopAnimating()
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        dateFormatter.locale = Locale(identifier: "ja_JP")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        //!!!!!!!!!!注目!!!!!!!!!!!!!
+        //ストップアニメイトであってますか？
+        activityIndicatorView.startAnimating()
+        
+        //決済日をuserDefaultから取り出し、決済月を求める
+       
         self.settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
-        if month == "12"{
-            startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(String(Int(year)! + 1))年\("1")月\(settlementDay)日")!
-        }else{
-            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(year)年\((month))月\(settlementDay)日")!
+        let settlementDayOfInt = Int(settlementDay)!
+        dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
         }
-        loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: nil, activityIndicatorView: activityIndicatorView)
+        
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//       
-//        monthGroupDetailsSets = []
-//    }
-
-
+    //    override func viewWillDisappear(_ animated: Bool) {
+    //        super.viewWillDisappear(animated)
+    //
+    //        monthGroupDetailsSets = []
+    //    }
+    
 }
 
 // MARK: - LoadOKDelegate
@@ -86,7 +82,6 @@ extension DetailAllViewController:LoadOKDelegate {
         activityIndicatorView.stopAnimating()
         monthGroupDetailsSets = []
         monthGroupDetailsSets = loadDBModel.monthGroupDetailsSets
-        //変更
         userIDArray = []
         profileImageArray = []
         userNameArray = []
@@ -99,12 +94,11 @@ extension DetailAllViewController:LoadOKDelegate {
             tableView.dataSource = self
             self.tableView.reloadData()
         }
-      
+        
         //明細に表示するユーザーネームとプロフィール画像取得
         loadDBModel.loadGroupMember(userIDArray: userIDArray) { [self] UserSets in
             self.profileImageArray.append(UserSets.profileImage)
             self.userNameArray.append(UserSets.userName)
-            
             tableView.delegate = self
             tableView.dataSource = self
             self.tableView.reloadData()
@@ -126,9 +120,7 @@ extension DetailAllViewController:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
-        //変更
-        print(monthGroupDetailsSets)
-        print(profileImageArray)
+        
         if profileImageArray.count == monthGroupDetailsSets.count{
             cell.profileImage.sd_setImage(with: URL(string: profileImageArray[indexPath.row]), completed: nil)
             cell.paymentLabel.text = String(monthGroupDetailsSets[indexPath.row].paymentAmount)

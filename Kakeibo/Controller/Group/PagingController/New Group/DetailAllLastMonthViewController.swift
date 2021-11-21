@@ -1,10 +1,9 @@
-//
+////
 //  DetailMyselfViewController.swift
 //  Test
 //
 //  Created by 近藤大伍 on 2021/11/04.
 //
-
 import UIKit
 import Parchment
 
@@ -23,6 +22,9 @@ class DetailAllLastMonthViewController: UIViewController {
     var userIDArray = [String]()
     var profileImageArray = [String]()
     var userNameArray = [String]()
+    var settlementDay = String()
+    var dateModel = DateModel()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,10 +49,20 @@ class DetailAllLastMonthViewController: UIViewController {
         month = String(date.month!)
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
+        
+        dateFormatter.dateFormat = "yyyy年MM月dd日"
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+        //決済日をuserDefaultから取り出し、決済月を求める
+        self.settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
+        let settlementDayOfInt = Int(settlementDay)!
+        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
+        }
+        
     }
     
- 
+    
     /*
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -64,29 +76,12 @@ class DetailAllLastMonthViewController: UIViewController {
 
 // MARK: - LoadOKDelegate
 extension DetailAllLastMonthViewController:LoadOKDelegate{
-    //決済日取得完了
-    //決済月を求める
-    func loadSettlementDay_OK(settlementDay: String) {
-        activityIndicatorView.stopAnimating()
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        dateFormatter.locale = Locale(identifier: "ja_JP")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        if month == "1"{
-            startDate = dateFormatter.date(from: "\(String(Int(year)! - 1))年\("11")月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(String(Int(year)! - 1))年\(12)月\(settlementDay)日")!
-        }else{
-            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 2))月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
-        }
-        
-        loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: nil, activityIndicatorView: activityIndicatorView)
-    }
     
+    //全体の明細を取得完了
     //全体の明細を取得完了
     func loadMonthDetails_OK() {
         activityIndicatorView.stopAnimating()
         monthGroupDetailsSets = loadDBModel.monthGroupDetailsSets
-        //変更
         userIDArray = []
         profileImageArray = []
         userNameArray = []
@@ -94,16 +89,18 @@ extension DetailAllLastMonthViewController:LoadOKDelegate{
             for i in 0...monthGroupDetailsSets.count - 1{
                 userIDArray.append(monthGroupDetailsSets[i].userID)
             }
+        }else{
+            tableView.delegate = self
+            tableView.dataSource = self
+            self.tableView.reloadData()
         }
         
         //明細に表示するユーザーネームとプロフィール画像取得
         loadDBModel.loadGroupMember(userIDArray: userIDArray) { [self] UserSets in
             self.profileImageArray.append(UserSets.profileImage)
             self.userNameArray.append(UserSets.userName)
-            
             tableView.delegate = self
             tableView.dataSource = self
-            
             self.tableView.reloadData()
         }
     }
@@ -111,33 +108,35 @@ extension DetailAllLastMonthViewController:LoadOKDelegate{
 }
 
 // MARK: - TableView
-
 extension DetailAllLastMonthViewController: UITableViewDelegate,UITableViewDataSource{
-      
-      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-          return profileImageArray.count
-      }
-      
-      func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-          return 85
-      }
-      
-      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
-          
-          //変更
-          cell.profileImage.sd_setImage(with: URL(string: profileImageArray[indexPath.row]), completed: nil)
-          cell.paymentLabel.text = String(monthGroupDetailsSets[indexPath.row].paymentAmount)
-          cell.userNameLabel.text = userNameArray[indexPath.row]
-          cell.dateLabel.text = monthGroupDetailsSets[indexPath.row].paymentDay
-          cell.category.text = monthGroupDetailsSets[indexPath.row].category
-          cell.view.layer.cornerRadius = 5
-          cell.view.layer.masksToBounds = false
-          cell.view.layer.shadowOffset = CGSize(width: 1, height: 3)
-          cell.view.layer.shadowOpacity = 0.2
-          cell.view.layer.shadowRadius = 3
-          
-          return cell
-      }
-      
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return profileImageArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 85
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
+        
+        if profileImageArray.count == monthGroupDetailsSets.count{
+            cell.profileImage.sd_setImage(with: URL(string: profileImageArray[indexPath.row]), completed: nil)
+            cell.paymentLabel.text = String(monthGroupDetailsSets[indexPath.row].paymentAmount)
+            cell.userNameLabel.text = userNameArray[indexPath.row]
+            cell.dateLabel.text = monthGroupDetailsSets[indexPath.row].paymentDay
+            cell.category.text = monthGroupDetailsSets[indexPath.row].category
+            cell.view.layer.cornerRadius = 5
+            cell.view.layer.masksToBounds = false
+            cell.view.layer.shadowOffset = CGSize(width: 1, height: 3)
+            cell.view.layer.shadowOpacity = 0.2
+            cell.view.layer.shadowRadius = 3
+            
+            return cell
+        }else{
+            return cell
+        }
+    }
+    
 }

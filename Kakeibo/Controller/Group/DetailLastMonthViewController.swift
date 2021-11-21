@@ -33,6 +33,7 @@ class DetailLastMonthViewController: UIViewController {
         self.addChild(pagingVC)
         self.view.addSubview(pagingVC.view)
         pagingVC.didMove(toParent: self)
+        pagingVC.contentInteraction = .none
         
         pagingVC.view.translatesAutoresizingMaskIntoConstraints = false
         pagingVC.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true

@@ -36,6 +36,8 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     
+    var profileImageData = Data()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +49,7 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
         
         editDBModel.editOKDelegate = self
+        sendDBModel.sendOKDelegate = self
         
         userID = UserDefaults.standard.object(forKey: "userID") as! String
 
@@ -79,6 +82,9 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     }
     
     @IBAction func back(_ sender: Any) {
+        if profileImageData != nil{
+            sendDBModel.sendProfileImage(data: profileImageData)
+        }
         navigationController?.popViewController(animated: true)
     }
 
@@ -167,8 +173,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         //トリミング編集が終えたら、呼び出される。
         self.profileImageView.image = image
-        let data = image.jpegData(compressionQuality: 1.0)
-        sendDBModel.sendProfileImage(data: data!)
+        profileImageData = image.jpegData(compressionQuality: 1.0)!
         cropViewController.dismiss(animated: true, completion: nil)
     }
     

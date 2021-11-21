@@ -29,6 +29,8 @@ class DetailMyselfLastMonthViewController: UIViewController {
     
     var db = Firestore.firestore()
     
+    var dateModel = DateModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,17 +68,10 @@ extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
     //決済月を求める
     func loadSettlementDay_OK(settlementDay: String) {
         activityIndicatorView.stopAnimating()
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        dateFormatter.locale = Locale(identifier: "ja_JP")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        if month == "1"{
-            startDate = dateFormatter.date(from: "\(String(Int(year)! - 1))年\("11")月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(String(Int(year)! - 1))年\(12)月\(settlementDay)日")!
-        }else{
-            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 2))月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
+        let settlementDayOfInt = Int(settlementDay)!
+        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
         }
-        loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
     }
     
     //自分の明細を取得完了
@@ -143,7 +138,7 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
             (ctxAction, view, completionHandler) in
             tableView.deleteRows(at: [indexPath], with: .automatic)
             //データ削除
-            db.collection(groupID).document(loadDBModel.monthMyDetailsSets[indexPath.row].documentID).delete()
+            db.collection("paymentData").document(loadDBModel.monthMyDetailsSets[indexPath.row].documentID).delete()
             monthMyDetailsSets.remove(at: indexPath.row)
             completionHandler(true)
         }

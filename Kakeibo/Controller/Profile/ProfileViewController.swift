@@ -294,12 +294,8 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
                 do {
                     try auth.signOut()
                     UserDefaults.standard.removePersistentDomain(forName: "com.daigoSwift.Kakeibo.plist")
-                    let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let viewController = storyboard.instantiateViewController(identifier: "LoginVC")
-                    let navigationVC = UINavigationController(rootViewController: viewController)
-                    window!.rootViewController = navigationVC
-                    navigationController?.popViewController(animated: true)
+                    let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginVC") as! LoginViewController
+                    self.navigationController?.pushViewController(loginVC, animated: true)
                 } catch let error {
                     //                    loginModel?.showError(error, showLabel: errorShow)
                     print(error)

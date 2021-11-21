@@ -32,6 +32,8 @@ class DetailMyselfViewController: UIViewController {
     
     var db = Firestore.firestore()
     
+    var dateModel = DateModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,18 +61,12 @@ class DetailMyselfViewController: UIViewController {
         editDBModel.editOKDelegate = self
         
         activityIndicatorView.stopAnimating()
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        dateFormatter.locale = Locale(identifier: "ja_JP")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
         settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
-        if month == "12"{
-            startDate = dateFormatter.date(from: "\(year)年\(month)月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(String(Int(year)! + 1))年\("1")月\(settlementDay)日")!
-        }else{
-            startDate = dateFormatter.date(from: "\(year)年\(String(Int(month)! - 1))月\(settlementDay)日")!
-            endDate = dateFormatter.date(from: "\(year)年\((month))月\(settlementDay)日")!
+        let settlementDayOfInt = Int(settlementDay)!
+        dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
         }
-        loadDBModel.loadMonthDetails(groupID: groupID, startDate: startDate, endDate: endDate, userID: userID, activityIndicatorView: activityIndicatorView)
+        
     }
     
 //    override func viewDidDisappear(_ animated: Bool) {
@@ -160,7 +156,9 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
             print(self.indexPath)
             //データ削除
 //            editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
-            db.collection(groupID).document(loadDBModel.monthMyDetailsSets[indexPath.row].documentID).delete()
+            print(groupID)
+            print(loadDBModel.monthMyDetailsSets)
+            db.collection("paymentData").document(monthMyDetailsSets[indexPath.row].documentID).delete()
             monthMyDetailsSets.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completionHandler(true)
