@@ -221,10 +221,11 @@ class LoadDBModel{
     
     //グループに所属する人の名前とプロフィール画像を取得するロード
     func loadGroupMember(userIDArray:[String],completion:@escaping(UserSets)->()){
+        var count = 0
         for userID in userIDArray{
             
             db.collection("userManagement").document(userID).addSnapshotListener { (snapShot, error) in
-                
+                count += 1
                 if error != nil{
                     return
                 }
@@ -233,6 +234,9 @@ class LoadDBModel{
                     let userName = data["userName"] as! String
                     let newData = UserSets(profileImage: profileImage, userName: userName, userID: userID)
                     completion(newData)
+                }
+                if count == userIDArray.count{
+                    self.loadOKDelegate?.loadGroupMember_OK?()
                 }
             }
         }

@@ -195,29 +195,30 @@ extension CreateGroupViewController:SendOKDelegate{
         let groupID = groupDocument.documentID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
         
-        //変更
         db.collection("groupManagement").document(groupID).setData([
             "groupName": groupNameTextField.text!,
             "groupImage": url,
-            "settlementDay": settlementTextField.text!,"groupID": groupID,
+            "settlementDay": settlementTextField.text!,
+            "groupID": groupID,
             "settlementDic": ["\(userID)": false],
             "userIDArray": [userID],
             "create_at": Date().timeIntervalSince1970
         ])
-        //追加
+
         db.collection("userManagement").document(userID).setData([
             "joinGroupDic" : ["\(groupID)": true]
             ],merge: true)
         
-        //変更
+        print(userIDArray)
+        userIDArray.removeAll(where: {$0 == userID})
+        print(userIDArray)
+        
         for usersID in userIDArray{
             db.collection("userManagement").document(usersID).setData([
                 "joinGroupDic":["\(groupID)": false]
             ], merge: true)
         }
         
-        //追加
-//        db.collection(groupID).document().setData(["paymentDay" : Any])
         navigationController?.popViewController(animated: true)
     }
     

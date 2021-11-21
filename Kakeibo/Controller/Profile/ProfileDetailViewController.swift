@@ -36,7 +36,7 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     
-    var profileImageData = Data()
+    var profileImageData:Data?
     
     
     override func viewDidLoad() {
@@ -83,7 +83,7 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     
     @IBAction func back(_ sender: Any) {
         if profileImageData != nil{
-            sendDBModel.sendProfileImage(data: profileImageData)
+            sendDBModel.sendProfileImage(data: profileImageData!)
         }
         navigationController?.popViewController(animated: true)
     }

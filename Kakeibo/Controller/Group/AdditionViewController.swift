@@ -66,6 +66,12 @@ class AdditionViewController: UIViewController {
     
     @IBAction func invitationButton(_ sender: Any) {
         let groupID = UserDefaults.standard.object(forKey: "groupID") as! String
+        let userID = UserDefaults.standard.object(forKey: "userID") as! String
+
+        print(userIDArray)
+        userIDArray.removeAll(where: {$0 == userID})
+        print(userIDArray)
+        
         for usersID in userIDArray{
             db.collection("userManagement").document(usersID).setData(["joinGroupDic":["\(groupID)": false]], merge: true)
         }

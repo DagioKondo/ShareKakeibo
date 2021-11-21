@@ -145,11 +145,14 @@ extension SettlementViewController: LoadOKDelegate{
             userNameDic.updateValue(UserSets.userName, forKey: UserSets.userID)
             sortedProfileImageDic = profileImageDic.sorted(by: {$0.key < $1.key})
             sortedUserNameDic = userNameDic.sorted(by: {$0.key < $1.key})
-            dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-                loadDBModel.loadMonthSettlement(groupID: groupID, userID: nil, startDate: minDate, endDate: maxDate)
-            }
         }
         
+    }
+    
+    func loadGroupMember_OK() {
+        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthSettlement(groupID: groupID, userID: nil, startDate: minDate, endDate: maxDate)
+        }
     }
     
     //グループの支払い状況の取得完了
