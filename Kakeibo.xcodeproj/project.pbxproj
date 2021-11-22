@@ -35,6 +35,7 @@
 		864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */; };
 		865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B9CE727216128000CCFB2 /* CollectionViewCell.swift */; };
 		865B9CEA27216128000CCFB2 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 865B9CE827216128000CCFB2 /* CollectionViewCell.xib */; };
+		8693BBCA274BCC30004BB73E /* ChangeCommaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693BBC9274BCC30004BB73E /* ChangeCommaModel.swift */; };
 		86A0387D27102A740044803F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0387C27102A740044803F /* AppDelegate.swift */; };
 		86A0387F27102A740044803F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0387E27102A740044803F /* SceneDelegate.swift */; };
 		86A0388127102A740044803F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A0388027102A740044803F /* LoginViewController.swift */; };
@@ -97,6 +98,7 @@
 		864E38B7271B4D89009D617A /* ButtonAnimatedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAnimatedModel.swift; sourceTree = "<group>"; };
 		865B9CE727216128000CCFB2 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		865B9CE827216128000CCFB2 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
+		8693BBC9274BCC30004BB73E /* ChangeCommaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeCommaModel.swift; sourceTree = "<group>"; };
 		86A0387927102A740044803F /* Kakeibo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kakeibo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A0387C27102A740044803F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		86A0387E27102A740044803F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				862AF707272B1CE400C2B5DC /* LoginModel.swift */,
 				862AF71A272C17A500C2B5DC /* AlertModel.swift */,
 				86EF6C212749806300F9D8D0 /* DateModel.swift */,
+				8693BBC9274BCC30004BB73E /* ChangeCommaModel.swift */,
 				8617BE1D273E85C3007417A1 /* loadModel */,
 			);
 			path = Model;
@@ -453,6 +456,7 @@
 				8635E89D27353A1700C8DB72 /* OverAllViewController.swift in Sources */,
 				8617BE24273E85E9007417A1 /* LoadDBModel.swift in Sources */,
 				864E38B8271B4D89009D617A /* ButtonAnimatedModel.swift in Sources */,
+				8693BBCA274BCC30004BB73E /* ChangeCommaModel.swift in Sources */,
 				8635E89E27353A1700C8DB72 /* FoodViewController.swift in Sources */,
 				8617BE23273E85E9007417A1 /* SendDBModel.swift in Sources */,
 				86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */,

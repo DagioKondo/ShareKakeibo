@@ -13,12 +13,16 @@ protocol GoToVcDelegate {
 
 class GroupDetailViewController: UIViewController {
     
+    
     var goToVcDelegate:GoToVcDelegate?
     var editDBModel = EditDBModel()
     
     var groupID = String()
     var userID = String()
     var activityIndicatorView = UIActivityIndicatorView()
+    
+    var alertModel = AlertModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,14 +58,16 @@ class GroupDetailViewController: UIViewController {
     @IBAction func exitButton(_ sender: Any) {
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
-        editDBModel.editUserDelete(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
+        alertModel.exitAlert(viewController: self, groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
+    
     
 }
 
 // MARK: - EditOKDelegate
 
 extension GroupDetailViewController: EditOKDelegate{
+    
     
     func editUserDelete_OK() {
         editDBModel.editUserDelete2(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
@@ -70,6 +76,7 @@ extension GroupDetailViewController: EditOKDelegate{
     func editUserDelete2_OK() {
         goToVcDelegate?.goToVC(segueID: "")
     }
+    
     
 }
 

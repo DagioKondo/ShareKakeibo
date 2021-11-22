@@ -36,6 +36,9 @@ class CreateGroupViewController: UIViewController{
     
     var buttonAnimatedModel = ButtonAnimatedModel(withDuration: 0.1, delay: 0.0, options: UIView.AnimationOptions.curveEaseIn, transform: CGAffineTransform(scaleX: 0.95, y: 0.95), alpha: 0.7)
     
+    var activityIndicatorView = UIActivityIndicatorView()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,8 +58,14 @@ class CreateGroupViewController: UIViewController{
         layout.scrollDirection = .horizontal
         collectionView.collectionViewLayout = layout
         
-        makePicker()
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
         
+        warningLabel.text = ""
+        
+        makePicker()
     }
     
     @objc func touchDown(_ sender:UIButton){
@@ -84,8 +93,10 @@ class CreateGroupViewController: UIViewController{
     
     @IBAction func createGroupButton(_ sender: Any) {
         buttonAnimatedModel.endAnimation(sender: sender as! UIButton)
+        activityIndicatorView.startAnimating()
         if groupNameTextField.text == "" || settlementTextField.text == ""{
             warningLabel.text = "グループ名と決済日は必須入力です"
+            activityIndicatorView.stopAnimating()
         }else{
             userID = UserDefaults.standard.object(forKey: "userID") as! String
             userName = UserDefaults.standard.object(forKey: "userName") as! String
@@ -96,7 +107,7 @@ class CreateGroupViewController: UIViewController{
             }
             sendDBModel.sendOKDelegate = self
             let data = groupImageView.image?.jpegData(compressionQuality: 1.0)
-            sendDBModel.sendGroupImage(data: data!)
+            sendDBModel.sendGroupImage(data: data!, activityIndicatorView: activityIndicatorView)
         }
     }
     
@@ -112,10 +123,12 @@ class CreateGroupViewController: UIViewController{
         alertModel.satsueiAlert(viewController: self)
     }
     
+    
 }
 
 //MARK:- UICollectionView
 extension CreateGroupViewController:UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
@@ -150,11 +163,12 @@ extension CreateGroupViewController:UICollectionViewDelegate, UICollectionViewDa
         collectionView.deleteItems(at: [IndexPath(item: indexPath!.row, section: 0)])
     }
     
+    
 }
 
 //MARK:- ImagePicker
 extension CreateGroupViewController:CropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
-    
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if info[.originalImage] as? UIImage != nil{
@@ -215,6 +229,7 @@ extension CreateGroupViewController:SendOKDelegate{
             ], merge: true)
         }
         
+        activityIndicatorView.stopAnimating()
         navigationController?.popViewController(animated: true)
     }
     
@@ -257,6 +272,7 @@ extension CreateGroupViewController:UIPickerViewDelegate,UIPickerViewDataSource{
 //MARK:- CollectionDelegate
 
 extension CreateGroupViewController:CollectionDeligate{
+    
     func SendArray(selectedUserImageArray: [String], userIDArray: [String], userNameArray: [String]) {
         print(selectedUserImageArray)
         print(userIDArray)

@@ -10,6 +10,7 @@ import Charts
 
 class FoodViewController: UIViewController {
     
+    
     var graphModel = GraphModel()
     var yAxisValues = [Int]()
     var loadDBModel = LoadDBModel()
@@ -27,6 +28,7 @@ class FoodViewController: UIViewController {
     let lastYearButton = UIButton()
     var settlementDay = String()
     var yearCount = 0
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,31 +118,18 @@ class FoodViewController: UIViewController {
         loadDBModel.loadMonthlyFoodTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
     }
     
+    
 }
 
 // MARK: - LoadOKDelegate
 extension FoodViewController:LoadOKDelegate{
-    //決済日取得完了
-    //今年の期間を定める
-    //    func loadSettlementDay_OK(settlementDay: String) {
-    //        activityIndicatorView.stopAnimating()
-    //        dateFormatter.dateFormat = "yyyy年MM月dd日"
-    //        dateFormatter.locale = Locale(identifier: "ja_JP")
-    //        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-    //
-    //        self.settlementDay = settlementDay
-    //        startDate = dateFormatter.date(from: "\(Int(year)! - 1)年\("12")月\(settlementDay)日")!
-    //        endDate = dateFormatter.date(from: "\(year)年\("12")月\(settlementDay)日")!
-    //        yearLabel.text = "\(year)年"
-    //        loadDBModel.loadMonthlyFoodTransition(groupID: groupID, year: year, settlementDay: settlementDay, startDate: startDate, endDate: endDate, activityIndicatorView: activityIndicatorView)
-    //    }
     
     //１〜１２月の食費の推移を取得完了
     func loadMonthlyTransition_OK(countArray: [Int]) {
-        activityIndicatorView.stopAnimating()
         yAxisValues = countArray
         lineChartsView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         graphModel.setLineCht(linechart: lineChartsView, yAxisValues: yAxisValues,thisMonth: month)
+        activityIndicatorView.stopAnimating()
     }
     
 }

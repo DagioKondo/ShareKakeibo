@@ -12,6 +12,7 @@ import FirebaseFirestore
 
 class DetailMyselfLastMonthViewController: UIViewController {
     
+    
     var loadDBModel = LoadDBModel()
     var monthMyDetailsSets = [MonthMyDetailsSets]()
     var activityIndicatorView = UIActivityIndicatorView()
@@ -25,9 +26,12 @@ class DetailMyselfLastMonthViewController: UIViewController {
     var tableView = UITableView()
     var profileImage = String()
     var userName = String()
+    var settlementDay = String()
     
     var db = Firestore.firestore()
     var dateModel = DateModel()
+    var changeCommaModel = ChangeCommaModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,9 +56,16 @@ class DetailMyselfLastMonthViewController: UIViewController {
         month = String(date.month!)
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
+        settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
+        
+        activityIndicatorView.startAnimating()
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadSettlementDay(groupID: groupID, activityIndicatorView: activityIndicatorView)
+        let settlementDayOfInt = Int(settlementDay)!
+        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
+        }
     }
+    
     
 }
 
@@ -62,19 +73,9 @@ class DetailMyselfLastMonthViewController: UIViewController {
 
 extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
     
-    //決済日取得完了
-    //決済月を求める
-    func loadSettlementDay_OK(settlementDay: String) {
-        activityIndicatorView.stopAnimating()
-        let settlementDayOfInt = Int(settlementDay)!
-        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
-        }
-    }
     
     //自分の明細を取得完了
     func loadMonthDetails_OK() {
-        activityIndicatorView.stopAnimating()
         monthMyDetailsSets = loadDBModel.monthMyDetailsSets
         loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
@@ -86,15 +87,17 @@ extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
         
         tableView.delegate = self
         tableView.dataSource = self
-        
         tableView.reloadData()
+        activityIndicatorView.stopAnimating()
     }
+    
     
 }
 
 // MARK: - TableView
 
 extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDataSource{
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return monthMyDetailsSets.count
@@ -108,10 +111,12 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
         let cell = tableView.dequeueReusableCell(withIdentifier: "detailCell", for: indexPath) as! DetailCell
         
         cell.profileImage.sd_setImage(with: URL(string: profileImage), completed: nil)
-        cell.paymentLabel.text = String(monthMyDetailsSets[indexPath.row].paymentAmount)
+        cell.paymentLabel.text = changeCommaModel.getComma(num: monthMyDetailsSets[indexPath.row].paymentAmount) + " 円"
         cell.userNameLabel.text = userName
         cell.dateLabel.text = monthMyDetailsSets[indexPath.row].paymentDay
         cell.category.text = monthMyDetailsSets[indexPath.row].category
+        cell.productNameLabel.text = monthMyDetailsSets[indexPath.row].productName
+        
         cell.view.layer.cornerRadius = 5
         cell.view.layer.masksToBounds = false
         cell.view.layer.shadowOffset = CGSize(width: 1, height: 3)
@@ -144,5 +149,6 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
         return swipeAction
         
     }
+    
     
 }

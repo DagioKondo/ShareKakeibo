@@ -12,6 +12,7 @@ import FirebaseFirestore
 
 class DetailMyselfViewController: UIViewController {
     
+    
     var loadDBModel = LoadDBModel()
     var monthMyDetailsSets = [MonthMyDetailsSets]()
     var activityIndicatorView = UIActivityIndicatorView()
@@ -30,6 +31,8 @@ class DetailMyselfViewController: UIViewController {
     
     var db = Firestore.firestore()
     var dateModel = DateModel()
+    var changeCommaModel = ChangeCommaModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,22 +57,16 @@ class DetailMyselfViewController: UIViewController {
         month = String(date.month!)
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
-        loadDBModel.loadOKDelegate = self
-        
-        activityIndicatorView.stopAnimating()
         settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
+        
         let settlementDayOfInt = Int(settlementDay)!
+        activityIndicatorView.startAnimating()
+        loadDBModel.loadOKDelegate = self
         dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
             loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
         }
         
     }
-    
-    //    override func viewDidDisappear(_ animated: Bool) {
-    //        monthMyDetailsSets = []
-    //    }
-    //
-    
     
     
 }
@@ -79,7 +76,6 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
     
     //自分の明細を取得完了
     func loadMonthDetails_OK() {
-        activityIndicatorView.stopAnimating()
         monthMyDetailsSets = loadDBModel.monthMyDetailsSets
         loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
     }
@@ -92,6 +88,7 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
         tableView.dataSource = self
         
         tableView.reloadData()
+        activityIndicatorView.stopAnimating()
     }
     
 }
@@ -99,6 +96,7 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
 // MARK: - TableView
 
 extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -119,10 +117,12 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
         cell.profileImage.sd_setImage(with: URL(string: profileImage), completed: nil)
         print("****cellForRowAt****")
         print(monthMyDetailsSets.count)
-        cell.paymentLabel.text = String(monthMyDetailsSets[indexPath.row].paymentAmount)
+        cell.paymentLabel.text = changeCommaModel.getComma(num: monthMyDetailsSets[indexPath.row].paymentAmount) + " 円"
         cell.userNameLabel.text = userName
         cell.dateLabel.text = monthMyDetailsSets[indexPath.row].paymentDay
         cell.category.text = monthMyDetailsSets[indexPath.row].category
+        cell.productNameLabel.text = monthMyDetailsSets[indexPath.row].productName
+        
         cell.view.layer.cornerRadius = 5
         //        cell.view.translatesAutoresizingMaskIntoConstraints = true
         cell.view.layer.masksToBounds = false
@@ -143,8 +143,6 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
             self.indexPath = indexPath
             print("***trailingSwipeActionsConfigurationForRowAt***")
             print(self.indexPath)
-            //データ削除
-            //            editDBModel.editMonthDetailsDelete(groupID: groupID, userID: userID, startDate: startDate, endDate: endDate, index: indexPath.row, activityIndicatorView: activityIndicatorView)
             print(groupID)
             print(loadDBModel.monthMyDetailsSets)
             db.collection("paymentData").document(monthMyDetailsSets[indexPath.row].documentID).delete()
@@ -163,5 +161,6 @@ extension DetailMyselfViewController:UITableViewDelegate,UITableViewDataSource{
         
         return swipeAction
     }
+    
     
 }

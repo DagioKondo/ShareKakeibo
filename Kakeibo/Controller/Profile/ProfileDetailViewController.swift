@@ -12,7 +12,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
-class ProfileDetailViewController: UIViewController,EditOKDelegate{
+class ProfileDetailViewController: UIViewController{
     
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -35,8 +35,9 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
     var editDBModel = EditDBModel()
     var db = Firestore.firestore()
     
-    var profileImageData:Data?
+    var activityIndicatorView = UIActivityIndicatorView()
     
+    var profileImageData:Data?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,11 +48,14 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
         
-        editDBModel.editOKDelegate = self
         sendDBModel.sendOKDelegate = self
         
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         
+        activityIndicatorView.center = view.center
+        activityIndicatorView.style = .large
+        activityIndicatorView.color = .darkGray
+        view.addSubview(activityIndicatorView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,31 +80,21 @@ class ProfileDetailViewController: UIViewController,EditOKDelegate{
         alertModel.satsueiAlert(viewController: self)
     }
     
-    func editProfileImageChange_OK() {
-        
-    }
-    
     @IBAction func back(_ sender: Any) {
         if profileImageData != nil{
-            sendDBModel.sendProfileImage(data: profileImageData!)
+            activityIndicatorView.startAnimating()
+            sendDBModel.sendProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
+        }else{
+            navigationController?.popViewController(animated: true)
         }
-        navigationController?.popViewController(animated: true)
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+ 
     
 }
 
 // MARK: - TableView
 extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource{
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userInfoArray.count
@@ -120,10 +114,20 @@ extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource
         
         let nameLabel = cell.contentView.viewWithTag(1) as! UILabel
         let loadLabel = cell.contentView.viewWithTag(2) as! UILabel
-        let imageView = cell.contentView.viewWithTag(3) as! UIImageView
+        var passwaordString = String()
         
         nameLabel.text = nameArray[indexPath.row]
-        loadLabel.text = userInfoArray[indexPath.row]
+        
+        if indexPath.row == 2{
+            userInfoArray[indexPath.row].forEach{string in
+                passwaordString = passwaordString + "●"
+                print(string)
+            }
+            loadLabel.text = passwaordString
+            print(passwaordString)
+        }else{
+            loadLabel.text = userInfoArray[indexPath.row]
+        }
         
         return cell
     }
@@ -134,6 +138,7 @@ extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource
         alertModel.passWordAlert(viewController: self, userInfo: userInfoArray)
     }
     
+    
 }
 
 // MARK: - SendOKDelegate
@@ -141,12 +146,15 @@ extension ProfileDetailViewController:SendOKDelegate{
     
     func sendImage_OK(url: String) {
         db.collection("userManagement").document(userID).updateData(["profileImage" : url])
+        activityIndicatorView.stopAnimating()
+        navigationController?.popViewController(animated: true)
     }
     
 }
 
 // MARK: - ImagePicker
 extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate,CropViewControllerDelegate{
+    
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -175,6 +183,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
         profileImageData = image.jpegData(compressionQuality: 1.0)!
         cropViewController.dismiss(animated: true, completion: nil)
     }
+    
     
 }
 

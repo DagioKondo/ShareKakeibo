@@ -38,6 +38,7 @@ class PaymentViewController: UIViewController{
     var today = Int()
     
     var dateModel = DateModel()
+    var changeCommaModel = ChangeCommaModel()
     
     
     override func viewDidLoad() {
@@ -107,9 +108,10 @@ class PaymentViewController: UIViewController{
         
         paymentDay = (dateModel.changeDate(dateString: "\(paymentDayTextField.text!)"))
         
-        if priceLabel.text?.isEmpty == false {
+        if priceLabel.text != "" && paymentDayTextField.text != "" && categoryTextField.text != "" && paymentNameTextField.text != "" {
+            let paymentAmount = priceLabel.text?.replacingOccurrences(of: ",", with: "")
             db.collection("paymentData").document().setData([
-                "paymentAmount" : Int(priceLabel.text!)!,
+                "paymentAmount" : Int(paymentAmount!)!,
                 "productName" : paymentNameTextField.text!,
                 "paymentDay" : paymentDay as Date,
                 "category" : categoryTextField.text!,
@@ -122,6 +124,13 @@ class PaymentViewController: UIViewController{
             //空だった場合の処理をお願いします
             //ここに来たのは２回目です。elseの処理がわかりません。お願いします。
             //支払名、カテゴリなどが空だったらどうしましょうか。時間が無いので先進みます。
+            let alert = UIAlertController(title: "全て必須入力です", message: "", preferredStyle: .alert)
+
+            let cancel = UIAlertAction(title: "OK", style: .cancel) { (acrion) in
+            }
+            alert.addAction(cancel)
+            
+            self.present(alert, animated: true, completion: nil)
         }
         
     }
@@ -132,10 +141,12 @@ class PaymentViewController: UIViewController{
         textFieldCalcArray = []
     }
     
+    
 }
 
 // MARK: - PickerView
 extension PaymentViewController: UIPickerViewDelegate,UIPickerViewDataSource{
+   
     
     func makePickerView(){
         pickerViewOfCategory.delegate = self
@@ -162,12 +173,12 @@ extension PaymentViewController: UIPickerViewDelegate,UIPickerViewDataSource{
         paymentDayTextField.inputAccessoryView = toolbarOfPaymentDay
         
         //支払い日の選択期間を取得＆反映
-        let settlementDayString = UserDefaults.standard.object(forKey: "settlementDay") as! String
-        let settlementDay = Int(settlementDayString)
-        dateModel.getPeriodOfTextField(settelemtDay: settlementDay!, completion: { maxDate, minDate in
-            pickerViewOfPaymentDay.maximumDate = maxDate
-            pickerViewOfPaymentDay.minimumDate = minDate
-        })
+//        let settlementDayString = UserDefaults.standard.object(forKey: "settlementDay") as! String
+//        let settlementDay = Int(settlementDayString)
+//        dateModel.getPeriodOfTextField(settelemtDay: settlementDay!, completion: { maxDate, minDate in
+//            pickerViewOfPaymentDay.maximumDate = maxDate
+//            pickerViewOfPaymentDay.minimumDate = minDate
+//        })
         
     }
     
@@ -190,7 +201,7 @@ extension PaymentViewController: UIPickerViewDelegate,UIPickerViewDataSource{
             textFieldCalcArray.append(num)
             print(num)
         }
-        priceLabel.text = "\(textFieldCalcArray.reduce(0){ $0 + $1 })"
+        priceLabel.text = "\(changeCommaModel.getComma(num: textFieldCalcArray.reduce(0){ $0 + $1 }))"
         priceTextField.text = ""
     }
     
@@ -211,10 +222,12 @@ extension PaymentViewController: UIPickerViewDelegate,UIPickerViewDataSource{
         self.categoryTextField.text = categoryArray[row]
     }
     
+    
 }
 
 // MARK: - UITextFieldDelegate
 extension PaymentViewController: UITextFieldDelegate{
+    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -222,14 +235,18 @@ extension PaymentViewController: UITextFieldDelegate{
             textFieldCalcArray.append(num)
             print(num)
         }
-        priceLabel.text = "\(textFieldCalcArray.reduce(0){ $0 + $1 })"
+        priceLabel.text = "\(changeCommaModel.getComma(num: textFieldCalcArray.reduce(0){ $0 + $1 }))"
         textField.text = ""
         return true
     }
     
+    
 }
 
+// MARK: -
 extension PaymentViewController {
+    
+    
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
         guard let presentationController = presentationController else {
@@ -237,4 +254,6 @@ extension PaymentViewController {
         }
         presentationController.delegate?.presentationControllerDidDismiss?(presentationController)
     }
+    
+    
 }

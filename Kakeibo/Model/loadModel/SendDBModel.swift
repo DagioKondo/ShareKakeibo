@@ -17,16 +17,18 @@ class SendDBModel{
     var sendOKDelegate:SendOKDelegate?
     
     //プロフィール画像送信
-    func sendProfileImage(data:Data){
+    func sendProfileImage(data:Data,activityIndicatorView:UIActivityIndicatorView){
         let image = UIImage(data: data)
         let profileImage = image?.jpegData(compressionQuality: 0.1)
         let imageRef = Storage.storage().reference().child("profileImage").child("\(UUID().uuidString + String(Date().timeIntervalSince1970)).jpg")
         imageRef.putData(profileImage!, metadata: nil) { (mataData, error) in
             if error != nil{
+                activityIndicatorView.stopAnimating()
                 return
             }
             imageRef.downloadURL { (url, error) in
                 if error != nil{
+                    activityIndicatorView.stopAnimating()
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "userImage")
@@ -36,16 +38,18 @@ class SendDBModel{
     }
     
     //グループ画像送信
-    func sendGroupImage(data:Data){
+    func sendGroupImage(data:Data,activityIndicatorView:UIActivityIndicatorView){
         let image = UIImage(data: data)
         let profileImage = image?.jpegData(compressionQuality: 0.1)
         let imageRef = Storage.storage().reference().child("groupImage").child("\(UUID().uuidString + String(Date().timeIntervalSince1970)).jpg")
         imageRef.putData(profileImage!, metadata: nil) { (mataData, error) in
             if error != nil{
+                activityIndicatorView.stopAnimating()
                 return
             }
             imageRef.downloadURL { (url, error) in
                 if error != nil{
+                    activityIndicatorView.stopAnimating()
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "groupImage")
