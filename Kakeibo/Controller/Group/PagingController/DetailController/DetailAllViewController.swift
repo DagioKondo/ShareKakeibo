@@ -36,6 +36,8 @@ class DetailAllViewController: UIViewController{
         tableView.separatorStyle = .none
         tableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "detailCell")
         tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         self.view.addSubview(tableView)
         
         activityIndicatorView.center = view.center
@@ -144,5 +146,13 @@ extension DetailAllViewController:UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+    @objc func refresh() {
+        let settlementDayOfInt = Int(settlementDay)!
+
+        dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
+        }
+        tableView.refreshControl?.endRefreshing()
+    }
     
 }

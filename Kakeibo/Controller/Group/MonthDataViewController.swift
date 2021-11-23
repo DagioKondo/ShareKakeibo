@@ -70,8 +70,15 @@ class MonthDataViewController: UIViewController{
         groupNameLabel.layer.shadowOpacity = 0.7
         groupNameLabel.layer.shadowRadius = 1
         
+        let containerView = UIView(frame: CGRect(x: 0, y: 100, width: scrollView.bounds.width, height: 60))
+        let refreshControl = UIRefreshControl()
+        scrollView.addSubview(containerView) // １.
+        containerView.addSubview(refreshControl)
+        self.view.bringSubviewToFront(containerView)
         scrollView.delegate = self
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.refreshControl = refreshControl
+        scrollView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         blurView.alpha = 0.3
         
         activityIndicatorView.center = view.center
@@ -190,7 +197,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - ScrollView
 extension MonthDataViewController:UIScrollViewDelegate{
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -204,6 +211,14 @@ extension MonthDataViewController:UIScrollViewDelegate{
         }else{
             blurView.alpha = 0.3
         }
+    }
+    
+    @objc func refresh() {
+   
+        dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+            loadDBModel.loadCategoryGraphOfTithMonth(groupID: groupID, startDate: minDate, endDate: maxDate, activityIndicatorView: activityIndicatorView)
+        }
+        scrollView.refreshControl?.endRefreshing()
     }
     
 }
@@ -227,3 +242,5 @@ extension MonthDataViewController:GoToVcDelegate{
     }
     
 }
+
+
