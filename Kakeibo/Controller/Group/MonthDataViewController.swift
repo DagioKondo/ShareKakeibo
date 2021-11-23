@@ -219,4 +219,11 @@ extension MonthDataViewController:GoToVcDelegate{
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "GroupConfigurationVC"{
+            let GroupConfigurationVC = segue.destination as! GroupConfigurationViewController
+            GroupConfigurationVC.groupImage = groupImageView.image!
+        }
+    }
+    
 }

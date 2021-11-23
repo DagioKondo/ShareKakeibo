@@ -9,6 +9,7 @@ import UIKit
 import SDWebImage
 import CropViewController
 import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
@@ -83,12 +84,12 @@ class ProfileDetailViewController: UIViewController{
     @IBAction func back(_ sender: Any) {
         if profileImageData != nil{
             activityIndicatorView.startAnimating()
-            sendDBModel.sendProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
+            sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
         }else{
             navigationController?.popViewController(animated: true)
         }
     }
- 
+    
     
 }
 
@@ -145,10 +146,10 @@ extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource
 extension ProfileDetailViewController:SendOKDelegate{
     
     func sendImage_OK(url: String) {
-        db.collection("userManagement").document(userID).updateData(["profileImage" : url])
-        activityIndicatorView.stopAnimating()
-        navigationController?.popViewController(animated: true)
-    }
+         db.collection("userManagement").document(userID).updateData(["profileImage" : url])
+         activityIndicatorView.stopAnimating()
+         navigationController?.popViewController(animated: true)
+     }
     
 }
 

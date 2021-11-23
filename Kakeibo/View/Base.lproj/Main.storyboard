@@ -884,15 +884,27 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="合計金額" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tT6-WD-Ivd">
+                                <rect key="frame" x="60" y="449.66666666666669" width="70" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="DaH-4M-gFe"/>
+                                    <constraint firstAttribute="width" constant="70" id="b79-g9-erP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YAh-9J-llG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="oVI-T1-d9q" firstAttribute="centerX" secondItem="wqd-SW-jma" secondAttribute="centerX" constant="-100" id="1Ik-zC-tlq"/>
                             <constraint firstItem="EIt-pb-ell" firstAttribute="centerX" secondItem="wqd-SW-jma" secondAttribute="centerX" constant="40" id="1nw-9O-HBi"/>
+                            <constraint firstItem="OjT-fM-S0D" firstAttribute="top" secondItem="tT6-WD-Ivd" secondAttribute="bottom" constant="8.6699999999999999" id="2ew-R4-da0"/>
                             <constraint firstItem="zMa-Ex-v49" firstAttribute="leading" secondItem="OjT-fM-S0D" secondAttribute="trailing" constant="34" id="3xN-Le-zbf"/>
                             <constraint firstItem="YAh-9J-llG" firstAttribute="bottom" secondItem="bpj-GP-36E" secondAttribute="bottom" constant="36" id="4yy-1t-2fL"/>
                             <constraint firstItem="eLp-uF-NCW" firstAttribute="top" secondItem="oVI-T1-d9q" secondAttribute="top" id="7GS-kt-nvq"/>
+                            <constraint firstItem="tT6-WD-Ivd" firstAttribute="centerX" secondItem="gbC-BX-kKD" secondAttribute="centerX" id="7qJ-l5-QZK"/>
                             <constraint firstItem="eLp-uF-NCW" firstAttribute="top" secondItem="1Bl-Jt-w8d" secondAttribute="bottom" constant="35" id="ABP-9r-7t3"/>
                             <constraint firstItem="ZWP-5S-K5Y" firstAttribute="centerX" secondItem="wqd-SW-jma" secondAttribute="centerX" id="B2u-xq-QS6"/>
                             <constraint firstItem="gbC-BX-kKD" firstAttribute="centerX" secondItem="wqd-SW-jma" secondAttribute="centerX" constant="-100" id="H6a-wu-1tM"/>
@@ -931,7 +943,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6bd-Nm-58K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2360" y="1941"/>
+            <point key="canvasLocation" x="2360" y="1940.7582938388625"/>
         </scene>
         <!--Group Detail View Controller-->
         <scene sceneID="tlI-fX-9Ku">
@@ -2984,8 +2996,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vw2-EH-iaJ"/>
-        <segue reference="7Ge-ud-dey"/>
+        <segue reference="L7o-hf-7BI"/>
+        <segue reference="vHG-yb-X8U"/>
         <segue reference="2n4-R5-2Xf"/>
         <segue reference="gYb-um-PEP"/>
     </inferredMetricsTieBreakers>

@@ -121,6 +121,8 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        notificationCountLabel.isHidden = true
+        
         // popGestureを乗っ取り、左スワイプでpopを無効化する
         // 必ずdisappearとセットで用いること
         if let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer {

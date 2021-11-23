@@ -334,8 +334,8 @@
             filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
             landmarkName = "viewWillDisappear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "viewWillDisappear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -446,10 +446,10 @@
             filePath = "Kakeibo/Model/GraphModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "chartValueSelected(_:entry:highlight:)"
-            landmarkType = "7">
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "GraphModel"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -934,22 +934,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0E03A24D-820A-4192-8E9C-549199764860"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Kakeibo/Controller/Profile/ProfileDetailViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "sendImage_OK(url:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "2B347176-0345-4F43-BF11-1D5627C4BC84"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -957,8 +941,8 @@
             filePath = "Kakeibo/Controller/Profile/ProfileDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "cropViewController(_:didCropToImage:withRect:angle:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -973,58 +957,10 @@
             filePath = "Kakeibo/Controller/Profile/ProfileDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F355C7A1-292B-4049-A3E5-1A9B68A79865"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Kakeibo/Model/loadModel/SendDBModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "sendProfileImage(data:activityIndicatorView:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F355C7A1-292B-4049-A3E5-1A9B68A79865 - 7714f87710b90304"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRStorageMetadata&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Kakeibo.SendDBModel.sendProfileImage(data: Foundation.Data, activityIndicatorView: __C.UIActivityIndicatorView) -&gt; ()"
-                  moduleName = "Kakeibo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/SendDBModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "240">
-               </Location>
-               <Location
-                  uuid = "F355C7A1-292B-4049-A3E5-1A9B68A79865 - 61107d122fb08828"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.URL&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRStorageMetadata&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Kakeibo.SendDBModel.sendProfileImage(data: Foundation.Data, activityIndicatorView: __C.UIActivityIndicatorView) -&gt; ()"
-                  moduleName = "Kakeibo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/SendDBModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "30"
-                  endingLineNumber = "30"
-                  offsetFromSymbolStart = "236">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1075,7 +1011,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "709F4EA8-6073-4F5A-B1A3-2DC7903F9D35 - 2621134ea1b4447"
+                  uuid = "709F4EA8-6073-4F5A-B1A3-2DC7903F9D35 - 2621134ea1b45c3"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1085,12 +1021,12 @@
                   urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Controller/Profile/NewGroupViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "177"
-                  endingLineNumber = "177"
+                  startingLineNumber = "181"
+                  endingLineNumber = "181"
                   offsetFromSymbolStart = "132">
                </Location>
                <Location
-                  uuid = "709F4EA8-6073-4F5A-B1A3-2DC7903F9D35 - d4d1406dcede743f"
+                  uuid = "709F4EA8-6073-4F5A-B1A3-2DC7903F9D35 - d4d1406dcede74bb"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1100,8 +1036,8 @@
                   urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Controller/Profile/NewGroupViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "178"
-                  endingLineNumber = "178"
+                  startingLineNumber = "182"
+                  endingLineNumber = "182"
                   offsetFromSymbolStart = "64">
                </Location>
             </Locations>
@@ -1165,8 +1101,8 @@
             filePath = "Kakeibo/Controller/Group/GroupConfigurationViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "changeGroupButton(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1181,8 +1117,8 @@
             filePath = "Kakeibo/Controller/Profile/SearchViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "loadUserSearch_OK()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1245,8 +1181,8 @@
             filePath = "Kakeibo/Controller/Profile/SearchViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "textField(_:shouldChangeCharactersIn:replacementString:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1261,8 +1197,8 @@
             filePath = "Kakeibo/Controller/Profile/SearchViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
             landmarkName = "textField(_:shouldChangeCharactersIn:replacementString:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1341,9 +1277,57 @@
             filePath = "Kakeibo/Controller/Profile/ProfileDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
             landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F90B96CC-7888-4040-AD60-988F6DA61E11"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Group/GroupConfigurationViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "GroupConfigurationViewController"
+            landmarkType = "21">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8CB4F7E7-1F56-46DA-9950-288F354CD685"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Group/MonthDataViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "prepare(for:sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6E287DE7-B05B-40EB-9137-BBDD915CC219"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Profile/CreateGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "sendImage_OK(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

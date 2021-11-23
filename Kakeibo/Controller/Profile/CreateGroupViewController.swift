@@ -230,8 +230,9 @@ extension CreateGroupViewController:SendOKDelegate{
         }
         
         activityIndicatorView.stopAnimating()
-        navigationController?.popViewController(animated: true)
-    }
+//        navigationController?.popViewController(animated: true)
+        let index = navigationController!.viewControllers.count - 3
+        navigationController?.popToViewController(navigationController!.viewControllers[index], animated: true)    }
     
 }
 //MARK:- Picker
