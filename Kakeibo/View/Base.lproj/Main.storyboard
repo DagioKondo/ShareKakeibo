@@ -588,6 +588,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="jdP-7y-Tsj" firstAttribute="width" secondItem="hZ8-V4-euT" secondAttribute="width" id="CX1-uB-sGd"/>
                                     <constraint firstItem="jdP-7y-Tsj" firstAttribute="leading" secondItem="f2d-4V-Iya" secondAttribute="leading" id="UEW-Se-QiG"/>
@@ -643,6 +644,9 @@
                                             <action selector="configurationButton:" destination="nTS-Ad-zCJ" eventType="touchUpInside" id="Xgh-pu-lHR"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="vRW-gt-gm5">
+                                        <rect key="frame" x="185" y="128" width="20" height="20"/>
+                                    </activityIndicatorView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GruopName" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="8rV-Ph-yEf">
                                         <rect key="frame" x="112.33333333333333" y="89" width="165.33333333333337" height="35"/>
                                         <constraints>
@@ -658,6 +662,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="vRW-gt-gm5" secondAttribute="trailing" constant="185" id="1qI-jg-bvb"/>
                                     <constraint firstAttribute="bottom" secondItem="p9c-4W-aGi" secondAttribute="bottom" id="4W2-3A-6nY"/>
                                     <constraint firstItem="8rV-Ph-yEf" firstAttribute="centerY" secondItem="dJO-bs-nfZ" secondAttribute="centerY" id="8LH-Wd-RRo"/>
                                     <constraint firstAttribute="trailing" secondItem="p9c-4W-aGi" secondAttribute="trailing" id="EOQ-oN-Ngb"/>
@@ -670,9 +675,12 @@
                                     <constraint firstItem="gQD-VY-vC9" firstAttribute="leading" secondItem="vtO-Vm-phz" secondAttribute="leading" id="XaT-hI-TwL"/>
                                     <constraint firstItem="8rV-Ph-yEf" firstAttribute="centerX" secondItem="vtO-Vm-phz" secondAttribute="centerX" id="ZR5-RO-kmi"/>
                                     <constraint firstItem="p9c-4W-aGi" firstAttribute="top" secondItem="vtO-Vm-phz" secondAttribute="top" id="fuY-gs-MqT"/>
+                                    <constraint firstItem="vRW-gt-gm5" firstAttribute="leading" secondItem="vtO-Vm-phz" secondAttribute="leading" constant="185" id="kfa-ar-rDf"/>
+                                    <constraint firstItem="vRW-gt-gm5" firstAttribute="top" secondItem="8rV-Ph-yEf" secondAttribute="bottom" constant="4" id="khZ-HF-kA8"/>
                                     <constraint firstAttribute="bottom" secondItem="8rV-Ph-yEf" secondAttribute="bottom" constant="26" id="oLx-Rf-dHd"/>
                                     <constraint firstAttribute="bottom" secondItem="gQD-VY-vC9" secondAttribute="bottom" id="vbu-cm-5Ge"/>
                                     <constraint firstAttribute="trailing" secondItem="gQD-VY-vC9" secondAttribute="trailing" id="wfc-d4-bad"/>
+                                    <constraint firstAttribute="bottom" secondItem="vRW-gt-gm5" secondAttribute="bottom" constant="2" id="yIj-oX-ohq"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KX8-lh-gVI">
@@ -718,6 +726,8 @@
                         <outlet property="groupNameBottomConstraint" destination="oLx-Rf-dHd" id="IaZ-hD-UaZ"/>
                         <outlet property="groupNameLabel" destination="8rV-Ph-yEf" id="snM-Sf-37w"/>
                         <outlet property="groupPaymentOfThisMonth" destination="x86-mE-IRy" id="2kz-e5-FUW"/>
+                        <outlet property="headerIndicator" destination="vRW-gt-gm5" id="doj-Hb-nDD"/>
+                        <outlet property="headerView" destination="vtO-Vm-phz" id="CuO-kz-evF"/>
                         <outlet property="headerViewHeightConstraint" destination="MNa-4c-JrR" id="xiI-7M-ZTz"/>
                         <outlet property="paymentAverageOfTithMonth" destination="3Kf-D0-wBH" id="AIC-Ya-Y3f"/>
                         <outlet property="pieChartView" destination="fi2-oP-uZj" id="eOv-yk-ofU"/>
@@ -2998,7 +3008,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="L7o-hf-7BI"/>
         <segue reference="vHG-yb-X8U"/>
-        <segue reference="jAd-Qy-5cW"/>
+        <segue reference="2n4-R5-2Xf"/>
         <segue reference="gYb-um-PEP"/>
     </inferredMetricsTieBreakers>
     <resources>

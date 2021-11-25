@@ -155,7 +155,7 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
     @objc func refresh() {
         let settlementDayOfInt = Int(settlementDay)!
 
-        dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
+        dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
             loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
         }
         tableView.refreshControl?.endRefreshing()

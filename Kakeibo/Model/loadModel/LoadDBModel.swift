@@ -55,29 +55,6 @@ class LoadDBModel{
         }
     }
     
-//    //メールアドレスで検索するメソッド。メールアドレスと一致するユーザー情報を取得。
-//    func loadUserSearch(email:String,activityIndicatorView:UIActivityIndicatorView){
-//        db.collection("userManagement").whereField("email", isEqualTo: email).addSnapshotListener { (snapShot, error) in
-//
-//            self.userSearchSets = []
-//            if error != nil{
-//                activityIndicatorView.stopAnimating()
-//                return
-//            }
-//            if let snapShotDoc = snapShot?.documents{
-//                for doc in snapShotDoc{
-//                    let data = doc.data()
-//                    let userName = data["userName"] as! String
-//                    let profileImage = data["profileImage"] as! String
-//                    let userID = data["userID"] as! String
-//                    let newData = UserSearchSets(userName: userName, profileImage: profileImage, userID: userID)
-//                    self.userSearchSets.append(newData)
-//                }
-//            }
-//            self.loadOKDelegate?.loadUserSearch_OK?()
-//        }
-//    }
-    
     //メールアドレスで検索するメソッド。メールアドレスと一致するユーザー情報を取得。
     func loadUserSearch(email:String,activityIndicatorView:UIActivityIndicatorView){
         db.collection("userManagement").order(by: "email").start(at: [email]).end(at: [email + "\u{f8ff}"]).getDocuments() { (snapShot, error) in
@@ -239,7 +216,7 @@ class LoadDBModel{
     
     //グループに所属する人のuserIDと決済可否を取得するロード
     func loadUserIDAndSettlementDic(groupID:String,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("groupManagement").document(groupID).addSnapshotListener { (snapShot, error) in
+        db.collection("groupManagement").document(groupID).getDocument { (snapShot, error) in
             
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -307,6 +284,7 @@ class LoadDBModel{
                         self.monthGroupDetailsSets.append(groupNewData)
                     }
                 }
+                self.monthGroupDetailsSets.reverse()
                 self.loadOKDelegate?.loadMonthDetails_OK?()
             }
         }else if userID != nil{
@@ -333,6 +311,7 @@ class LoadDBModel{
                         self.monthMyDetailsSets.append(myNewData)
                     }
                 }
+                self.monthMyDetailsSets.reverse()
                 self.loadOKDelegate?.loadMonthDetails_OK?()
             }
         }
@@ -341,7 +320,7 @@ class LoadDBModel{
     //カテゴリ別の合計金額金額
     func loadCategoryGraphOfTithMonth(groupID:String,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
         
-        db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).addSnapshotListener { (snapShot, error) in
+        db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).getDocuments { (snapShot, error) in
             
             var foodCount = 0
             var waterCount = 0
@@ -709,7 +688,7 @@ class LoadDBModel{
     
     //(グループの合計金額)と(1人当たりの金額)と(支払いに参加したユーザー)をロード
     func loadMonthPayment(groupID:String,userIDArray:[String],startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
-        db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).addSnapshotListener { (snapShot, error) in
+        db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).getDocuments { (snapShot, error) in
             
             var groupPaymentOfMonth = 0
             var paymentAverageOfMonth = 0
@@ -739,7 +718,7 @@ class LoadDBModel{
     //各メンバーの支払い金額を取得するロード
     func loadMonthSettlement(groupID:String,userID:String?,startDate:Date,endDate:Date,activityIndicatorView:UIActivityIndicatorView){
         if userID == nil{
-            db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).addSnapshotListener { (snapShot, error) in
+            db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).getDocuments { (snapShot, error) in
                 
                 self.settlementSets = []
                 if error != nil{
@@ -759,7 +738,7 @@ class LoadDBModel{
                 self.loadOKDelegate?.loadMonthSettlement_OK?()
             }
         }else{
-            db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).addSnapshotListener { (snapShot, error) in
+            db.collection("paymentData").whereField("groupID", isEqualTo: groupID).whereField("userID", isEqualTo: userID!).whereField("paymentDay", isGreaterThanOrEqualTo: startDate).whereField("paymentDay", isLessThan: endDate).getDocuments { (snapShot, error) in
                 
                 self.settlementSets = []
                 var myTotalPay = 0
