@@ -47,7 +47,10 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.barTintColor = .white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = UIColor(red: 255 / 255, green: 190 / 255, blue: 115 / 255, alpha: 1.0)
         
         profileImageView.layer.cornerRadius = 40
         profileView.layer.cornerRadius = 42
@@ -121,6 +124,8 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.navigationController?.navigationBar.isHidden = true
+
         notificationCountLabel.isHidden = true
         
         // popGestureを乗っ取り、左スワイプでpopを無効化する

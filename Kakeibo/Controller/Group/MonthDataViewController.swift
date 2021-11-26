@@ -153,6 +153,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
     //グループ画像、グループ名を取得完了
     func loadGroupName_OK(groupName: String, groupImage: String) {
+
         UserDefaults.standard.setValue(groupName, forKey: "groupName")
         UserDefaults.standard.setValue(groupImage, forKey: "groupImage")
         groupNameLabel.text = groupName
@@ -164,6 +165,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
     //グラフに反映するカテゴリ別合計金額取得完了
     func loadCategoryGraphOfTithMonth_OK(categoryDic: Dictionary<String, Int>) {
+
         let sortedCategoryDic = categoryDic.sorted{ $0.1 > $1.1 }
         print("*******************")
         print(sortedCategoryDic)
@@ -174,6 +176,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
     //グループに参加しているメンバーを取得完了
     func loadUserIDAndSettlementDic_OK(settlementDic: Dictionary<String, Bool>, userIDArray: [String]) {
+
         dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
             dateFormatter.dateFormat = "MM/dd"
             dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -188,6 +191,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
     //グループの合計出資額、1人当たりの出資額を取得完了
     func loadMonthPayment_OK(groupPaymentOfMonth: Int, paymentAverageOfMonth: Int, userIDArray: [String]) {
+
         self.groupPaymentOfThisMonth.text = changeCommaModel.getComma(num: groupPaymentOfMonth) + "　円"
         self.paymentAverageOfTithMonth.text = changeCommaModel.getComma(num: paymentAverageOfMonth) + "　円"
         dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
@@ -197,6 +201,7 @@ extension MonthDataViewController:LoadOKDelegate {
     
     //自分の支払額を取得完了
     func loadMonthSettlement_OK() {
+
         self.userPaymentThisMonth.text = changeCommaModel.getComma(num: loadDBModel.settlementSets[0].paymentAmount!) + "　円"
         activityIndicatorView.stopAnimating()
     }
@@ -227,6 +232,7 @@ extension MonthDataViewController:UIScrollViewDelegate{
             loadDBModel.loadCategoryGraphOfTithMonth(groupID: groupID, startDate: minDate, endDate: maxDate, activityIndicatorView: activityIndicatorView)
             headerIndicator.isHidden = false
             headerIndicator.startAnimating()
+            activityIndicatorView.startAnimating()
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {

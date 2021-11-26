@@ -33,6 +33,14 @@ class NewGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "招待を受けているグループ"
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkGray]
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = UIColor(red: 255 / 255, green: 190 / 255, blue: 115 / 255, alpha: 1.0)
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
@@ -112,11 +120,7 @@ class NewGroupViewController: UIViewController {
         groupID = groupNotJoinArray[indexPath.row].groupID
         editDBModel.editGroupInfoDelete(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
     }
-    
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-
+ 
     
 }
 //MARK:- TabeleView

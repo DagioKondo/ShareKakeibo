@@ -134,7 +134,7 @@ class LoadDBModel{
         var count = 0
 
         for groupID in groupIDArray{
-            db.collection("groupManagement").document(groupID).addSnapshotListener { (sanpShot, error) in
+            db.collection("groupManagement").document(groupID).getDocument { (sanpShot, error) in
                 count += 1
                 if error != nil{
                     activityIndicatorView.stopAnimating()
@@ -210,7 +210,6 @@ class LoadDBModel{
                 let settlementDay = data["settlementDay"] as! String
                 self.loadOKDelegate?.loadSettlementDay_OK?(settlementDay: settlementDay)
             }
-            activityIndicatorView.stopAnimating()
         }
     }
     
@@ -227,7 +226,6 @@ class LoadDBModel{
                 let userIDArray = data["userIDArray"] as! Array<String>
                 self.loadOKDelegate?.loadUserIDAndSettlementDic_OK?(settlementDic: settlementDic, userIDArray: userIDArray)
             }
-            activityIndicatorView.stopAnimating()
         }
     }
     

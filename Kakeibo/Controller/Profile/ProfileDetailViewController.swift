@@ -43,6 +43,14 @@ class ProfileDetailViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkGray]
+        title = "プロフィール設定"
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = UIColor(red: 255 / 255, green: 190 / 255, blue: 115 / 255, alpha: 1.0)
+        
         profileImageView.image = profileImage
         profileImageView.layer.cornerRadius = 120
         tableView.delegate = self
@@ -80,16 +88,7 @@ class ProfileDetailViewController: UIViewController{
     @IBAction func profileImageView(_ sender: UITapGestureRecognizer) {
         alertModel.satsueiAlert(viewController: self)
     }
-    
-    @IBAction func back(_ sender: Any) {
-        if profileImageData != nil{
-            activityIndicatorView.startAnimating()
-            sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
-        }else{
-            navigationController?.popViewController(animated: true)
-        }
-    }
-    
+
     
 }
 
@@ -182,6 +181,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
         //トリミング編集が終えたら、呼び出される。
         self.profileImageView.image = image
         profileImageData = image.jpegData(compressionQuality: 1.0)!
+        sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
         cropViewController.dismiss(animated: true, completion: nil)
     }
     

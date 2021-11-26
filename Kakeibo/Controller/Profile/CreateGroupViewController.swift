@@ -42,6 +42,10 @@ class CreateGroupViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "グループ作成"
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkGray]
+        
         searchUserButton.layer.cornerRadius = 5
         
         searchUserButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
@@ -110,10 +114,7 @@ class CreateGroupViewController: UIViewController{
             sendDBModel.sendGroupImage(data: data!, activityIndicatorView: activityIndicatorView)
         }
     }
-    
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
+
     
     @IBAction func groupImageView(_ sender: Any) {
         alertModel.satsueiAlert(viewController: self)

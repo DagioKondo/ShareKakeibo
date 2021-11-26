@@ -16,7 +16,6 @@ protocol profileConfigurationVCDelegate {
 class ProfileConfigurationViewController: UIViewController {
     
     
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var warningLabel: UILabel!
@@ -40,7 +39,8 @@ class ProfileConfigurationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = receiveTitle
+        title = receiveTitle
+        
         textField.placeholder = receiveTitle
         saveButton.layer.cornerRadius = 5
         saveButton.addTarget(self, action: #selector(touchDown(_:)), for: .touchDown)
@@ -71,10 +71,6 @@ class ProfileConfigurationViewController: UIViewController {
         }else if receiveDataName == "email"{
             loginModel.updateUserDataOfEmail(emailTextField: textField, errorShowLabel: warningLabel)
         }
-    }
-    
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
   
     

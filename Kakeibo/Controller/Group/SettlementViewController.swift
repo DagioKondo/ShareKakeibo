@@ -187,6 +187,7 @@ extension SettlementViewController: LoadOKDelegate{
                     }
                 }
             }else{
+                activityIndicatorView.stopAnimating()
                 return
             }
             //各メンバーの支払金額の配列

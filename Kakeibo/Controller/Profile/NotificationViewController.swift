@@ -21,6 +21,11 @@ class NotificationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "お知らせ"
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkGray]
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -46,10 +51,6 @@ class NotificationViewController: UIViewController {
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
         loadDBModel.loadSettlementNotification(userID: userID, day: String(day), activityIndicatorView: activityIndicatorView)
-    }
-  
-    @IBAction func back(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
 
     

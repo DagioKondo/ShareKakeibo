@@ -61,6 +61,7 @@
 		86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D62719B6A60044803F /* GroupMemberViewController.swift */; };
 		86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D82719C7740044803F /* DetailLastMonthViewController.swift */; };
 		86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */; };
+		86DA54B427514B6C009DEA8F /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DA54B327514B6C009DEA8F /* NavigationController.swift */; };
 		86EF6C1F274537E600F9D8D0 /* SettlementSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */; };
 		86EF6C222749806300F9D8D0 /* DateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF6C212749806300F9D8D0 /* DateModel.swift */; };
 		C25F0C74DDF82920E5B386FC /* Pods_Kakeibo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45F04BDF83913AC2A80BE6F4 /* Pods_Kakeibo.framework */; };
@@ -126,6 +127,7 @@
 		86A038D62719B6A60044803F /* GroupMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberViewController.swift; sourceTree = "<group>"; };
 		86A038D82719C7740044803F /* DetailLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLastMonthViewController.swift; sourceTree = "<group>"; };
 		86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastMonthDataViewController.swift; sourceTree = "<group>"; };
+		86DA54B327514B6C009DEA8F /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementSets.swift; sourceTree = "<group>"; };
 		86EF6C212749806300F9D8D0 /* DateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -260,6 +262,7 @@
 				86A038B627197A430044803F /* RegisterViewController.swift */,
 				862AF71C272C366C00C2B5DC /* Profile */,
 				86EF6C202746A06700F9D8D0 /* Group */,
+				86DA54B327514B6C009DEA8F /* NavigationController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				86A038D32719B5520044803F /* GroupConfigurationViewController.swift in Sources */,
 				86A038CD2719ABF40044803F /* MonthlyDataViewController.swift in Sources */,
 				8635E8A027353A1D00C8DB72 /* UtilityViewController.swift in Sources */,
+				86DA54B427514B6C009DEA8F /* NavigationController.swift in Sources */,
 				86A038D12719B53C0044803F /* GroupDetailViewController.swift in Sources */,
 				8617BE2C273E85F2007417A1 /* MonthMyDetailsSets.swift in Sources */,
 				86EF6C1F274537E600F9D8D0 /* SettlementSets.swift in Sources */,
@@ -637,7 +641,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.daigoSwift.Kakeibo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -657,7 +661,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.daigoSwift.Kakeibo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
