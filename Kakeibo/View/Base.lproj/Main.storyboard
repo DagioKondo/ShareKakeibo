@@ -116,11 +116,11 @@
             <objects>
                 <viewController id="kRR-Yb-vhq" customClass="RegisterViewController" customModule="Kakeibo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a2c-pp-2nn">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ユーザー名" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3eq-ei-Sr8">
-                                <rect key="frame" x="47" y="410" width="296" height="34"/>
+                                <rect key="frame" x="47" y="383" width="296" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="72z-r6-WS4"/>
                                     <constraint firstAttribute="width" constant="296" id="AAc-Pk-kiV"/>
@@ -129,7 +129,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="メールアドレス" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="z1w-rJ-WlI">
-                                <rect key="frame" x="47" y="455" width="296" height="34"/>
+                                <rect key="frame" x="47" y="428" width="296" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="BBf-Md-Z5B"/>
                                     <constraint firstAttribute="width" constant="296" id="wPw-w5-m5P"/>
@@ -156,7 +156,7 @@
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RGP-vI-oVZ">
-                                <rect key="frame" x="95" y="677" width="200" height="50"/>
+                                <rect key="frame" x="95" y="650" width="200" height="50"/>
                                 <color key="backgroundColor" red="1" green="0.74509805439999999" blue="0.45098042490000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="fP3-no-83P"/>
@@ -171,7 +171,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDN-eb-GUA">
-                                <rect key="frame" x="0.0" y="641" width="390" height="23"/>
+                                <rect key="frame" x="0.0" y="614" width="390" height="23"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="1" green="0.20251320289999999" blue="0.2272392248" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
@@ -2802,9 +2802,9 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="vw2-EH-iaJ"/>
-        <segue reference="r9H-BY-bay"/>
+        <segue reference="vHG-yb-X8U"/>
         <segue reference="jAd-Qy-5cW"/>
-        <segue reference="Zio-TX-dRf"/>
+        <segue reference="gYb-um-PEP"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow" width="48" height="48"/>

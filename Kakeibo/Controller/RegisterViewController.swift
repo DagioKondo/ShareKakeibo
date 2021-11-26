@@ -34,6 +34,8 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.isHidden = false
+        
         registerButton.layer.cornerRadius = 5
         profileImageView.layer.cornerRadius = 108
         loginModel.loginOKDelegate = self
