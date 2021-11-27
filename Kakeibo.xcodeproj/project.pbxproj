@@ -248,7 +248,6 @@
 				86A038B5271875600044803F /* View */,
 				86A038B3271875470044803F /* Controller */,
 				86A0388527102A750044803F /* Assets.xcassets */,
-				86A0388727102A750044803F /* LaunchScreen.storyboard */,
 				86A0388A27102A750044803F /* Info.plist */,
 				862AF703272B0E3600C2B5DC /* GoogleService-Info.plist */,
 			);
@@ -286,6 +285,7 @@
 		86A038B5271875600044803F /* View */ = {
 			isa = PBXGroup;
 			children = (
+				86A0388727102A750044803F /* LaunchScreen.storyboard */,
 				86A0388227102A740044803F /* Main.storyboard */,
 				8635E8462733245F00C8DB72 /* DetailCell.swift */,
 				8635E8472733245F00C8DB72 /* DetailCell.xib */,
