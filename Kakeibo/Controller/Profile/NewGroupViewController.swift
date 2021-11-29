@@ -108,6 +108,7 @@ class NewGroupViewController: UIViewController {
             "settlementDic": [userID: false],
             "userIDArray": FieldValue.arrayUnion([userID])
         ],merge: true)
+        loadDBModel.loadSettlementDay(groupID: groupID)
         navigationController?.popViewController(animated: true)
     }
     
@@ -210,4 +211,13 @@ extension NewGroupViewController:LoadOKDelegate, EditOKDelegate{
         activityIndicatorView.stopAnimating()
     }
     
+    func loadSettlementDay_OK(check: Int, settlementDay: String?) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            let notificatinModel = NotificationModel()
+            notificatinModel.registerNotificarionOfSettlement(groupID: groupID, settlementDay: settlementDay!)
+        }
+    }
 }

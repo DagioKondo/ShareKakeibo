@@ -1,10 +1,10 @@
+
 //
 //  GroupConfigurationViewController.swift
 //  Kakeibo
 //
 //  Created by 近藤大伍 on 2021/10/15.
 //
-
 import UIKit
 import CropViewController
 import Firebase
@@ -115,6 +115,9 @@ class GroupConfigurationViewController: UIViewController{
             let dateModel = DateModel()
             let newSettlement = dateModel.getNextSettlement(settlement: settlementTextField.text!)
             db.collection("groupManagement").document(groupID).updateData(["nextSettlementDay" : newSettlement])
+            let notificationModel = NotificationModel()
+            notificationModel.deleteNotification(identifier: groupID)
+            notificationModel.registerNotificarionOfSettlement(groupID: groupID,settlementDay: settlementTextField.text!)
             activityIndicatorView.stopAnimating()
             dismiss(animated: true, completion: nil)
         }

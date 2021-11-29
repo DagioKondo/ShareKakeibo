@@ -24,7 +24,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     @IBOutlet weak var profileView: UIView! //profileImageViewの後ろの白いビュー
     @IBOutlet weak var profileOrangeView: UIView!//profileImageViewの後ろのオレンジのビュー
     @IBOutlet weak var newGroupCountLabel: UILabel!
-    @IBOutlet weak var notificationCountLabel: UILabel!
     
     var loadDBModel = LoadDBModel()
     var userID = String()
@@ -98,9 +97,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         newGroupCountLabel.clipsToBounds = true
         newGroupCountLabel.layer.cornerRadius = 10
         
-        notificationCountLabel.clipsToBounds = true
-        notificationCountLabel.layer.cornerRadius = 10
-        
         getFileNamesFromPreferences()
         
     }
@@ -126,8 +122,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.isHidden = true
-
-        notificationCountLabel.isHidden = true
         
         // popGestureを乗っ取り、左スワイプでpopを無効化する
         // 必ずdisappearとセットで用いること
@@ -171,10 +165,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         scrollToPage()
     }
     
-    @IBAction func notificationButton(_ sender: Any) {
-        let notificationVC = storyboard?.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationViewController
-        navigationController?.pushViewController(notificationVC, animated: true)
-    }
     
     @IBAction func newGroupButton(_ sender: Any) {
         let newGroupVC = storyboard?.instantiateViewController(withIdentifier: "NewGroupVC") as! NewGroupViewController
@@ -345,11 +335,6 @@ extension ProfileViewController: UIScrollViewDelegate{
         if scrollView.tag == 1{
             swipeView.frame = CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height)
             swipeView.alpha = (0.5 / 260) * scrollView.bounds.minX
-            print("daigobounds")
-            print(scrollView.bounds)
-            print("daigoframe")
-            print(scrollView.frame)
-            print(scrollView.contentOffset.x)
         }
     }
     

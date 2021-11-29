@@ -61,6 +61,7 @@
 		86A038D72719B6A60044803F /* GroupMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D62719B6A60044803F /* GroupMemberViewController.swift */; };
 		86A038D92719C7740044803F /* DetailLastMonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038D82719C7740044803F /* DetailLastMonthViewController.swift */; };
 		86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */; };
+		86ACD7672754F00100EC7FD0 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ACD7662754F00100EC7FD0 /* NotificationModel.swift */; };
 		86EF6C1F274537E600F9D8D0 /* SettlementSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */; };
 		86EF6C222749806300F9D8D0 /* DateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF6C212749806300F9D8D0 /* DateModel.swift */; };
 		C25F0C74DDF82920E5B386FC /* Pods_Kakeibo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45F04BDF83913AC2A80BE6F4 /* Pods_Kakeibo.framework */; };
@@ -126,6 +127,7 @@
 		86A038D62719B6A60044803F /* GroupMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberViewController.swift; sourceTree = "<group>"; };
 		86A038D82719C7740044803F /* DetailLastMonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLastMonthViewController.swift; sourceTree = "<group>"; };
 		86A038DA2719C7AB0044803F /* LastMonthDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastMonthDataViewController.swift; sourceTree = "<group>"; };
+		86ACD7662754F00100EC7FD0 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
 		86EF6C1E274537E600F9D8D0 /* SettlementSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementSets.swift; sourceTree = "<group>"; };
 		86EF6C212749806300F9D8D0 /* DateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -274,6 +276,7 @@
 				862AF71A272C17A500C2B5DC /* AlertModel.swift */,
 				86EF6C212749806300F9D8D0 /* DateModel.swift */,
 				8693BBC9274BCC30004BB73E /* ChangeCommaModel.swift */,
+				86ACD7662754F00100EC7FD0 /* NotificationModel.swift */,
 				8617BE1D273E85C3007417A1 /* loadModel */,
 			);
 			path = Model;
@@ -469,6 +472,7 @@
 				86A038C527197AF50044803F /* ProfileConfigurationViewController.swift in Sources */,
 				86A038DB2719C7AB0044803F /* LastMonthDataViewController.swift in Sources */,
 				865B9CE927216128000CCFB2 /* CollectionViewCell.swift in Sources */,
+				86ACD7672754F00100EC7FD0 /* NotificationModel.swift in Sources */,
 				8635E8482733245F00C8DB72 /* DetailCell.swift in Sources */,
 				8635E8A727353A2300C8DB72 /* DetailMyselfViewController.swift in Sources */,
 				86A038BB27197A6F0044803F /* NotificationViewController.swift in Sources */,

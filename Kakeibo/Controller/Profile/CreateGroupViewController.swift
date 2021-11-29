@@ -208,6 +208,8 @@ extension CreateGroupViewController:SendOKDelegate{
         
         let dateModel = DateModel()
         let nextSettlementDay = dateModel.getNextSettlement(settlement: settlementTextField.text!)
+        let notificationModel = NotificationModel()
+        notificationModel.registerNotificarionOfSettlement(groupID: groupID,settlementDay: settlementTextField.text!)
         
         db.collection("groupManagement").document(groupID).setData([
             "groupName": groupNameTextField.text!,

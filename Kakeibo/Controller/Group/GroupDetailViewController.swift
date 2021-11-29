@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 protocol GoToVcDelegate {
     func goToVC(segueID:String)
 }
@@ -59,13 +60,14 @@ class GroupDetailViewController: UIViewController {
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         alertModel.exitAlert(viewController: self, groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
+        let notificationModel = NotificationModel()
+        notificationModel.deleteNotification(identifier: groupID)
     }
     
     
 }
 
 // MARK: - EditOKDelegate
-
 extension GroupDetailViewController: EditOKDelegate{
     
     
@@ -79,4 +81,3 @@ extension GroupDetailViewController: EditOKDelegate{
     
     
 }
-

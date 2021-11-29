@@ -14,9 +14,7 @@ import FirebaseFirestore
     @objc optional func loadJoinGroup_OK(check:Int)
     @objc optional func loadNotJoinGroup_OK(check:Int,groupIDArray:[String]?,notJoinCount:Int)
     @objc optional func loadNotJoinGroupInfo_OK(check:Int)
-    //変更③＜start＞-------------------------------------------
     @objc optional func loadGroupName_OK(check:Int,groupName:String?,groupImage:String?,nextSettlementDay: Date?)
-    //変更③＜end＞---------------------------------------------
     @objc optional func loadSettlementNotification_OK(check:Int)
     @objc optional func loadSettlementDay_OK(check:Int,settlementDay:String?)
     @objc optional func loadUserIDAndSettlementDic_OK(check:Int,settlementDic:Dictionary<String,Bool>?,userIDArray:[String]?)
@@ -175,11 +173,9 @@ class LoadDBModel{
             if let data = snapShot?.data(){
                 let groupName = data["groupName"] as! String
                 let groupImage = data["groupImage"] as! String
-                //変更③＜start＞------------------------------------------
                 let timestamp = data["nextSettlementDay"] as! Timestamp
                 let nextSettlementDay = timestamp.dateValue()
                 loadOKDelegate?.loadGroupName_OK?(check: 1, groupName: groupName, groupImage: groupImage, nextSettlementDay: nextSettlementDay)
-                //変更③＜end＞--------------------------------------------
             }
         }
     }
