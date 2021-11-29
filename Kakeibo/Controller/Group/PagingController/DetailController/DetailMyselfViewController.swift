@@ -9,6 +9,7 @@ import UIKit
 import Parchment
 import Firebase
 import FirebaseFirestore
+import ViewAnimator
 
 class DetailMyselfViewController: UIViewController {
     
@@ -56,6 +57,8 @@ class DetailMyselfViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tableView.isHidden = true
+        
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.year,.month], from: Date())
         year = String(date.year!)
@@ -89,6 +92,9 @@ extension DetailMyselfViewController:LoadOKDelegate,EditOKDelegate{
         }else{
             monthMyDetailsSets = loadDBModel.monthMyDetailsSets
             tableView.reloadData()
+            tableView.isHidden = false
+            let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+            UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
             activityIndicatorView.stopAnimating()
             if tableView.refreshControl?.isRefreshing == true{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {

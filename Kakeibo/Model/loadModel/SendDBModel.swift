@@ -8,13 +8,14 @@ import Foundation
 import FirebaseStorage
 
 protocol SendOKDelegate{
-    func sendImage_OK(url:String)
+    
+    func sendImage_OK(url:String,storagePath:String?)
 }
 
 class SendDBModel{
     
     var sendOKDelegate:SendOKDelegate?
-    var profileStoregePath = String()
+    var profileStoragePath = String()
     var groupStoregePath = String()
     
     //プロフィール画像送信
@@ -22,9 +23,9 @@ class SendDBModel{
         let image = UIImage(data: data)
         let profileImage = image?.jpegData(compressionQuality: 0.1)
         let imageRef = Storage.storage().reference().child("profileImage").child("\(UUID().uuidString + String(Date().timeIntervalSince1970)).jpg")
-        profileStoregePath = imageRef.fullPath
-        profileStoregePath = String(profileStoregePath.dropFirst(13))
-        UserDefaults.standard.setValue(profileStoregePath, forKey: "profileStoregePath")
+        profileStoragePath = imageRef.fullPath
+        profileStoragePath = String(profileStoragePath.dropFirst(13))
+        UserDefaults.standard.setValue(profileStoragePath, forKey: "profileStoregePath")
         imageRef.putData(profileImage!, metadata: nil) { (mataData, error) in
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -36,17 +37,16 @@ class SendDBModel{
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "userImage")
-                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString)
+                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString, storagePath: self.profileStoragePath)
             }
         }
     }
     
     //プロフィール画像変更
-    func sendChangeProfileImage(data:Data,activityIndicatorView:UIActivityIndicatorView){
+    func sendChangeProfileImage(data:Data,activityIndicatorView:UIActivityIndicatorView,profileStoragePath:String){
         let image = UIImage(data: data)
         let profileImage = image?.jpegData(compressionQuality: 0.1)
-        profileStoregePath = UserDefaults.standard.object(forKey: "profileStoregePath") as! String
-        let imageRef = Storage.storage().reference().child("profileImage").child(profileStoregePath)
+        let imageRef = Storage.storage().reference().child("profileImage").child(profileStoragePath)
         imageRef.putData(profileImage!, metadata: nil) { (mataData, error) in
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -58,7 +58,7 @@ class SendDBModel{
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "userImage")
-                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString)
+                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString, storagePath: nil)
             }
         }
     }
@@ -82,17 +82,16 @@ class SendDBModel{
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "groupImage")
-                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString)
+                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString, storagePath: self.groupStoregePath)
             }
         }
     }
     
     //グループ画像送信
-    func sendChangeGroupImage(data:Data,activityIndicatorView:UIActivityIndicatorView){
+    func sendChangeGroupImage(data:Data,activityIndicatorView:UIActivityIndicatorView,groupStragePath:String){
         let image = UIImage(data: data)
         let profileImage = image?.jpegData(compressionQuality: 0.1)
-        groupStoregePath = UserDefaults.standard.object(forKey: "groupStoregePath") as! String
-        let imageRef = Storage.storage().reference().child("groupImage").child(groupStoregePath)
+        let imageRef = Storage.storage().reference().child("groupImage").child(groupStragePath)
         imageRef.putData(profileImage!, metadata: nil) { (mataData, error) in
             if error != nil{
                 activityIndicatorView.stopAnimating()
@@ -104,7 +103,7 @@ class SendDBModel{
                     return
                 }
                 UserDefaults.standard.setValue(url?.absoluteString, forKey: "groupImage")
-                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString)
+                self.sendOKDelegate?.sendImage_OK(url: url!.absoluteString, storagePath: nil)
             }
         }
     }

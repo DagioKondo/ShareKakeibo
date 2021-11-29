@@ -142,8 +142,9 @@ extension ProfileDetailViewController:UITableViewDelegate, UITableViewDataSource
 // MARK: - SendOKDelegate
 extension ProfileDetailViewController:SendOKDelegate{
     
-    func sendImage_OK(url: String) {
+    func sendImage_OK(url: String, storagePath: String?) {
          db.collection("userManagement").document(userID).updateData(["profileImage" : url])
+        
          activityIndicatorView.stopAnimating()
          navigationController?.popViewController(animated: true)
      }
@@ -174,9 +175,11 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
     }
     
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        activityIndicatorView.startAnimating()
         self.profileImageView.image = image
         profileImageData = image.jpegData(compressionQuality: 1.0)!
-        sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)
+        let profileStoragePath = UserDefaults.standard.object(forKey: "profileStoragePath") as! String
+        sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView,profileStoragePath: profileStoragePath)
         cropViewController.dismiss(animated: true, completion: nil)
     }
     

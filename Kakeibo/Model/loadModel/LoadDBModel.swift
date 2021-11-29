@@ -9,12 +9,13 @@ import Firebase
 import FirebaseFirestore
 
 @objc protocol LoadOKDelegate {
-    @objc optional func loadUserInfo_OK(check:Int,userName:String?,profileImage:String?,email:String?,password:String?)
+    
+    @objc optional func loadUserInfo_OK(check:Int,userName:String?,profileImage:String?,email:String?,password:String?,profileStoragePath:String?)
     @objc optional func loadUserSearch_OK(check:Int)
     @objc optional func loadJoinGroup_OK(check:Int)
     @objc optional func loadNotJoinGroup_OK(check:Int,groupIDArray:[String]?,notJoinCount:Int)
     @objc optional func loadNotJoinGroupInfo_OK(check:Int)
-    @objc optional func loadGroupName_OK(check:Int,groupName:String?,groupImage:String?,nextSettlementDay: Date?)
+    @objc optional func loadGroupName_OK(check:Int,groupName:String?,groupImage:String?,groupStoragePath:String?,nextSettlementDay: Date?)
     @objc optional func loadSettlementNotification_OK(check:Int)
     @objc optional func loadSettlementDay_OK(check:Int,settlementDay:String?)
     @objc optional func loadUserIDAndSettlementDic_OK(check:Int,settlementDic:Dictionary<String,Bool>?,userIDArray:[String]?)
@@ -24,6 +25,7 @@ import FirebaseFirestore
     @objc optional func loadMonthlyTransition_OK(check:Int,countArray:[Int]?)
     @objc optional func loadMonthPayment_OK(check:Int,groupPaymentOfMonth:Int,paymentAverageOfMonth:Int,userIDArray:[String]?)
     @objc optional func loadMonthSettlement_OK(check:Int)
+    
 }
 
 class LoadDBModel{
@@ -39,19 +41,19 @@ class LoadDBModel{
     let dateFormatter = DateFormatter()
     var countArray = [Int]()
     
-    
+
     //userの情報を取得するメソッド
     func loadUserInfo(userID:String){
         db.collection("userManagement").document(userID).addSnapshotListener { [self] (snapShot, error) in
             
             if error != nil{
                 print(errorMessage(of: error!))
-                loadOKDelegate?.loadUserInfo_OK?(check: 0, userName: nil, profileImage: nil, email: nil, password: nil)
+                loadOKDelegate?.loadUserInfo_OK?(check: 0, userName: nil, profileImage: nil, email: nil, password: nil, profileStoragePath: nil)
                 return
             }
             let data = snapShot?.data()
-            if let userName = data!["userName"] as? String,let profileImage = data!["profileImage"] as? String,let email = data!["email"] as? String,let password = data!["password"] as? String{
-                loadOKDelegate?.loadUserInfo_OK?(check: 1, userName: userName, profileImage: profileImage, email: email, password: password)
+            if let userName = data!["userName"] as? String,let profileImage = data!["profileImage"] as? String,let email = data!["email"] as? String,let password = data!["password"] as? String,let profileStoragePath = data!["profileStoragePath"] as? String{
+                loadOKDelegate?.loadUserInfo_OK?(check: 1, userName: userName, profileImage: profileImage, email: email, password: password, profileStoragePath: profileStoragePath)
             }
         }
     }
@@ -167,15 +169,16 @@ class LoadDBModel{
             
             if error != nil{
                 print(errorMessage(of: error!))
-                loadOKDelegate?.loadGroupName_OK?(check: 0, groupName: nil, groupImage: nil, nextSettlementDay: nil)
+                loadOKDelegate?.loadGroupName_OK?(check: 0, groupName: nil, groupImage: nil, groupStoragePath: nil, nextSettlementDay: nil)
                 return
             }
             if let data = snapShot?.data(){
                 let groupName = data["groupName"] as! String
                 let groupImage = data["groupImage"] as! String
+                let groupStoragePath = data["groupStoragePath"] as! String
                 let timestamp = data["nextSettlementDay"] as! Timestamp
                 let nextSettlementDay = timestamp.dateValue()
-                loadOKDelegate?.loadGroupName_OK?(check: 1, groupName: groupName, groupImage: groupImage, nextSettlementDay: nextSettlementDay)
+                loadOKDelegate?.loadGroupName_OK?(check: 1, groupName: groupName, groupImage: groupImage, groupStoragePath: groupStoragePath, nextSettlementDay: nextSettlementDay)
             }
         }
     }

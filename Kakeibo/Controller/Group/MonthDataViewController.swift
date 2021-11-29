@@ -159,7 +159,7 @@ extension MonthDataViewController:LoadOKDelegate {
     }
     
     //グループ画像、グループ名を取得完了
-    func loadGroupName_OK(check: Int, groupName: String?, groupImage: String?, nextSettlementDay: Date?) {
+    func loadGroupName_OK(check: Int, groupName: String?, groupImage: String?, groupStoragePath: String?, nextSettlementDay: Date?) {
         if check == 0{
             activityIndicatorView.stopAnimating()
             alertModel.errorAlert(viewController: self)
@@ -167,6 +167,7 @@ extension MonthDataViewController:LoadOKDelegate {
             newNextSettlementDay = nextSettlementDay!
             UserDefaults.standard.setValue(groupName, forKey: "groupName")
             UserDefaults.standard.setValue(groupImage, forKey: "groupImage")
+            UserDefaults.standard.setValue(groupStoragePath, forKey: "groupStoragePath")
             groupNameLabel.text = groupName
             groupImageView.sd_setImage(with: URL(string: groupImage!), completed: nil)
             dateModel.getPeriodOfThisMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in

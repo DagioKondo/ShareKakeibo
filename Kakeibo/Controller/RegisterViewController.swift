@@ -63,14 +63,15 @@ class RegisterViewController: UIViewController,LoginOKDelegate,SendOKDelegate {
         sendDBModel.sendProfileImage(data: data!, activityIndicatorView: activityIndicatorView)
     }
     
-    func sendImage_OK(url: String) {
+    func sendImage_OK(url: String, storagePath: String?) {
         if url.isEmpty != true{
             db.collection("userManagement").document(userID).setData([
-                "email" : emailTextField.text,
-                "userName": userNameTextField.text,
-                "password":passwordTextField.text,
-                "profileImage":url,
-                "userID":userID
+                "email" : emailTextField.text!,
+                "userName": userNameTextField.text!,
+                "password": passwordTextField.text!,
+                "profileImage" : url,
+                "userID" : userID,
+                "profileStoragePath" : storagePath!
             ])
             userNameTextField.text = ""
             emailTextField.text = ""

@@ -311,22 +311,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "92067007-38D7-4917-A411-41308EC420D0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "29535D37-B30B-45D8-B9EA-2BE514E92D40"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -334,8 +318,8 @@
             filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "viewWillDisappear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -350,8 +334,8 @@
             filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "viewWillDisappear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -749,8 +733,8 @@
             filePath = "Kakeibo/Controller/Group/MonthDataViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "goToVC(segueID:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -797,8 +781,8 @@
             filePath = "Kakeibo/Controller/Group/MonthDataViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
             landmarkName = "prepare(for:sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -813,8 +797,8 @@
             filePath = "Kakeibo/Controller/Group/MonthDataViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
+            startingLineNumber = "283"
+            endingLineNumber = "283"
             landmarkName = "refresh()"
             landmarkType = "7">
          </BreakpointContent>
@@ -849,6 +833,133 @@
             endingLineNumber = "99"
             landmarkName = "createGroupButton(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C9394B0A-B71F-4901-AE69-E42236CCDACE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Profile/ProfileViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "loadNotJoinGroup_OK(check:groupIDArray:notJoinCount:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2729D82D-BD6D-4484-83BB-F27D2530F54E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Group/SettlementViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "loadMonthSettlement_OK(check:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6AA63888-FFDC-4209-9819-2FCB85F204A7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Model/loadModel/LoadDBModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "714"
+            endingLineNumber = "714"
+            landmarkName = "loadMonthPayment(groupID:userIDArray:startDate:endDate:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "30178A40-A84E-425B-B571-7E3964E7EBC3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Controller/Group/SettlementViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "loadUserIDAndSettlementDic_OK(check:settlementDic:userIDArray:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0D8A0F28-D194-40B6-82EF-0551571A6C6B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Kakeibo/Model/loadModel/LoadDBModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "715"
+            endingLineNumber = "715"
+            landmarkName = "loadMonthPayment(groupID:userIDArray:startDate:endDate:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0D8A0F28-D194-40B6-82EF-0551571A6C6B - e704208f9732b05"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Kakeibo.LoadDBModel.loadMonthPayment(groupID: Swift.String, userIDArray: Swift.Array&lt;Swift.String&gt;, startDate: Foundation.Date, endDate: Foundation.Date) -&gt; ()"
+                  moduleName = "Kakeibo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/LoadDBModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "715"
+                  endingLineNumber = "715"
+                  offsetFromSymbolStart = "212">
+               </Location>
+               <Location
+                  uuid = "0D8A0F28-D194-40B6-82EF-0551571A6C6B - e704208f9732b05"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Kakeibo.LoadDBModel.loadMonthPayment(groupID: Swift.String, userIDArray: Swift.Array&lt;Swift.String&gt;, startDate: Foundation.Date, endDate: Foundation.Date) -&gt; ()"
+                  moduleName = "Kakeibo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/LoadDBModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "715"
+                  endingLineNumber = "715"
+                  offsetFromSymbolStart = "1032">
+               </Location>
+               <Location
+                  uuid = "0D8A0F28-D194-40B6-82EF-0551571A6C6B - fa54653da4b07b8d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Kakeibo.LoadDBModel.loadMonthPayment(groupID: Swift.String, userIDArray: Swift.Array&lt;Swift.String&gt;, startDate: Foundation.Date, endDate: Foundation.Date) -&gt; ()"
+                  moduleName = "Kakeibo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kondoudaigo/Desktop/App/Kakeibo/Kakeibo/Model/loadModel/LoadDBModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "717"
+                  endingLineNumber = "717"
+                  offsetFromSymbolStart = "88">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

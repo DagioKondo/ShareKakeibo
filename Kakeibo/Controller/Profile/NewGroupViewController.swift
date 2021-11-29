@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseFirestore
 import SDWebImage
+import ViewAnimator
 
 class NewGroupViewController: UIViewController {
     
@@ -201,6 +202,8 @@ extension NewGroupViewController:LoadOKDelegate, EditOKDelegate{
             alertModel.errorAlert(viewController: self)
         }else{
             self.tableView.reloadData()
+            let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+            UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
             activityIndicatorView.stopAnimating()
         }
     }

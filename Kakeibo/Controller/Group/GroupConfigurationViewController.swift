@@ -108,7 +108,8 @@ class GroupConfigurationViewController: UIViewController{
             activityIndicatorView.startAnimating()
             sendDBModel.sendOKDelegate = self
             let data = groupImageView.image?.jpegData(compressionQuality: 1.0)
-            sendDBModel.sendChangeGroupImage(data: data!, activityIndicatorView: activityIndicatorView)
+            let groupStoragePath = UserDefaults.standard.object(forKey: "groupStoragePath") as! String
+            sendDBModel.sendChangeGroupImage(data: data!, activityIndicatorView: activityIndicatorView, groupStragePath: groupStoragePath)
         }else{
             db.collection("groupManagement").document(groupID).updateData(
                 ["groupName": groupNameTextField.text!,"settlementDay": settlementTextField.text!])
@@ -143,7 +144,7 @@ class GroupConfigurationViewController: UIViewController{
 extension GroupConfigurationViewController:SendOKDelegate{
     
     
-    func sendImage_OK(url: String) {
+    func sendImage_OK(url: String, storagePath: String?) {
         db.collection("groupManagement").document(groupID).updateData([
             "groupImage": url,
              "groupName": groupNameTextField.text!,

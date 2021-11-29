@@ -72,13 +72,8 @@ class SettlementViewController: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
         tableView.separatorStyle = .none
-        UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
-        
-        if let indexPath = tableView.indexPathForSelectedRow{
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
+        tableView.isHidden = true
         
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
@@ -227,6 +222,9 @@ extension SettlementViewController: LoadOKDelegate{
             tableView.delegate = self
             tableView.dataSource = self
             tableView.reloadData()
+            tableView.isHidden = false
+            let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+            UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
             activityIndicatorView.stopAnimating()
         }
     }

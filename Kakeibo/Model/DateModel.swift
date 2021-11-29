@@ -154,8 +154,8 @@ class DateModel{
         //次の決済年月日を更新
         db.updateData(["nextSettlementDay" :newNextSettlement])
         //settlementDicを更新
-        for (key,val) in settlementDic{
-            db.updateData(["settlementDic" : [key : false]])
+        for (key,_) in settlementDic{
+            db.setData(["settlementDic" : [key : false]],merge: true)
         }
     }
 //変更①＜end＞--------------------------------------------

@@ -104,10 +104,8 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     func getFileNamesFromPreferences() {
            // Libraryまでのファイルパスを取得
            let filePath = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]
-
            // filePathにPreferencesを追加
            let preferences = filePath.appendingPathComponent("Preferences")
-
            // Library/Preferences内のファイルのパスを取得
            guard let fileNames = try? FileManager.default.contentsOfDirectory(at: preferences, includingPropertiesForKeys: nil) else {
                return
@@ -130,9 +128,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
             popGestureRecognizer.delegate = self
         }
         
-        let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
-        UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
-        
         if let indexPath = tableView.indexPathForSelectedRow{
             tableView.deselectRow(at: indexPath, animated: true)
         }else if let congigurationIndexPath = configurationTableView.indexPathForSelectedRow {
@@ -145,6 +140,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         loadDBModel.loadUserInfo(userID: userID)
         
     }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -177,13 +173,14 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
 extension ProfileViewController: LoadOKDelegate{
     
     
-    func loadUserInfo_OK(check: Int, userName: String?, profileImage: String?, email: String?, password: String?) {
+    func loadUserInfo_OK(check: Int, userName: String?, profileImage: String?, email: String?, password: String?, profileStoragePath: String?) {
         if check == 0{
             activityIndicatorView.stopAnimating()
             alertModel.errorAlert(viewController: self)
         }else{
             UserDefaults.standard.setValue(userName, forKey: "userName")
             UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
+            UserDefaults.standard.setValue(profileStoragePath, forKey: "profileStoragePath")
             profileImageView.sd_setImage(with: URL(string: profileImage!), completed: nil)
             userNameLabel.text = userName
             userInfoArray = [userName!,email!,password!]
@@ -224,6 +221,8 @@ extension ProfileViewController: LoadOKDelegate{
             tableView.delegate = self
             tableView.dataSource = self
             tableView.reloadData()
+            let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+            UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
             activityIndicatorView.stopAnimating()
         }
     }
@@ -274,18 +273,18 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
             return configurationCell
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-            let cellView = cell?.contentView.viewWithTag(1) as! UIView
+            let cellView = cell?.contentView.viewWithTag(1)!
             let groupImage = cell?.contentView.viewWithTag(2) as! UIImageView
             let groupNameLabel = cell?.contentView.viewWithTag(3) as! UILabel
             
             groupImage.layer.cornerRadius = 30
             groupImage.sd_setImage(with: URL(string: groupJoinArray[indexPath.row].groupImage), completed: nil)
             groupNameLabel.text = groupJoinArray[indexPath.row].groupName
-            cellView.layer.cornerRadius = 5
-            cellView.layer.masksToBounds = false
-            cellView.layer.shadowOffset = CGSize(width: 1, height: 3)
-            cellView.layer.shadowOpacity = 0.2
-            cellView.layer.shadowRadius = 3
+            cellView!.layer.cornerRadius = 5
+            cellView!.layer.masksToBounds = false
+            cellView!.layer.shadowOffset = CGSize(width: 1, height: 3)
+            cellView!.layer.shadowOpacity = 0.2
+            cellView!.layer.shadowRadius = 3
             
             return cell!
         }

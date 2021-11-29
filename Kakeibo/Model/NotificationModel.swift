@@ -21,9 +21,6 @@ class NotificationModel{
         content.userInfo = ["groupID":groupID]
         
         let date = DateComponents(day:Int(settlementDay),hour: 12)
-//        let date = DateComponents(day:29,hour: 21,mincd ute: 35)
-
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(3), repeats: false)
         let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         let request = UNNotificationRequest(identifier: groupID, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request){ (error : Error?) in

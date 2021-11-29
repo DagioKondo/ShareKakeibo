@@ -6,6 +6,7 @@
 //
 import UIKit
 import Parchment
+import ViewAnimator
 
 class DetailAllLastMonthViewController: UIViewController {
     
@@ -48,6 +49,8 @@ class DetailAllLastMonthViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        tableView.isHidden = true
         
         let calendar = Calendar(identifier: .gregorian)
         let date = calendar.dateComponents([.year,.month], from: Date())
@@ -93,6 +96,9 @@ extension DetailAllLastMonthViewController:LoadOKDelegate{
                 tableView.delegate = self
                 tableView.dataSource = self
                 self.tableView.reloadData()
+                tableView.isHidden = false
+                let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+                UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
                 activityIndicatorView.stopAnimating()
             }
             
@@ -112,6 +118,9 @@ extension DetailAllLastMonthViewController:LoadOKDelegate{
             tableView.delegate = self
             tableView.dataSource = self
             self.tableView.reloadData()
+            tableView.isHidden = false
+            let animation = [AnimationType.vector(CGVector(dx: 0, dy: 30))]
+            UIView.animate(views: tableView.visibleCells, animations: animation, completion:nil)
             activityIndicatorView.stopAnimating()
             if tableView.refreshControl?.isRefreshing == true{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
