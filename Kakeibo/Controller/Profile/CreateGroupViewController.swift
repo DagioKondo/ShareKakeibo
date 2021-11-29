@@ -206,10 +206,14 @@ extension CreateGroupViewController:SendOKDelegate{
         let groupID = groupDocument.documentID
         UserDefaults.standard.setValue(groupID, forKey: "groupID")
         
+        let dateModel = DateModel()
+        let nextSettlementDay = dateModel.getNextSettlement(settlement: settlementTextField.text!)
+        
         db.collection("groupManagement").document(groupID).setData([
             "groupName": groupNameTextField.text!,
             "groupImage": url,
             "settlementDay": settlementTextField.text!,
+            "nextSettlementDay":nextSettlementDay,
             "groupID": groupID,
             "settlementDic": ["\(userID)": false],
             "userIDArray": [userID],
@@ -231,9 +235,10 @@ extension CreateGroupViewController:SendOKDelegate{
         }
         
         activityIndicatorView.stopAnimating()
-//        navigationController?.popViewController(animated: true)
         let index = navigationController!.viewControllers.count - 3
-        navigationController?.popToViewController(navigationController!.viewControllers[index], animated: true)    }
+        navigationController?.popToViewController(navigationController!.viewControllers[index], animated: true)
+        
+    }
     
 }
 //MARK:- Picker
@@ -276,13 +281,10 @@ extension CreateGroupViewController:UIPickerViewDelegate,UIPickerViewDataSource{
 extension CreateGroupViewController:CollectionDeligate{
     
     func SendArray(selectedUserImageArray: [String], userIDArray: [String], userNameArray: [String]) {
-        print(selectedUserImageArray)
-        print(userIDArray)
         self.selectedUserImageArray = selectedUserImageArray
         self.userIDArray = userIDArray
         self.userNameArray = userNameArray
         collectionView.reloadData()
-        print(self.userIDArray)
     }
     
 }

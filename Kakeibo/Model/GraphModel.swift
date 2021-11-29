@@ -14,7 +14,6 @@ class ChartFormatter: NSObject, IAxisValueFormatter {
     let xAxisValues = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        //granularityを１.０、labelCountを１２にしているおかげで引数のvalueは1.0, 2.0, 3.0・・・１１.０となります。
         let index = Int(value)
         return xAxisValues[index]
     }
@@ -48,8 +47,8 @@ class GraphModel: ChartViewDelegate{
         let formatter = ChartFormatter()
         linechart.xAxis.valueFormatter = formatter
         linechart.extraRightOffset = 30
-        linechart.xAxis.labelCount = 12 //labelCountはChartDataEntryと同じ数だけ入れます。
-        linechart.xAxis.granularity = 1.0 //granularityは1.0で固定
+        linechart.xAxis.labelCount = 12
+        linechart.xAxis.granularity = 1.0
         linechart.xAxis.gridColor = .clear
         linechart.rightAxis.enabled = false
         linechart.leftAxis.drawZeroLineEnabled = true

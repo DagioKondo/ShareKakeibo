@@ -112,6 +112,9 @@ class GroupConfigurationViewController: UIViewController{
         }else{
             db.collection("groupManagement").document(groupID).updateData(
                 ["groupName": groupNameTextField.text!,"settlementDay": settlementTextField.text!])
+            let dateModel = DateModel()
+            let newSettlement = dateModel.getNextSettlement(settlement: settlementTextField.text!)
+            db.collection("groupManagement").document(groupID).updateData(["nextSettlementDay" : newSettlement])
             activityIndicatorView.stopAnimating()
             dismiss(animated: true, completion: nil)
         }

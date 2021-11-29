@@ -21,10 +21,7 @@ class ProfileDetailViewController: UIViewController{
     
     var profileImage = UIImage()
     let user = Auth.auth().currentUser
-    var password = String()
-    var email = String()
-    
-    //    var receiveImage = UIImage()
+
     var nameArray = ["名前","メールアドレス","パスワード"]
     var dataNameArray = ["userName","email","password"]
     var userInfoArray = [String]()
@@ -39,6 +36,7 @@ class ProfileDetailViewController: UIViewController{
     var activityIndicatorView = UIActivityIndicatorView()
     
     var profileImageData:Data?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +53,7 @@ class ProfileDetailViewController: UIViewController{
         profileImageView.layer.cornerRadius = 120
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView = UIView() //空白のセルの線を消してるよ
+        tableView.tableFooterView = UIView() 
         
         sendDBModel.sendOKDelegate = self
         
@@ -164,9 +162,7 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
             
             cropController.delegate = self
             cropController.customAspectRatio = profileImageView.frame.size
-            //cropBoxのサイズを固定する。
             cropController.cropView.cropBoxResizeEnabled = false
-            //pickerを閉じたら、cropControllerを表示する。
             picker.dismiss(animated: true) {
                 self.present(cropController, animated: true, completion: nil)
             }
@@ -178,7 +174,6 @@ extension ProfileDetailViewController:UIImagePickerControllerDelegate,UINavigati
     }
     
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
-        //トリミング編集が終えたら、呼び出される。
         self.profileImageView.image = image
         profileImageData = image.jpegData(compressionQuality: 1.0)!
         sendDBModel.sendChangeProfileImage(data: profileImageData!, activityIndicatorView: activityIndicatorView)

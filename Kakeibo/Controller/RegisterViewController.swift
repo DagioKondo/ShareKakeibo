@@ -106,9 +106,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate,UINavigationCo
             
             cropController.delegate = self
             cropController.customAspectRatio = profileImageView.frame.size
-            //cropBoxのサイズを固定する。
             cropController.cropView.cropBoxResizeEnabled = false
-            //pickerを閉じたら、cropControllerを表示する。
             picker.dismiss(animated: true) {
                 self.present(cropController, animated: true, completion: nil)
             }
@@ -120,7 +118,6 @@ extension RegisterViewController: UIImagePickerControllerDelegate,UINavigationCo
     }
     
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
-        //トリミング編集が終えたら、呼び出される。
         self.profileImageView.image = image
         cropViewController.dismiss(animated: true, completion: nil)
     }

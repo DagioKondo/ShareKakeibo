@@ -25,12 +25,12 @@ class AdditionViewController: UIViewController {
     var selectedUserImageArray = [String]() //profile画像のURLが入る
     var userIDArray = [String]()
     var userNameArray = [String]()
-    //    var imageArray = ["person","person.fill","pencil","trash","person"]
     var userSearchSets = [UserSearchSets]()
     var db = Firestore.firestore()
     
     var activityIndicatorView = UIActivityIndicatorView()
     let nothingLabel = UILabel()
+    var alertModel = AlertModel()
     
     
     override func viewDidLoad() {
@@ -53,7 +53,6 @@ class AdditionViewController: UIViewController {
         tableView.layer.shadowOffset = CGSize(width: 0, height: 1)
         tableView.layer.shadowOpacity = 0.5
         tableView.layer.shadowRadius = 1
-        //        tableView.isHidden = true
         tableView.transform = CGAffineTransform(scaleX: 0, y: 0)
         
         loadDBModel.loadOKDelegate = self
@@ -97,7 +96,7 @@ class AdditionViewController: UIViewController {
         }
         activityIndicatorView.startAnimating()
         nothingLabel.isHidden = true
-        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
+        loadDBModel.loadUserSearch(email: searchUserTextField.text!)
         searchUserTextField.text = ""
     }
     
@@ -172,7 +171,6 @@ extension AdditionViewController: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath
         
         nothingLabel.isHidden = true
         selectedUserImageArray.append(userSearchSets[indexPath.row].profileImage)
@@ -208,7 +206,11 @@ extension AdditionViewController: UITableViewDelegate,UITableViewDataSource{
 extension AdditionViewController:LoadOKDelegate{
     
     
-    func loadUserSearch_OK() {
+    func loadUserSearch_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }
         var loadUserSearchSets = loadDBModel.userSearchSets
         for userID in userIDArray{
             loadUserSearchSets.removeAll(where: {$0.userID == userID})
@@ -227,7 +229,6 @@ extension AdditionViewController:LoadOKDelegate{
                 self.tableView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
                 self.tableView.alpha = 1
             }, completion:  { _ in
-                //            self.tableView.isHidden = false
                 self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
                 self.tableView.reloadData()
                 self.activityIndicatorView.stopAnimating()
@@ -243,11 +244,6 @@ extension AdditionViewController:UITextFieldDelegate{
     
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(searchUserTextField.text)
-        print(textField.text)
-        print(string)
-        print(textField.text! + string)
-        print("")
         if string == "" && textField.text != ""{
             if textField.text?.count == 1{
                 
@@ -264,13 +260,12 @@ extension AdditionViewController:UITextFieldDelegate{
             }else{
                 var removeText = textField.text
                 removeText?.removeLast()
-                print(removeText)
-                loadDBModel.loadUserSearch(email: removeText!, activityIndicatorView: activityIndicatorView)
+                loadDBModel.loadUserSearch(email: removeText!)
             }
         }else if string != "" && textField.text != ""{
-            loadDBModel.loadUserSearch(email: textField.text! + string, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadUserSearch(email: textField.text! + string)
         }else if string != "" && textField.text == ""{
-            loadDBModel.loadUserSearch(email: string, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadUserSearch(email: string)
         }else if string == "" && textField.text == ""{
             
             UIView.animate(withDuration: 0.3, animations: {

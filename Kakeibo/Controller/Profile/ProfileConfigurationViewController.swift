@@ -20,11 +20,8 @@ class ProfileConfigurationViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var warningLabel: UILabel!
     
-    //auth内のデータ更新のため追加しました＿山口
     var loginModel = LoginModel()
     let user = Auth.auth().currentUser
-    var password = String()
-    var email = String()
     var userInfoArray = [String]()
     var delivery:profileConfigurationVCDelegate?
     

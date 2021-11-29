@@ -31,11 +31,14 @@ class DetailMyselfLastMonthViewController: UIViewController {
     var db = Firestore.firestore()
     var dateModel = DateModel()
     var changeCommaModel = ChangeCommaModel()
+    var alertModel = AlertModel()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.separatorStyle = .none
         tableView.register(UINib(nibName: "DetailCell", bundle: nil), forCellReuseIdentifier: "detailCell")
         tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
@@ -58,13 +61,15 @@ class DetailMyselfLastMonthViewController: UIViewController {
         month = String(date.month!)
         groupID = UserDefaults.standard.object(forKey: "groupID") as! String
         userID = UserDefaults.standard.object(forKey: "userID") as! String
+        userName = UserDefaults.standard.object(forKey: "userName") as! String
+        profileImage = UserDefaults.standard.object(forKey: "profileImage") as! String
         settlementDay = UserDefaults.standard.object(forKey: "settlementDay") as! String
         
         activityIndicatorView.startAnimating()
         loadDBModel.loadOKDelegate = self
         let settlementDayOfInt = Int(settlementDay)!
         dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID)
         }
     }
     
@@ -77,20 +82,21 @@ extension DetailMyselfLastMonthViewController:LoadOKDelegate,EditOKDelegate{
     
     
     //自分の明細を取得完了
-    func loadMonthDetails_OK() {
-        monthMyDetailsSets = loadDBModel.monthMyDetailsSets
-        loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
-    }
-    
-    //自分のユーザーネーム、プロフィール画像を取得完了
-    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
-        self.profileImage = profileImage
-        self.userName = userName
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.reloadData()
-        activityIndicatorView.stopAnimating()
+    func loadMonthDetails_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            monthMyDetailsSets = loadDBModel.monthMyDetailsSets
+            loadDBModel.loadUserInfo(userID: userID)
+            tableView.reloadData()
+            activityIndicatorView.stopAnimating()
+            if tableView.refreshControl?.isRefreshing == true{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            }
+        }
     }
     
     
@@ -156,9 +162,8 @@ extension DetailMyselfLastMonthViewController:UITableViewDelegate,UITableViewDat
         let settlementDayOfInt = Int(settlementDay)!
 
         dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: userID)
         }
-        tableView.refreshControl?.endRefreshing()
     }
     
     

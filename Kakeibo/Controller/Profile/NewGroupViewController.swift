@@ -29,6 +29,7 @@ class NewGroupViewController: UIViewController {
     var groupNotJoinArray = [GroupSets]()
     var sortedGroupNotJoinArray = [GroupSets]()
     var activityIndicatorView = UIActivityIndicatorView()
+    var alertModel = AlertModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +66,7 @@ class NewGroupViewController: UIViewController {
         profileImage = UserDefaults.standard.object(forKey: "profileImage") as! String
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
-        loadDBModel.loadNotJoinGroup(userID: userID, activityIndicatorView: activityIndicatorView)
+        loadDBModel.loadNotJoinGroup(userID: userID)
         
     }
     
@@ -147,7 +148,7 @@ extension NewGroupViewController:UITableViewDelegate, UITableViewDataSource{
         let rejectButton = cell.contentView.viewWithTag(4) as! UIButton
         let groupImageView = cell.contentView.viewWithTag(5) as! UIImageView
         
-        cell.selectionStyle = .none //セルのハイライトを消している
+        cell.selectionStyle = .none 
         
         invitationView.layer.cornerRadius = 5
         invitationView.layer.masksToBounds = false
@@ -179,20 +180,26 @@ extension NewGroupViewController:UITableViewDelegate, UITableViewDataSource{
 extension NewGroupViewController:LoadOKDelegate, EditOKDelegate{
     
     //どのグループに参加しているか招待されているかを取得完了
-    func loadNotJoinGroup_OK(groupIDArray: [String], notJoinCount: Int) {
-           groupNotJoinArray = []
-           //招待されているグループの情報を取得完了
-        loadDBModel.loadNotJoinGroupInfo(groupIDArray: groupIDArray, activityIndicatorView: activityIndicatorView) { JoinGroupSets in
-               self.groupNotJoinArray.append(JoinGroupSets)
-               self.sortedGroupNotJoinArray = self.groupNotJoinArray.sorted(by: {($0.create_at! > $1.create_at!)})
-           }
-       }
-  
-    func loadNotJoinGroupInfo_OK(check: Int) {
-        if check == 1{
-            self.tableView.reloadData()
+    func loadNotJoinGroup_OK(check: Int, groupIDArray: [String]?, notJoinCount: Int) {
+        if check == 0{
             activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
         }else{
+            groupNotJoinArray = []
+            //招待されているグループの情報を取得完了
+            loadDBModel.loadNotJoinGroupInfo(groupIDArray: groupIDArray!) { JoinGroupSets in
+                self.groupNotJoinArray.append(JoinGroupSets)
+                self.sortedGroupNotJoinArray = self.groupNotJoinArray.sorted(by: {($0.create_at! > $1.create_at!)})
+            }
+        }
+    }
+    
+    func loadNotJoinGroupInfo_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            self.tableView.reloadData()
             activityIndicatorView.stopAnimating()
         }
     }

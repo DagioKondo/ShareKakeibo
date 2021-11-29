@@ -27,12 +27,12 @@ class SearchViewController: UIViewController {
     var selectedUserImageArray = [String]() //profile画像のURLが入る
     var userIDArray = [String]()
     var userNameArray = [String]()
-    //    var imageArray = ["person","person.fill","pencil","trash","person"]
     var userSearchSets = [UserSearchSets]()
     
     let nothingLabel = UILabel()
     
     var activityIndicatorView = UIActivityIndicatorView()
+    var alertModel = AlertModel()
     
     
     override func viewDidLoad() {
@@ -90,7 +90,7 @@ class SearchViewController: UIViewController {
         }
         activityIndicatorView.startAnimating()
         nothingLabel.isHidden = true
-        loadDBModel.loadUserSearch(email: searchUserTextField.text!, activityIndicatorView: activityIndicatorView)
+        loadDBModel.loadUserSearch(email: searchUserTextField.text!)
         searchUserTextField.text = ""
     }
     
@@ -210,32 +210,39 @@ extension SearchViewController:UITableViewDelegate,UITableViewDataSource{
 // MARK: - LoadOKDelegate
 extension SearchViewController: LoadOKDelegate{
     
-    func loadUserSearch_OK() {
-        var loadUserSearchSets = loadDBModel.userSearchSets
-        for userID in userIDArray{
-            loadUserSearchSets.removeAll(where: {$0.userID == userID})
-        }
-        userSearchSets = loadUserSearchSets
-        
-        if userSearchSets.count == 0{
-            nothingLabel.isHidden = false
-            
-            self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
-            tableView.reloadData()
+  
+    func loadUserSearch_OK(check: Int) {
+        if check == 0{
             activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
         }else{
-            nothingLabel.isHidden = true
-            UIView.animate(withDuration: 0.1, animations: {
-                self.tableView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                self.tableView.alpha = 1
-            }, completion:  { _ in
-                //            self.tableView.isHidden = false
+            var loadUserSearchSets = loadDBModel.userSearchSets
+            for userID in userIDArray{
+                loadUserSearchSets.removeAll(where: {$0.userID == userID})
+            }
+            userSearchSets = loadUserSearchSets
+            
+            if userSearchSets.count == 0{
+                nothingLabel.isHidden = false
+                
                 self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
-                self.tableView.reloadData()
-                self.activityIndicatorView.stopAnimating()
-            })
+                tableView.reloadData()
+                activityIndicatorView.stopAnimating()
+            }else{
+                nothingLabel.isHidden = true
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.tableView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                    self.tableView.alpha = 1
+                }, completion:  { _ in
+                    //            self.tableView.isHidden = false
+                    self.tableViewHeight.constant = CGFloat(self.userSearchSets.count * 74)
+                    self.tableView.reloadData()
+                    self.activityIndicatorView.stopAnimating()
+                })
+            }
         }
     }
+    
     
 }
 
@@ -244,11 +251,6 @@ extension SearchViewController:UITextFieldDelegate{
     
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(searchUserTextField.text)
-        print(textField.text)
-        print(string)
-        print(textField.text! + string)
-        print("")
         if string == "" && textField.text != ""{
             if textField.text?.count == 1{
                 
@@ -266,12 +268,12 @@ extension SearchViewController:UITextFieldDelegate{
                 var removeText = textField.text
                 removeText?.removeLast()
                 print(removeText)
-                loadDBModel.loadUserSearch(email: removeText!, activityIndicatorView: activityIndicatorView)
+                loadDBModel.loadUserSearch(email: removeText!)
             }
         }else if string != "" && textField.text != ""{
-            loadDBModel.loadUserSearch(email: textField.text! + string, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadUserSearch(email: textField.text! + string)
         }else if string != "" && textField.text == ""{
-            loadDBModel.loadUserSearch(email: string, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadUserSearch(email: string)
         }else if string == "" && textField.text == ""{
             
             UIView.animate(withDuration: 0.3, animations: {

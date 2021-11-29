@@ -18,7 +18,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     @IBOutlet weak var contentViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var tableView: UITableView!//roomNameが反映されるテーブルビューだよ
+    @IBOutlet weak var tableView: UITableView!//roomNameが反映されるテーブルビュー
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var profileView: UIView! //profileImageViewの後ろの白いビュー
@@ -37,11 +37,13 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
     var auth = Auth.auth()
     var activityIndicatorView = UIActivityIndicatorView()
     var originalNavigationControllerDelegate: UIGestureRecognizerDelegate?
-    var configurationTableView = UITableView() //設定バーのテーブルビューだよ
+    var configurationTableView = UITableView() //設定バーのテーブルビュー
     let configurationNameArray = ["プロフィールを変更","ログアウト"]
     let configurationImageArray = ["person.fill","exit"]
     let configurationLabel = UILabel()
     var swipeView = UIVisualEffectView()
+    
+    var alertModel = AlertModel()
 
     
     override func viewDidLoad() {
@@ -62,7 +64,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         configurationTableView.register(UINib(nibName: "ProfileConfigurationCell", bundle: nil), forCellReuseIdentifier: "ProfileConfigurationCell")
         configurationTableView.delegate = self
         configurationTableView.dataSource = self
-        //        configurationTableView.isScrollEnabled = false
         
         tableView.separatorStyle = .none
         
@@ -147,7 +148,8 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
         userID = UserDefaults.standard.object(forKey: "userID") as! String
         activityIndicatorView.startAnimating()
         loadDBModel.loadOKDelegate = self
-        loadDBModel.loadUserInfo(userID: userID, activityIndicatorView: activityIndicatorView)
+        loadDBModel.loadUserInfo(userID: userID)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -160,10 +162,6 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
             originalNavigationControllerDelegate = nil
         }
     }
-    
-//    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        return false
-//    }
     
     @objc func swipeViewTap(_ sender:UITapGestureRecognizer){
         scrollToOriginal()
@@ -188,25 +186,39 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate{
 //MARK:- LoadOKDelegate
 extension ProfileViewController: LoadOKDelegate{
     
-    func loadUserInfo_OK(userName: String, profileImage: String, email: String, password: String) {
-        UserDefaults.standard.setValue(userName, forKey: "userName")
-        UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
-        profileImageView.sd_setImage(with: URL(string: profileImage), completed: nil)
-        userNameLabel.text = userName
-        userInfoArray = [userName,email,password]
-        loadDBModel.loadJoinGroup(groupID: groupID, userID: userID, activityIndicatorView: activityIndicatorView)
-        newGroupCountLabel.isHidden = true
+    
+    func loadUserInfo_OK(check: Int, userName: String?, profileImage: String?, email: String?, password: String?) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            UserDefaults.standard.setValue(userName, forKey: "userName")
+            UserDefaults.standard.setValue(profileImage, forKey: "profileImage")
+            profileImageView.sd_setImage(with: URL(string: profileImage!), completed: nil)
+            userNameLabel.text = userName
+            userInfoArray = [userName!,email!,password!]
+            loadDBModel.loadJoinGroup(groupID: groupID, userID: userID)
+            newGroupCountLabel.isHidden = true
+        }
     }
     
     //参加しているグループの情報を取得完了
-    func loadJoinGroup_OK() {
-        groupJoinArray = loadDBModel.groupSets
-        loadDBModel.loadNotJoinGroup(userID: userID, activityIndicatorView: activityIndicatorView)
+    func loadJoinGroup_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            groupJoinArray = loadDBModel.groupSets
+            loadDBModel.loadNotJoinGroup(userID: userID)
+        }
     }
     
     //不参加のグループの数を取得完了
-        func loadNotJoinGroup_OK(groupIDArray: [String], notJoinCount: Int) {
-            print(notJoinCount)
+    func loadNotJoinGroup_OK(check: Int, groupIDArray: [String]?, notJoinCount: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
             newGroupCountLabel.text = String(notJoinCount)
             if notJoinCount == 0{
                 newGroupCountLabel.isHidden = true
@@ -224,6 +236,8 @@ extension ProfileViewController: LoadOKDelegate{
             tableView.reloadData()
             activityIndicatorView.stopAnimating()
         }
+    }
+   
     
 }
 

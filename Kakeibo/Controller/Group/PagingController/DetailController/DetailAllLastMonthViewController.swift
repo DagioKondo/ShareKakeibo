@@ -27,6 +27,8 @@ class DetailAllLastMonthViewController: UIViewController {
     var dateModel = DateModel()
     var changeCommaModel = ChangeCommaModel()
     
+    var alertModel = AlertModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +64,7 @@ class DetailAllLastMonthViewController: UIViewController {
         loadDBModel.loadOKDelegate = self
         activityIndicatorView.startAnimating()
         dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil)
         }
     }
     
@@ -74,35 +76,49 @@ extension DetailAllLastMonthViewController:LoadOKDelegate{
     
     
     //全体の明細を取得完了
-    //全体の明細を取得完了
-    func loadMonthDetails_OK() {
-        monthGroupDetailsSets = loadDBModel.monthGroupDetailsSets
-        userIDArray = []
-        profileImageArray = []
-        userNameArray = []
-        if monthGroupDetailsSets.count != 0{
-            for i in 0...monthGroupDetailsSets.count - 1{
-                userIDArray.append(monthGroupDetailsSets[i].userID)
+    func loadMonthDetails_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
+        }else{
+            monthGroupDetailsSets = loadDBModel.monthGroupDetailsSets
+            userIDArray = []
+            profileImageArray = []
+            userNameArray = []
+            if monthGroupDetailsSets.count != 0{
+                for i in 0...monthGroupDetailsSets.count - 1{
+                    userIDArray.append(monthGroupDetailsSets[i].userID)
+                }
+            }else{
+                tableView.delegate = self
+                tableView.dataSource = self
+                self.tableView.reloadData()
+                activityIndicatorView.stopAnimating()
             }
+            
+            //明細に表示するユーザーネームとプロフィール画像取得
+            loadDBModel.loadGroupMember(userIDArray: userIDArray) { [self] UserSets in
+                self.profileImageArray.append(UserSets.profileImage)
+                self.userNameArray.append(UserSets.userName)
+            }
+        }
+    }
+
+    func loadGroupMember_OK(check: Int) {
+        if check == 0{
+            activityIndicatorView.stopAnimating()
+            alertModel.errorAlert(viewController: self)
         }else{
             tableView.delegate = self
             tableView.dataSource = self
             self.tableView.reloadData()
             activityIndicatorView.stopAnimating()
+            if tableView.refreshControl?.isRefreshing == true{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            }
         }
-        
-        //明細に表示するユーザーネームとプロフィール画像取得
-        loadDBModel.loadGroupMember(userIDArray: userIDArray, activityIndicatorView: activityIndicatorView) { [self] UserSets in
-            self.profileImageArray.append(UserSets.profileImage)
-            self.userNameArray.append(UserSets.userName)
-        }
-    }
-    
-    func loadGroupMember_OK() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        self.tableView.reloadData()
-        activityIndicatorView.stopAnimating()
     }
     
     
@@ -147,9 +163,8 @@ extension DetailAllLastMonthViewController: UITableViewDelegate,UITableViewDataS
         let settlementDayOfInt = Int(settlementDay)!
 
         dateModel.getPeriodOfLastMonth(settelemtDay: settlementDayOfInt) { maxDate, minDate in
-            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil, activityIndicatorView: activityIndicatorView)
+            loadDBModel.loadMonthDetails(groupID: groupID, startDate: minDate, endDate: maxDate, userID: nil)
         }
-        tableView.refreshControl?.endRefreshing()
     }
     
     
